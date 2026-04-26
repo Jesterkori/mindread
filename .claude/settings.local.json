@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run build)",
+      "Bash(npm install:*)",
+      "Bash(PGPASSWORD=\"Born2win!\" psql -U postgres -d mindcheck -c \"DROP TABLE IF EXISTS submissions, otp_verifications, admin_users, users CASCADE;\")",
+      "Bash(where psql:*)",
+      "Read(//c/Program Files/PostgreSQL/**)"
+    ]
+  }
+}
