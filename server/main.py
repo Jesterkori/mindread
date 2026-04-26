@@ -569,10 +569,4 @@ def admin_seed_questions(body: SeedBody, request: Request):
 _dist = Path(__file__).parent.parent / 'dist'
 
 if _dist.exists():
-    _assets = _dist / 'assets'
-    if _assets.exists():
-        app.mount('/assets', StaticFiles(directory=str(_assets)), name='assets')
-
-    @app.get('/{full_path:path}')
-    async def spa(_: str):
-        return FileResponse(str(_dist / 'index.html'))
+    app.mount('/', StaticFiles(directory=str(_dist), html=True), name='spa')
