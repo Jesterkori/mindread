@@ -1,21 +1,16 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import ReCAPTCHA from 'react-google-recaptcha'
 import { CATEGORIES } from '../data/questions'
-
-const RECAPTCHA_SITE_KEY = '6LdyJp4sAAAAAC0eByPC1HgbfSoPHh9QT91HfVxZ'
 
 // step: 'form' | 'otp' | 'done'
 export default function Register() {
   const navigate = useNavigate()
-  const captchaRef = useRef(null)
 
   const [step, setStep] = useState('form')
   const [form, setForm] = useState({
     name: '', email: '', password: '', confirm: '', category: '',
   })
   const [otp, setOtp] = useState('')
-  const [captchaToken, setCaptchaToken] = useState(null)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -33,8 +28,6 @@ export default function Register() {
     if (!form.category) return setError('Please select your category.')
     if (form.password.length < 6) return setError('Password must be at least 6 characters.')
     if (form.password !== form.confirm) return setError('Passwords do not match.')
-    if (!captchaToken) return setError('Please complete the CAPTCHA.')
-
     setLoading(true)
     try {
       const res = await fetch('/api/auth/register', {
@@ -45,13 +38,10 @@ export default function Register() {
           email: form.email.trim().toLowerCase(),
           password: form.password,
           category: form.category,
-          captchaToken,
         }),
       })
       const data = await res.json()
       if (!res.ok) {
-        captchaRef.current?.reset()
-        setCaptchaToken(null)
         return setError(data.error)
       }
       setStep('otp')
@@ -299,23 +289,10 @@ export default function Register() {
               </div>
             </div>
 
-            {/* CAPTCHA */}
-            <div>
-              <p className="block text-sm font-medium text-slate-700 mb-2">
-                Verify you&apos;re human
-              </p>
-              <ReCAPTCHA
-                ref={captchaRef}
-                sitekey={RECAPTCHA_SITE_KEY}
-                onChange={(token) => setCaptchaToken(token)}
-                onExpired={() => setCaptchaToken(null)}
-              />
-            </div>
-
             <button
               type="submit"
               className="btn-primary w-full mt-2"
-              disabled={loading || !captchaToken}
+              disabled={loading}
             >
               {loading ? 'Submitting…' : 'Create Account & Send OTP'}
             </button>
