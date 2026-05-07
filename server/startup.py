@@ -55,6 +55,7 @@ with db() as cur:
         );
 
         ALTER TABLE submissions ADD COLUMN IF NOT EXISTS ai_analysis TEXT;
+        ALTER TABLE submissions ADD COLUMN IF NOT EXISTS admin_action TEXT;
     """)
 
 print('Tables ready.')

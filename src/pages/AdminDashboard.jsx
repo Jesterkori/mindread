@@ -26,9 +26,9 @@ export default function AdminDashboard() {
   const [stats, setStats]               = useState(null)
   const [expanded, setExpanded]         = useState(null)
   const [notes, setNotes]               = useState({})
-  const [editedAnalysis, setEditedAnalysis] = useState({})
-  const [editedAction, setEditedAction] = useState({})
-  const [declineReason, setDeclineReason] = useState({})
+  const [editedAnalysis, setEditedAnalysis]       = useState({})
+  const [editedAdminAction, setEditedAdminAction] = useState({})
+  const [declineReason, setDeclineReason]         = useState({})
   const [busy, setBusy]                 = useState({})
   const [loading, setLoading]           = useState(true)
 
@@ -89,9 +89,9 @@ export default function AdminDashboard() {
       method: 'POST',
       headers,
       body: JSON.stringify({
-        adminNotes: notes[id] || '',
-        aiAnalysis: editedAnalysis[id] ?? null,
-        action:     editedAction[id] ?? null,
+        adminNotes:  notes[id] || '',
+        aiAnalysis:  editedAnalysis[id] ?? null,
+        adminAction: editedAdminAction[id] ?? null,
       }),
     })
     setBusy((b) => ({ ...b, [`release-${id}`]: false }))
@@ -332,8 +332,8 @@ export default function AdminDashboard() {
                             if (!isOpen) {
                               if (editedAnalysis[s.id] === undefined)
                                 setEditedAnalysis((a) => ({ ...a, [s.id]: s.ai_analysis ?? '' }))
-                              if (editedAction[s.id] === undefined)
-                                setEditedAction((a) => ({ ...a, [s.id]: s.action ?? '' }))
+                              if (editedAdminAction[s.id] === undefined)
+                                setEditedAdminAction((a) => ({ ...a, [s.id]: s.admin_action ?? '' }))
                             }
                           }}
                           className="text-sm text-blue-600 hover:underline shrink-0"
@@ -373,7 +373,7 @@ export default function AdminDashboard() {
                             </div>
                           </div>
 
-                          {/* 2. PDF result */}
+                          {/* 2. PDF result — read-only reference */}
                           <div className="space-y-2">
                             <div className="flex items-center gap-2">
                               <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
@@ -387,17 +387,49 @@ export default function AdminDashboard() {
                               </span>
                               <span className="text-xs text-slate-400">{s.score}/{s.total * 4}</span>
                             </div>
-                            <textarea
-                              rows={3}
-                              value={editedAction[s.id] ?? s.action ?? ''}
-                              onChange={(e) => setEditedAction((a) => ({ ...a, [s.id]: e.target.value }))}
-                              placeholder="PDF-based recommendation text…"
-                              disabled={s.result_released}
-                              className="input-field text-sm resize-y disabled:bg-slate-50 disabled:text-slate-500"
-                            />
+                            <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-600 leading-relaxed select-text">
+                              {s.action || <span className="text-slate-400 italic">No PDF result generated.</span>}
+                            </div>
                           </div>
 
-                          {/* 3. AI analysis */}
+                          {/* 3. Admin Answer — what the user sees */}
+                          {!s.result_released && (
+                            <div className="space-y-2">
+                              <div className="flex items-center justify-between">
+                                <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                                  Admin Answer <span className="text-slate-400 font-normal normal-case">(shown to user)</span>
+                                </p>
+                                {s.action && (
+                                  <button
+                                    type="button"
+                                    onClick={() => setEditedAdminAction((a) => ({ ...a, [s.id]: s.action }))}
+                                    className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                                  >
+                                    ↑ Copy from PDF
+                                  </button>
+                                )}
+                              </div>
+                              <textarea
+                                rows={3}
+                                value={editedAdminAction[s.id] ?? ''}
+                                onChange={(e) => setEditedAdminAction((a) => ({ ...a, [s.id]: e.target.value }))}
+                                placeholder="Type the result to show the user, or copy from PDF above…"
+                                className="input-field text-sm resize-y"
+                              />
+                            </div>
+                          )}
+                          {s.result_released && s.admin_action && (
+                            <div className="space-y-2">
+                              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                                Admin Answer <span className="text-slate-400 font-normal normal-case">(released to user)</span>
+                              </p>
+                              <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-600 leading-relaxed">
+                                {s.admin_action}
+                              </div>
+                            </div>
+                          )}
+
+                          {/* AI analysis */}
                           <div className="space-y-2">
                             <div className="flex items-center justify-between">
                               <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
@@ -419,7 +451,7 @@ export default function AdminDashboard() {
                             />
                           </div>
 
-                          {/* 4. Release */}
+                          {/* Release */}
                           {!s.result_released ? (
                             <div className="space-y-2 pt-1 border-t border-slate-100">
                               <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wide">

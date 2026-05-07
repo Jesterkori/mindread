@@ -88,7 +88,7 @@ export default function UserDashboard() {
 
         {/* Previous Results */}
         <div>
-          <h2 className="text-base font-semibold text-slate-700 mb-3">Previous Test Results</h2>
+          <h2 className="text-base font-semibold text-slate-700 mb-3">My Assessments</h2>
 
           {loading && (
             <div className="card shadow-sm text-center text-slate-400 py-8">
@@ -99,9 +99,9 @@ export default function UserDashboard() {
           {!loading && results.length === 0 && (
             <div className="card shadow-sm text-center py-10">
               <p className="text-4xl mb-3">📋</p>
-              <p className="text-slate-600 font-medium">No results yet</p>
+              <p className="text-slate-600 font-medium">No assessments yet</p>
               <p className="text-slate-400 text-sm mt-1">
-                Complete an assessment and wait for your results to be reviewed.
+                Complete an assessment above to get started.
               </p>
             </div>
           )}
@@ -109,6 +109,36 @@ export default function UserDashboard() {
           {!loading && results.length > 0 && (
             <div className="space-y-3">
               {results.map((r) => {
+                // Unreleased — show "In Review" card
+                if (!r.result_released) {
+                  return (
+                    <div
+                      key={r.id}
+                      className="rounded-2xl border-2 border-blue-100 bg-blue-50 p-4"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="w-3 h-3 rounded-full bg-blue-400 shrink-0 animate-pulse" />
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-slate-800 text-sm">Assessment Submitted</p>
+                          <p className="text-xs text-slate-500">
+                            {categoryLabel(r.category)} &middot;{' '}
+                            {new Date(r.submitted_at).toLocaleDateString('en-IN', {
+                              day: 'numeric', month: 'short', year: 'numeric',
+                            })}
+                          </p>
+                        </div>
+                        <span className="text-xs font-semibold bg-blue-100 text-blue-700 px-3 py-1 rounded-full">
+                          In Review
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-500 mt-3 ml-6">
+                        Our team is reviewing your responses. You will see your result here once it has been released.
+                      </p>
+                    </div>
+                  )
+                }
+
+                // Released — show full result card
                 const key   = levelKey(r.level)
                 const style = LEVEL_STYLES[key]
                 const isOpen = expanded === r.id
@@ -149,34 +179,25 @@ export default function UserDashboard() {
                     {isOpen && (
                       <div className="mt-4 pt-4 border-t border-slate-200 space-y-4">
 
-                        {r.safety_flag && (
-                          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-                            <p className="text-xs font-semibold text-red-700 mb-1">⚠️ Safety Note</p>
-                            <p className="text-xs text-red-600 leading-relaxed">
-                              Your responses indicated possible distress. Please speak with a trusted adult or counsellor.
-                              iCall: 9152987821 | Vandrevala Foundation: 1860-2662-345
+                        {r.admin_action && (
+                          <div>
+                            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1">
+                              Result
                             </p>
+                            <p className="text-sm text-slate-700 leading-relaxed">{r.admin_action}</p>
                           </div>
                         )}
 
                         {r.ai_analysis && (
                           <div>
                             <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">
-                              Your Personalised Assessment
+                              Personalised Assessment
                             </p>
                             <div className="space-y-3">
                               {r.ai_analysis.split('\n\n').filter(Boolean).map((para) => (
                                 <p key={para.slice(0, 40)} className="text-sm text-slate-700 leading-relaxed">{para}</p>
                               ))}
                             </div>
-                          </div>
-                        )}
-                        {!r.ai_analysis && r.action && (
-                          <div>
-                            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1">
-                              Recommendation
-                            </p>
-                            <p className="text-sm text-slate-700">{r.action}</p>
                           </div>
                         )}
 
