@@ -31,6 +31,8 @@ export default function AdminDashboard() {
   const [declineReason, setDeclineReason]         = useState({})
   const [busy, setBusy]                 = useState({})
   const [loading, setLoading]           = useState(true)
+  const [editingReleased, setEditingReleased] = useState(null)
+  const [categoryQs, setCategoryQs]     = useState({})
 
   // Questions tab state
   const [qCategory, setQCategory]     = useState(CATEGORIES[0]?.id ?? '')
@@ -98,13 +100,50 @@ export default function AdminDashboard() {
     load()
   }
 
+  async function editResult(id) {
+    setBusy((b) => ({ ...b, [`edit-${id}`]: true }))
+    await fetch(`/api/admin/edit-result/${id}`, {
+      method: 'PUT',
+      headers,
+      body: JSON.stringify({
+        adminNotes:  notes[id] ?? null,
+        aiAnalysis:  editedAnalysis[id] ?? null,
+        adminAction: editedAdminAction[id] ?? null,
+      }),
+    })
+    setBusy((b) => ({ ...b, [`edit-${id}`]: false }))
+    setEditingReleased(null)
+    load()
+  }
+
+  async function deleteUser(id) {
+    if (!confirm('Delete this user and all their submissions? This cannot be undone.')) return
+    setBusy((b) => ({ ...b, [`del-user-${id}`]: true }))
+    await fetch(`/api/admin/users/${id}`, { method: 'DELETE', headers })
+    setBusy((b) => ({ ...b, [`del-user-${id}`]: false }))
+    load()
+  }
+
+  async function loadCategoryQs(category) {
+    if (categoryQs[category]) return
+    const res  = await fetch(`/api/admin/questions?category=${category}`, { headers: authHeader() })
+    const data = await res.json()
+    if (data.ok) {
+      const byId = {}
+      data.questions.forEach((q) => { byId[q.id] = q })
+      setCategoryQs((prev) => ({ ...prev, [category]: byId }))
+    }
+  }
+
   function handleLogout() {
     logout()
     navigate('/login', { replace: true })
   }
 
-  // Get question text for a category + question id
+  // Get question by DB id — uses live questions loaded from API, falls back to static data
   function getQuestion(category, qId) {
+    const fromApi = categoryQs[category]?.[Number(qId)]
+    if (fromApi) return { text: fromApi.text, safetyQuestion: fromApi.safety_question }
     const qs = QUESTIONS[category] || []
     return qs.find((q) => q.id === Number(qId))
   }
@@ -246,7 +285,14 @@ export default function AdminDashboard() {
                   <div key={u.id} className="card shadow-sm">
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                       <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-slate-800">{u.name}</p>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="font-semibold text-slate-800">{u.name}</p>
+                          {!u.email_verified && (
+                            <span className="text-xs bg-amber-100 text-amber-700 px-2 py-0.5 rounded-full font-medium">
+                              Email not verified
+                            </span>
+                          )}
+                        </div>
                         <p className="text-sm text-slate-500">{u.email}</p>
                         <p className="text-xs text-slate-400 mt-0.5">
                           {categoryLabel(u.category)} &middot; Registered {fmt(u.created_at)}
@@ -275,6 +321,13 @@ export default function AdminDashboard() {
                           className="px-4 py-1.5 rounded-xl bg-red-100 text-red-700 text-sm font-medium hover:bg-red-200 disabled:opacity-50 transition-colors"
                         >
                           {busy[`decline-${u.id}`] ? 'Declining…' : 'Decline'}
+                        </button>
+                        <button
+                          onClick={() => deleteUser(u.id)}
+                          disabled={busy[`del-user-${u.id}`]}
+                          className="px-4 py-1.5 rounded-xl bg-slate-100 text-slate-500 text-sm font-medium hover:bg-red-100 hover:text-red-600 disabled:opacity-50 transition-colors"
+                        >
+                          {busy[`del-user-${u.id}`] ? 'Deleting…' : 'Delete'}
                         </button>
                       </div>
                     </div>
@@ -334,6 +387,9 @@ export default function AdminDashboard() {
                                 setEditedAnalysis((a) => ({ ...a, [s.id]: s.ai_analysis ?? '' }))
                               if (editedAdminAction[s.id] === undefined)
                                 setEditedAdminAction((a) => ({ ...a, [s.id]: s.admin_action ?? '' }))
+                              if (notes[s.id] === undefined)
+                                setNotes((n) => ({ ...n, [s.id]: s.admin_notes ?? '' }))
+                              loadCategoryQs(s.category)
                             }
                           }}
                           className="text-sm text-blue-600 hover:underline shrink-0"
@@ -446,17 +502,17 @@ export default function AdminDashboard() {
                               value={editedAnalysis[s.id] ?? s.ai_analysis ?? ''}
                               onChange={(e) => setEditedAnalysis((a) => ({ ...a, [s.id]: e.target.value }))}
                               placeholder="AI analysis will appear here once generated. You can also write or edit it manually."
-                              disabled={s.result_released}
+                              disabled={s.result_released && editingReleased !== s.id}
                               className="input-field text-sm resize-y disabled:bg-slate-50 disabled:text-slate-500"
                             />
                           </div>
 
-                          {/* Release */}
+                          {/* Release / Edit */}
                           {!s.result_released ? (
                             <div className="space-y-2 pt-1 border-t border-slate-100">
-                              <label className="block text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
                                 Personal note to user (optional)
-                              </label>
+                              </p>
                               <textarea
                                 rows={2}
                                 value={notes[s.id] || ''}
@@ -472,10 +528,57 @@ export default function AdminDashboard() {
                                 {busy[`release-${s.id}`] ? 'Releasing…' : 'Release Result to User'}
                               </button>
                             </div>
+                          ) : editingReleased === s.id ? (
+                            <div className="space-y-3 pt-1 border-t border-slate-100">
+                              <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">
+                                Editing Released Result
+                              </p>
+                              <div className="space-y-1">
+                                <p className="text-xs text-slate-500">Admin Answer (shown to user)</p>
+                                <textarea
+                                  rows={3}
+                                  value={editedAdminAction[s.id] ?? ''}
+                                  onChange={(e) => setEditedAdminAction((a) => ({ ...a, [s.id]: e.target.value }))}
+                                  className="input-field text-sm resize-y"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <p className="text-xs text-slate-500">Personal note to user</p>
+                                <textarea
+                                  rows={2}
+                                  value={notes[s.id] || ''}
+                                  onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))}
+                                  className="input-field text-sm resize-none"
+                                />
+                              </div>
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => editResult(s.id)}
+                                  disabled={busy[`edit-${s.id}`]}
+                                  className="btn-primary flex-1 disabled:opacity-50"
+                                >
+                                  {busy[`edit-${s.id}`] ? 'Saving…' : 'Save Changes'}
+                                </button>
+                                <button
+                                  onClick={() => setEditingReleased(null)}
+                                  className="btn-secondary flex-1"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
                           ) : (
-                            <div className="bg-slate-50 rounded-xl p-3 border border-slate-200">
-                              <p className="text-xs font-semibold text-slate-600">Released {fmt(s.released_at)}</p>
-                              {s.admin_notes && <p className="text-sm text-slate-700 mt-1">{s.admin_notes}</p>}
+                            <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 flex items-start justify-between gap-3">
+                              <div>
+                                <p className="text-xs font-semibold text-slate-600">Released {fmt(s.released_at)}</p>
+                                {s.admin_notes && <p className="text-sm text-slate-700 mt-1">{s.admin_notes}</p>}
+                              </div>
+                              <button
+                                onClick={() => setEditingReleased(s.id)}
+                                className="text-xs px-3 py-1.5 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors shrink-0"
+                              >
+                                Edit Result
+                              </button>
                             </div>
                           )}
                         </div>

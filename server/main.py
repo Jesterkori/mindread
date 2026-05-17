@@ -400,8 +400,8 @@ def pending_users(request: Request):
     get_admin(request)
     with db() as cur:
         cur.execute(
-            "SELECT id, name, email, category, created_at FROM users "
-            "WHERE status = 'pending' AND email_verified = TRUE ORDER BY created_at ASC"
+            "SELECT id, name, email, category, email_verified, created_at FROM users "
+            "WHERE status = 'pending' AND role != 'admin' ORDER BY created_at ASC"
         )
         rows = [_fmt(r, 'created_at') for r in _rows(cur)]
     return {'ok': True, 'users': rows}
@@ -438,7 +438,9 @@ def admin_stats(request: Request):
 def approve_user(uid: int, request: Request):
     get_admin(request)
     with db() as cur:
-        cur.execute("UPDATE users SET status = 'approved' WHERE id = %s", (uid,))
+        cur.execute(
+            "UPDATE users SET status = 'approved', email_verified = TRUE WHERE id = %s", (uid,)
+        )
     return {'ok': True}
 
 
@@ -450,6 +452,15 @@ def decline_user(uid: int, request: Request):
     return {'ok': True}
 
 
+@app.delete('/api/admin/users/{uid}')
+def delete_user(uid: int, request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute("DELETE FROM submissions WHERE user_id = %s", (uid,))
+        cur.execute("DELETE FROM users WHERE id = %s AND role != 'admin'", (uid,))
+    return {'ok': True}
+
+
 @app.post('/api/admin/release-result/{sub_id}')
 def release_result(sub_id: int, body: ReleaseBody, request: Request):
     get_admin(request)
@@ -457,6 +468,18 @@ def release_result(sub_id: int, body: ReleaseBody, request: Request):
         cur.execute(
             'UPDATE submissions SET result_released = TRUE, admin_notes = %s, '
             'ai_analysis = %s, admin_action = %s, released_at = NOW() '
+            'WHERE id = %s',
+            (body.adminNotes or None, body.aiAnalysis, body.adminAction or None, sub_id)
+        )
+    return {'ok': True}
+
+
+@app.put('/api/admin/edit-result/{sub_id}')
+def edit_result(sub_id: int, body: ReleaseBody, request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute(
+            'UPDATE submissions SET admin_notes = %s, ai_analysis = %s, admin_action = %s '
             'WHERE id = %s',
             (body.adminNotes or None, body.aiAnalysis, body.adminAction or None, sub_id)
         )
