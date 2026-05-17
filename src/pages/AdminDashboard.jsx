@@ -205,6 +205,234 @@ export default function AdminDashboard() {
 
   const answerLabel = { A: 'Rarely/Never', B: 'Sometimes', C: 'Often', D: 'Almost Always' }
 
+  const pending  = submissions
+    .filter((s) => !s.result_released)
+    .sort((a, b) => (b.safety_flag - a.safety_flag) || (new Date(b.submitted_at) - new Date(a.submitted_at)))
+  const reviewed = submissions
+    .filter((s) => s.result_released)
+    .sort((a, b) => new Date(b.released_at) - new Date(a.released_at))
+
+  function renderCard(s) {
+    const isOpen = expanded === s.id
+    const isSafe = s.safety_flag
+    return (
+      <div
+        key={s.id}
+        className={`rounded-2xl border-2 p-4 bg-white transition-all
+          ${isSafe && !s.result_released ? 'border-red-300' : 'border-slate-200'}`}
+      >
+        {/* Row summary */}
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <p className="font-semibold text-slate-800">{s.user_name}</p>
+              {isSafe && (
+                <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">
+                  ⚠️ Safety Flag
+                </span>
+              )}
+              {s.result_released && (
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+                  Released
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-slate-500">{s.user_email}</p>
+            <p className="text-xs text-slate-400 mt-0.5">
+              {categoryLabel(s.category)} &middot; {s.label} ({s.score}/{s.total}) &middot; {fmt(s.submitted_at)}
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setExpanded(isOpen ? null : s.id)
+              if (!isOpen) {
+                if (editedAnalysis[s.id] === undefined)
+                  setEditedAnalysis((a) => ({ ...a, [s.id]: s.ai_analysis ?? '' }))
+                if (editedAdminAction[s.id] === undefined)
+                  setEditedAdminAction((a) => ({ ...a, [s.id]: s.admin_action ?? '' }))
+                if (notes[s.id] === undefined)
+                  setNotes((n) => ({ ...n, [s.id]: s.admin_notes ?? '' }))
+                loadCategoryQs(s.category)
+              }
+            }}
+            className="text-sm text-blue-600 hover:underline shrink-0"
+          >
+            {isOpen ? 'Collapse' : 'View & Review'}
+          </button>
+        </div>
+
+        {/* Expanded detail */}
+        {isOpen && (
+          <div className="mt-4 pt-4 border-t border-slate-200 space-y-5">
+
+            {/* Answers */}
+            <div>
+              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">Test Answers</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
+                {Object.entries(s.answers).map(([qId, answer]) => {
+                  const q = getQuestion(s.category, qId)
+                  const isRisk = (answer === 'C' || answer === 'D') && q?.safetyQuestion
+                  return (
+                    <div
+                      key={qId}
+                      className={`rounded-xl p-2.5 text-xs border
+                        ${isRisk ? 'border-red-200 bg-red-50' : 'border-slate-100 bg-slate-50'}`}
+                    >
+                      <p className="text-slate-500 mb-1 leading-snug">{q ? q.text : `Question ${qId}`}</p>
+                      <p className={`font-semibold ${isRisk ? 'text-red-700' : 'text-slate-800'}`}>
+                        {answer} — {answerLabel[answer]}{isRisk && ' ⚠️'}
+                      </p>
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* PDF result */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">PDF Result</p>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded-full
+                  ${s.level === 'healthy' ? 'bg-green-100 text-green-700' :
+                    s.level === 'high'    ? 'bg-red-100 text-red-700' :
+                                            'bg-amber-100 text-amber-700'}`}>
+                  {s.label}
+                </span>
+                <span className="text-xs text-slate-400">{s.score}/{s.total * 4}</span>
+              </div>
+              <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-600 leading-relaxed select-text">
+                {s.action || <span className="text-slate-400 italic">No PDF result generated.</span>}
+              </div>
+            </div>
+
+            {/* Admin Answer */}
+            {!s.result_released && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                    Admin Answer <span className="text-slate-400 font-normal normal-case">(shown to user)</span>
+                  </p>
+                  {s.action && (
+                    <button
+                      type="button"
+                      onClick={() => setEditedAdminAction((a) => ({ ...a, [s.id]: s.action }))}
+                      className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-100 hover:text-blue-700 transition-colors"
+                    >
+                      ↑ Copy from PDF
+                    </button>
+                  )}
+                </div>
+                <textarea
+                  rows={3}
+                  value={editedAdminAction[s.id] ?? ''}
+                  onChange={(e) => setEditedAdminAction((a) => ({ ...a, [s.id]: e.target.value }))}
+                  placeholder="Type the result to show the user, or copy from PDF above…"
+                  className="input-field text-sm resize-y"
+                />
+              </div>
+            )}
+            {s.result_released && s.admin_action && editingReleased !== s.id && (
+              <div className="space-y-2">
+                <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                  Admin Answer <span className="text-slate-400 font-normal normal-case">(released to user)</span>
+                </p>
+                <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-600 leading-relaxed">
+                  {s.admin_action}
+                </div>
+              </div>
+            )}
+
+            {/* AI Assessment */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">AI Assessment</p>
+                {!s.ai_analysis && !s.result_released && (
+                  <span className="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">Still generating…</span>
+                )}
+              </div>
+              <textarea
+                rows={6}
+                value={editedAnalysis[s.id] ?? s.ai_analysis ?? ''}
+                onChange={(e) => setEditedAnalysis((a) => ({ ...a, [s.id]: e.target.value }))}
+                placeholder="AI analysis will appear here once generated. You can also write or edit it manually."
+                disabled={s.result_released && editingReleased !== s.id}
+                className="input-field text-sm resize-y disabled:bg-slate-50 disabled:text-slate-500"
+              />
+            </div>
+
+            {/* Release / Edit actions */}
+            {!s.result_released ? (
+              <div className="space-y-2 pt-1 border-t border-slate-100">
+                <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
+                  Personal note to user (optional)
+                </p>
+                <textarea
+                  rows={2}
+                  value={notes[s.id] || ''}
+                  onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))}
+                  placeholder="e.g. We recommend speaking with a counsellor…"
+                  className="input-field text-sm resize-none"
+                />
+                <button
+                  onClick={() => releaseResult(s.id)}
+                  disabled={busy[`release-${s.id}`]}
+                  className="btn-primary disabled:opacity-50"
+                >
+                  {busy[`release-${s.id}`] ? 'Releasing…' : 'Release Result to User'}
+                </button>
+              </div>
+            ) : editingReleased === s.id ? (
+              <div className="space-y-3 pt-1 border-t border-slate-100">
+                <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">Editing Released Result</p>
+                <div className="space-y-1">
+                  <p className="text-xs text-slate-500">Admin Answer (shown to user)</p>
+                  <textarea
+                    rows={3}
+                    value={editedAdminAction[s.id] ?? ''}
+                    onChange={(e) => setEditedAdminAction((a) => ({ ...a, [s.id]: e.target.value }))}
+                    className="input-field text-sm resize-y"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-xs text-slate-500">Personal note to user</p>
+                  <textarea
+                    rows={2}
+                    value={notes[s.id] || ''}
+                    onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))}
+                    className="input-field text-sm resize-none"
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => editResult(s.id)}
+                    disabled={busy[`edit-${s.id}`]}
+                    className="btn-primary flex-1 disabled:opacity-50"
+                  >
+                    {busy[`edit-${s.id}`] ? 'Saving…' : 'Save Changes'}
+                  </button>
+                  <button onClick={() => setEditingReleased(null)} className="btn-secondary flex-1">Cancel</button>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-semibold text-slate-600">Released {fmt(s.released_at)}</p>
+                  {s.admin_notes && <p className="text-sm text-slate-700 mt-1">{s.admin_notes}</p>}
+                </div>
+                <button
+                  onClick={() => setEditingReleased(s.id)}
+                  className="text-xs px-3 py-1.5 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors shrink-0"
+                >
+                  Edit Result
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Header */}
@@ -347,246 +575,37 @@ export default function AdminDashboard() {
                 <p className="text-slate-600 font-medium">No submissions yet</p>
               </div>
             ) : (
-              <div className="space-y-3">
-                {submissions.map((s) => {
-                  const isOpen = expanded === s.id
-                  const isSafe = s.safety_flag
+              <>
+                {/* Needs Review */}
+                <div>
+                  <div className="flex items-center gap-2 mb-3">
+                    <p className="font-semibold text-slate-800">Needs Review</p>
+                    {pending.length > 0 && (
+                      <span className={`text-xs px-2.5 py-0.5 rounded-full font-medium ${pending.some((s) => s.safety_flag) ? 'bg-red-100 text-red-700' : 'bg-blue-100 text-blue-700'}`}>
+                        {pending.length}
+                      </span>
+                    )}
+                  </div>
+                  {pending.length === 0 ? (
+                    <div className="card shadow-sm text-center py-6 text-sm text-slate-400">All assessments reviewed</div>
+                  ) : (
+                    <div className="space-y-3">{pending.map(renderCard)}</div>
+                  )}
+                </div>
 
-                  return (
-                    <div
-                      key={s.id}
-                      className={`rounded-2xl border-2 p-4 bg-white transition-all
-                        ${isSafe && !s.result_released ? 'border-red-300' : 'border-slate-200'}`}
-                    >
-                      {/* Row summary */}
-                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <p className="font-semibold text-slate-800">{s.user_name}</p>
-                            {isSafe && (
-                              <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">
-                                ⚠️ Safety Flag
-                              </span>
-                            )}
-                            {s.result_released && (
-                              <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
-                                Released
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-slate-500">{s.user_email}</p>
-                          <p className="text-xs text-slate-400 mt-0.5">
-                            {categoryLabel(s.category)} &middot; {s.label} ({s.score}/{s.total}) &middot; {fmt(s.submitted_at)}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => {
-                            setExpanded(isOpen ? null : s.id)
-                            if (!isOpen) {
-                              if (editedAnalysis[s.id] === undefined)
-                                setEditedAnalysis((a) => ({ ...a, [s.id]: s.ai_analysis ?? '' }))
-                              if (editedAdminAction[s.id] === undefined)
-                                setEditedAdminAction((a) => ({ ...a, [s.id]: s.admin_action ?? '' }))
-                              if (notes[s.id] === undefined)
-                                setNotes((n) => ({ ...n, [s.id]: s.admin_notes ?? '' }))
-                              loadCategoryQs(s.category)
-                            }
-                          }}
-                          className="text-sm text-blue-600 hover:underline shrink-0"
-                        >
-                          {isOpen ? 'Collapse' : 'View & Release'}
-                        </button>
-                      </div>
-
-                      {/* Expanded: answers + results + release */}
-                      {isOpen && (
-                        <div className="mt-4 pt-4 border-t border-slate-200 space-y-5">
-
-                          {/* 1. Answers */}
-                          <div>
-                            <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-2">
-                              Test Answers
-                            </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
-                              {Object.entries(s.answers).map(([qId, answer]) => {
-                                const q = getQuestion(s.category, qId)
-                                const isRisk = (answer === 'C' || answer === 'D') && q?.safetyQuestion
-                                return (
-                                  <div
-                                    key={qId}
-                                    className={`rounded-xl p-2.5 text-xs border
-                                      ${isRisk ? 'border-red-200 bg-red-50' : 'border-slate-100 bg-slate-50'}`}
-                                  >
-                                    <p className="text-slate-500 mb-1 leading-snug">
-                                      {q ? q.text : `Question ${qId}`}
-                                    </p>
-                                    <p className={`font-semibold ${isRisk ? 'text-red-700' : 'text-slate-800'}`}>
-                                      {answer} — {answerLabel[answer]}{isRisk && ' ⚠️'}
-                                    </p>
-                                  </div>
-                                )
-                              })}
-                            </div>
-                          </div>
-
-                          {/* 2. PDF result — read-only reference */}
-                          <div className="space-y-2">
-                            <div className="flex items-center gap-2">
-                              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                                PDF Result
-                              </p>
-                              <span className={`text-xs font-bold px-2 py-0.5 rounded-full
-                                ${s.level === 'healthy' ? 'bg-green-100 text-green-700' :
-                                  s.level === 'high'    ? 'bg-red-100 text-red-700' :
-                                                          'bg-amber-100 text-amber-700'}`}>
-                                {s.label}
-                              </span>
-                              <span className="text-xs text-slate-400">{s.score}/{s.total * 4}</span>
-                            </div>
-                            <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-600 leading-relaxed select-text">
-                              {s.action || <span className="text-slate-400 italic">No PDF result generated.</span>}
-                            </div>
-                          </div>
-
-                          {/* 3. Admin Answer — what the user sees */}
-                          {!s.result_released && (
-                            <div className="space-y-2">
-                              <div className="flex items-center justify-between">
-                                <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                                  Admin Answer <span className="text-slate-400 font-normal normal-case">(shown to user)</span>
-                                </p>
-                                {s.action && (
-                                  <button
-                                    type="button"
-                                    onClick={() => setEditedAdminAction((a) => ({ ...a, [s.id]: s.action }))}
-                                    className="text-xs px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 hover:bg-blue-100 hover:text-blue-700 transition-colors"
-                                  >
-                                    ↑ Copy from PDF
-                                  </button>
-                                )}
-                              </div>
-                              <textarea
-                                rows={3}
-                                value={editedAdminAction[s.id] ?? ''}
-                                onChange={(e) => setEditedAdminAction((a) => ({ ...a, [s.id]: e.target.value }))}
-                                placeholder="Type the result to show the user, or copy from PDF above…"
-                                className="input-field text-sm resize-y"
-                              />
-                            </div>
-                          )}
-                          {s.result_released && s.admin_action && (
-                            <div className="space-y-2">
-                              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                                Admin Answer <span className="text-slate-400 font-normal normal-case">(released to user)</span>
-                              </p>
-                              <div className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-600 leading-relaxed">
-                                {s.admin_action}
-                              </div>
-                            </div>
-                          )}
-
-                          {/* AI analysis */}
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                                AI Assessment
-                              </p>
-                              {!s.ai_analysis && !s.result_released && (
-                                <span className="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full">
-                                  Still generating…
-                                </span>
-                              )}
-                            </div>
-                            <textarea
-                              rows={6}
-                              value={editedAnalysis[s.id] ?? s.ai_analysis ?? ''}
-                              onChange={(e) => setEditedAnalysis((a) => ({ ...a, [s.id]: e.target.value }))}
-                              placeholder="AI analysis will appear here once generated. You can also write or edit it manually."
-                              disabled={s.result_released && editingReleased !== s.id}
-                              className="input-field text-sm resize-y disabled:bg-slate-50 disabled:text-slate-500"
-                            />
-                          </div>
-
-                          {/* Release / Edit */}
-                          {!s.result_released ? (
-                            <div className="space-y-2 pt-1 border-t border-slate-100">
-                              <p className="text-xs font-semibold text-slate-600 uppercase tracking-wide">
-                                Personal note to user (optional)
-                              </p>
-                              <textarea
-                                rows={2}
-                                value={notes[s.id] || ''}
-                                onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))}
-                                placeholder="e.g. We recommend speaking with a counsellor…"
-                                className="input-field text-sm resize-none"
-                              />
-                              <button
-                                onClick={() => releaseResult(s.id)}
-                                disabled={busy[`release-${s.id}`]}
-                                className="btn-primary disabled:opacity-50"
-                              >
-                                {busy[`release-${s.id}`] ? 'Releasing…' : 'Release Result to User'}
-                              </button>
-                            </div>
-                          ) : editingReleased === s.id ? (
-                            <div className="space-y-3 pt-1 border-t border-slate-100">
-                              <p className="text-xs font-semibold text-amber-700 uppercase tracking-wide">
-                                Editing Released Result
-                              </p>
-                              <div className="space-y-1">
-                                <p className="text-xs text-slate-500">Admin Answer (shown to user)</p>
-                                <textarea
-                                  rows={3}
-                                  value={editedAdminAction[s.id] ?? ''}
-                                  onChange={(e) => setEditedAdminAction((a) => ({ ...a, [s.id]: e.target.value }))}
-                                  className="input-field text-sm resize-y"
-                                />
-                              </div>
-                              <div className="space-y-1">
-                                <p className="text-xs text-slate-500">Personal note to user</p>
-                                <textarea
-                                  rows={2}
-                                  value={notes[s.id] || ''}
-                                  onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))}
-                                  className="input-field text-sm resize-none"
-                                />
-                              </div>
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={() => editResult(s.id)}
-                                  disabled={busy[`edit-${s.id}`]}
-                                  className="btn-primary flex-1 disabled:opacity-50"
-                                >
-                                  {busy[`edit-${s.id}`] ? 'Saving…' : 'Save Changes'}
-                                </button>
-                                <button
-                                  onClick={() => setEditingReleased(null)}
-                                  className="btn-secondary flex-1"
-                                >
-                                  Cancel
-                                </button>
-                              </div>
-                            </div>
-                          ) : (
-                            <div className="bg-slate-50 rounded-xl p-3 border border-slate-200 flex items-start justify-between gap-3">
-                              <div>
-                                <p className="text-xs font-semibold text-slate-600">Released {fmt(s.released_at)}</p>
-                                {s.admin_notes && <p className="text-sm text-slate-700 mt-1">{s.admin_notes}</p>}
-                              </div>
-                              <button
-                                onClick={() => setEditingReleased(s.id)}
-                                className="text-xs px-3 py-1.5 rounded-lg bg-amber-100 text-amber-700 hover:bg-amber-200 transition-colors shrink-0"
-                              >
-                                Edit Result
-                              </button>
-                            </div>
-                          )}
-                        </div>
-                      )}
+                {/* Reviewed */}
+                {reviewed.length > 0 && (
+                  <div className="pt-4 border-t-2 border-slate-200">
+                    <div className="flex items-center gap-2 mb-3">
+                      <p className="font-semibold text-slate-800">Reviewed</p>
+                      <span className="text-xs bg-green-100 text-green-700 px-2.5 py-0.5 rounded-full font-medium">
+                        {reviewed.length}
+                      </span>
                     </div>
-                  )
-                })}
-              </div>
+                    <div className="space-y-3">{reviewed.map(renderCard)}</div>
+                  </div>
+                )}
+              </>
             )}
           </>
         )}
