@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const axios = require('axios');
 const pool = require('../db/connection');
 const { sendOTP } = require('../utils/mailer');
 
@@ -12,29 +11,10 @@ function makeOTP() {
 
 // POST /api/auth/register
 router.post('/register', async (req, res) => {
-  const { name, email, password, category, captchaToken } = req.body;
+  const { name, email, password, category } = req.body;
 
-  if (!name || !email || !password || !category || !captchaToken) {
+  if (!name || !email || !password || !category) {
     return res.status(400).json({ error: 'All fields are required.' });
-  }
-
-  // Verify reCAPTCHA
-  try {
-    const captchaRes = await axios.post(
-      'https://www.google.com/recaptcha/api/siteverify',
-      null,
-      {
-        params: {
-          secret: process.env.RECAPTCHA_SECRET,
-          response: captchaToken,
-        },
-      }
-    );
-    if (!captchaRes.data.success) {
-      return res.status(400).json({ error: 'CAPTCHA verification failed. Please try again.' });
-    }
-  } catch {
-    return res.status(500).json({ error: 'Could not verify CAPTCHA.' });
   }
 
   // Check duplicate email (check both users and pending otp_pending users)
