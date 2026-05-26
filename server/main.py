@@ -1,3 +1,5 @@
+import csv
+import io
 import json
 import os
 import random
@@ -11,7 +13,7 @@ from dotenv import load_dotenv
 from fastapi import BackgroundTasks, FastAPI, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from fastapi.staticfiles import StaticFiles
 from jose import JWTError, jwt
 from pydantic import BaseModel
@@ -201,6 +203,7 @@ class RegisterBody(BaseModel):
     email: str
     password: str
     category: str
+    institution: Optional[str] = None
     captchaToken: Optional[str] = None
 
 class VerifyOtpBody(BaseModel):
@@ -225,6 +228,7 @@ class SubmitBody(BaseModel):
     label: str
     action: str
     safety_flag: bool = False
+    section: Optional[str] = None
 
 class ReleaseBody(BaseModel):
     adminNotes: Optional[str] = None
@@ -280,10 +284,11 @@ def register(body: RegisterBody):
             raise HTTPException(400, 'Email already registered.')
 
         hashed = bcrypt.hashpw(body.password.encode(), bcrypt.gensalt()).decode()
+        institution = body.institution if body.institution and body.institution != 'none' else None
         cur.execute(
-            'INSERT INTO users (name, email, password, category, email_verified, status) '
-            'VALUES (%s,%s,%s,%s,TRUE,%s)',
-            (body.name, body.email, hashed, body.category, 'pending')
+            'INSERT INTO users (name, email, password, category, institution, email_verified, status) '
+            'VALUES (%s,%s,%s,%s,%s,TRUE,%s)',
+            (body.name, body.email, hashed, body.category, institution, 'pending')
         )
 
     return {'ok': True}
@@ -293,7 +298,7 @@ def register(body: RegisterBody):
 def login(body: LoginBody):
     with db() as cur:
         cur.execute(
-            'SELECT id, name, email, password, role, category, email_verified, status '
+            'SELECT id, name, email, password, role, category, institution, email_verified, status '
             'FROM users WHERE email = %s',
             (body.email,)
         )
@@ -302,7 +307,7 @@ def login(body: LoginBody):
     if not row:
         raise HTTPException(400, 'Invalid email or password.')
 
-    uid, name, email, pw_hash, role, category, email_verified, status = row
+    uid, name, email, pw_hash, role, category, institution, email_verified, status = row
 
     if not email_verified:
         raise HTTPException(400, 'Please verify your email first.')
@@ -313,7 +318,7 @@ def login(body: LoginBody):
     if not bcrypt.checkpw(body.password.encode(), pw_hash.encode()):
         raise HTTPException(400, 'Invalid email or password.')
 
-    payload = {'id': uid, 'name': name, 'email': email, 'role': role, 'category': category}
+    payload = {'id': uid, 'name': name, 'email': email, 'role': role, 'category': category, 'institution': institution}
     return {'token': make_token(payload), 'user': payload}
 
 
@@ -328,10 +333,11 @@ async def submit(body: SubmitBody, request: Request, background_tasks: Backgroun
         name, email = cur.fetchone()
         cur.execute(
             'INSERT INTO submissions '
-            '(user_id, user_name, user_email, category, answers, score, total, level, label, action, safety_flag) '
-            'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id',
+            '(user_id, user_name, user_email, category, answers, score, total, level, label, action, safety_flag, section) '
+            'VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) RETURNING id',
             (user['id'], name, email, body.category, json.dumps(body.answers),
-             body.score, body.total, body.level, body.label, body.action, body.safety_flag)
+             body.score, body.total, body.level, body.label, body.action, body.safety_flag,
+             body.section or None)
         )
         submission_id = cur.fetchone()[0]
 
@@ -365,7 +371,7 @@ def pending_users(request: Request):
     get_admin(request)
     with db() as cur:
         cur.execute(
-            "SELECT id, name, email, category, email_verified, created_at FROM users "
+            "SELECT id, name, email, category, institution, email_verified, created_at FROM users "
             "WHERE status = 'pending' AND role != 'admin' ORDER BY created_at ASC"
         )
         rows = [_fmt(r, 'created_at') for r in _rows(cur)]
@@ -377,13 +383,65 @@ def admin_submissions(request: Request):
     get_admin(request)
     with db() as cur:
         cur.execute(
-            'SELECT id, user_id, user_name, user_email, category, answers, score, total, '
-            'level, label, action, admin_action, safety_flag, ai_analysis, result_released, '
-            'admin_notes, released_at, submitted_at '
-            'FROM submissions ORDER BY safety_flag DESC, submitted_at DESC'
+            'SELECT s.id, s.user_id, s.user_name, s.user_email, s.category, s.answers, s.score, s.total, '
+            's.level, s.label, s.action, s.admin_action, s.safety_flag, s.ai_analysis, s.result_released, '
+            's.admin_notes, s.released_at, s.submitted_at, s.section, u.institution '
+            'FROM submissions s LEFT JOIN users u ON s.user_id = u.id '
+            'ORDER BY s.safety_flag DESC, s.submitted_at DESC'
         )
         rows = [_fmt(r, 'released_at', 'submitted_at') for r in _rows(cur)]
     return {'ok': True, 'submissions': rows}
+
+
+@app.get('/api/admin/export/csv')
+def export_csv(request: Request, institution: Optional[str] = None, section: Optional[str] = None):
+    get_admin(request)
+    query = (
+        'SELECT s.id, s.user_name, s.user_email, u.institution, s.section, s.category, '
+        's.score, s.total, s.level, s.label, s.safety_flag, s.result_released, s.submitted_at '
+        'FROM submissions s LEFT JOIN users u ON s.user_id = u.id WHERE 1=1'
+    )
+    params: list = []
+    if institution:
+        query += ' AND u.institution = %s'
+        params.append(institution)
+    if section:
+        query += ' AND s.section = %s'
+        params.append(section)
+    query += ' ORDER BY s.submitted_at DESC'
+
+    with db() as cur:
+        cur.execute(query, params)
+        rows = _rows(cur)
+
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(['ID', 'Name', 'Email', 'Institution', 'Section', 'Category',
+                     'Score', 'Max Score', 'Level', 'Result', 'Safety Flag', 'Released', 'Date'])
+    for r in rows:
+        writer.writerow([
+            r['id'], r['user_name'], r['user_email'],
+            r.get('institution') or '', r.get('section') or '',
+            r['category'], r['score'], r['total'] * 4,
+            r['level'], r['label'],
+            'Yes' if r['safety_flag'] else 'No',
+            'Yes' if r['result_released'] else 'No',
+            r['submitted_at'] or '',
+        ])
+
+    fname = 'mindcheck'
+    if institution:
+        fname += f'_{institution.replace(" ", "_")}'
+    if section:
+        fname += f'_{section.replace(" ", "_")}'
+    fname += '_results.csv'
+
+    output.seek(0)
+    return StreamingResponse(
+        iter([output.getvalue()]),
+        media_type='text/csv',
+        headers={'Content-Disposition': f'attachment; filename="{fname}"'},
+    )
 
 
 @app.get('/api/admin/stats')

@@ -10,9 +10,14 @@ const CARD_COLORS = {
   older:         { border: '#a855f7', bg: 'rgba(168,85,247,0.12)',  icon: '🌟' },
 }
 
+const INSTITUTIONS = [
+  { value: 'none',        label: 'None — Individual / Independent' },
+  { value: 'PES College', label: 'PES College (PES University)' },
+]
+
 export default function Register() {
   const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', category: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', category: '', institution: 'none' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
@@ -36,10 +41,11 @@ export default function Register() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: form.name.trim(),
-          email: form.email.trim().toLowerCase(),
-          password: form.password,
-          category: form.category,
+          name:        form.name.trim(),
+          email:       form.email.trim().toLowerCase(),
+          password:    form.password,
+          category:    form.category,
+          institution: form.institution === 'none' ? null : form.institution,
         }),
       })
       const data = await res.json()
@@ -138,9 +144,31 @@ export default function Register() {
               </div>
             ))}
 
+            {/* Institution */}
+            <div>
+              <p className="text-sm font-medium text-white/70 mb-2">Are you part of an institution?</p>
+              <div className="grid grid-cols-1 gap-2">
+                {INSTITUTIONS.map(inst => {
+                  const sel = form.institution === inst.value
+                  return (
+                    <label key={inst.value} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
+                      style={{
+                        border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
+                        background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
+                      }}>
+                      <input type="radio" name="institution" value={inst.value} checked={sel} onChange={handleChange} className="sr-only"/>
+                      <span className="text-lg">{inst.value === 'none' ? '👤' : '🏫'}</span>
+                      <span className="text-sm font-medium text-white/85">{inst.label}</span>
+                      {sel && <span className="ml-auto text-xs font-bold text-green-400">✓</span>}
+                    </label>
+                  )
+                })}
+              </div>
+            </div>
+
             {/* Category */}
             <div>
-              <label className="block text-sm font-medium text-white/70 mb-2">Select your category</label>
+              <p className="text-sm font-medium text-white/70 mb-2">Select your category</p>
               <div className="grid grid-cols-1 gap-2 max-h-52 overflow-y-auto pr-1">
                 {CATEGORIES.map(cat => {
                   const meta = CARD_COLORS[cat.id] ?? { border: '#60a5fa', bg: 'rgba(96,165,250,0.12)', icon: cat.icon }

@@ -2,6 +2,21 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/questions'
 import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar'
+
+const PES_SECTIONS = [
+  '1st Year — A', '1st Year — B', '1st Year — C', '1st Year — D',
+  'CSE — A', 'CSE — B', 'CSE — C', 'CSE — D',
+  'ISE — A', 'ISE — B',
+  'ECE — A', 'ECE — B', 'ECE — C',
+  'EEE — A', 'EEE — B',
+  'ME — A', 'ME — B',
+  'Civil',
+  'MBA — A', 'MBA — B',
+  'MCA — A', 'MCA — B',
+  'PhD',
+  'Other',
+]
 
 function dbRowToQuestion(row) {
   return {
@@ -14,18 +29,25 @@ function dbRowToQuestion(row) {
   }
 }
 
+const bgStyle = { background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }
+
 export default function Questionnaire() {
-  const { user, logout, authHeader } = useAuth()
+  const { user, authHeader } = useAuth()
   const navigate = useNavigate()
 
   const categoryId = user?.category
   const category   = CATEGORIES.find((c) => c.id === categoryId)
 
-  const [questions, setQuestions]           = useState(null)
-  const [current, setCurrent]               = useState(0)
-  const [answers, setAnswers]               = useState({})
+  const [questions, setQuestions]             = useState(null)
+  const [current, setCurrent]                 = useState(0)
+  const [answers, setAnswers]                 = useState({})
   const [submitAttempted, setSubmitAttempted] = useState(false)
-  const [submitting, setSubmitting]         = useState(false)
+  const [submitting, setSubmitting]           = useState(false)
+
+  // Section selection (for institution users)
+  const [section, setSection]           = useState('')
+  const [sectionConfirmed, setSectionConfirmed] = useState(false)
+  const needsSection = !!(user?.institution) && user.institution !== 'none'
 
   useEffect(() => {
     if (!categoryId) { navigate('/dashboard', { replace: true }); return }
@@ -42,21 +64,88 @@ export default function Questionnaire() {
 
   if (!categoryId || questions === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={bgStyle}>
+        <div className="w-8 h-8 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
       </div>
     )
   }
 
   if (questions.length === 0) return null
 
+  // ── Section picker screen ─────────────────────────────────────────────────
+  if (needsSection && !sectionConfirmed) {
+    return (
+      <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
+        <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.05, pointerEvents: 'none' }}>
+          <defs>
+            <pattern id="circ-q" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+              <path d="M15 60 H45 M45 60 V25 M45 25 H80 M80 25 V60 M80 60 H105" stroke="#4ade80" strokeWidth="1" fill="none"/>
+              <circle cx="45" cy="60" r="3" fill="#4ade80"/><circle cx="80" cy="25" r="3" fill="#4ade80"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#circ-q)"/>
+        </svg>
+        <Navbar />
+        <div className="relative z-10 max-w-lg mx-auto px-4 pt-28 pb-12">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
+              style={{ background: 'rgba(74,222,128,0.15)', border: '1.5px solid rgba(74,222,128,0.3)' }}>
+              <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+              </svg>
+            </div>
+            <h1 className="text-2xl font-extrabold text-white">Select Your Section</h1>
+            <p className="text-white/50 text-sm mt-2">
+              {user.institution} · Choose your class section before starting the assessment.
+            </p>
+          </div>
+
+          <div className="rounded-2xl p-6"
+            style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
+            <p className="text-sm font-medium text-white/70 mb-3">Your section</p>
+            <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
+              {PES_SECTIONS.map((s) => {
+                const sel = section === s
+                return (
+                  <button
+                    key={s}
+                    type="button"
+                    onClick={() => setSection(s)}
+                    className="px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all"
+                    style={{
+                      background: sel ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.05)',
+                      border: `1.5px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.1)'}`,
+                      color: sel ? '#4ade80' : 'rgba(255,255,255,0.7)',
+                    }}
+                  >
+                    {s}
+                  </button>
+                )
+              })}
+            </div>
+
+            <button
+              onClick={() => { if (section) setSectionConfirmed(true) }}
+              disabled={!section}
+              className="mt-5 w-full py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95 disabled:opacity-40"
+              style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}
+            >
+              {section ? `Continue with ${section}` : 'Select a section to continue'}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── Assessment screen ──────────────────────────────────────────────────────
   const question       = questions[current]
   const totalQuestions = questions.length
   const progress       = ((current + 1) / totalQuestions) * 100
   const answeredCount  = Object.keys(answers).length
   const isLast         = current === totalQuestions - 1
 
-  const prevPart      = current > 0 ? questions[current - 1].part : null
+  const prevPart       = current > 0 ? questions[current - 1].part : null
   const showPartHeader = question.part !== prevPart
 
   function selectAnswer(value) {
@@ -92,6 +181,7 @@ export default function Questionnaire() {
           label:       result.label,
           action:      result.action,
           safety_flag: result.safetyFlag,
+          section:     section || null,
         }),
       })
     } catch {
@@ -106,37 +196,44 @@ export default function Questionnaire() {
   const currentAnswer = answers[question.id]
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 px-4 py-8">
-      {/* Header */}
-      <header className="max-w-2xl mx-auto flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-sm">
-            <span className="text-lg">🧠</span>
-          </div>
-          <div>
-            <p className="font-semibold text-slate-800 text-sm leading-tight">MindCheck</p>
-            <p className="text-xs text-slate-500">{category?.label} Assessment</p>
-          </div>
-        </div>
-        <button
-          onClick={() => { logout(); navigate('/login', { replace: true }) }}
-          className="text-sm text-slate-400 hover:text-red-500 transition-colors"
-        >
-          Sign out
-        </button>
-      </header>
+    <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
+      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.05, pointerEvents: 'none' }}>
+        <defs>
+          <pattern id="circ-qa" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+            <path d="M15 60 H45 M45 60 V25 M45 25 H80 M80 25 V60 M80 60 H105" stroke="#4ade80" strokeWidth="1" fill="none"/>
+            <circle cx="45" cy="60" r="3" fill="#4ade80"/><circle cx="80" cy="25" r="3" fill="#4ade80"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#circ-qa)"/>
+      </svg>
 
-      <div className="max-w-2xl mx-auto">
+      <Navbar />
+
+      <div className="relative z-10 max-w-2xl mx-auto px-4 pt-24 pb-12">
+        {/* Section / category badge */}
+        <div className="flex items-center gap-2 mb-4 flex-wrap">
+          <span className="text-xs font-semibold px-3 py-1 rounded-full"
+            style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.3)' }}>
+            {category?.label} Assessment
+          </span>
+          {section && (
+            <span className="text-xs font-semibold px-3 py-1 rounded-full"
+              style={{ background: 'rgba(96,165,250,0.15)', color: '#93c5fd', border: '1px solid rgba(96,165,250,0.3)' }}>
+              {section}
+            </span>
+          )}
+        </div>
+
         {/* Progress */}
         <div className="mb-6">
-          <div className="flex justify-between text-xs text-slate-500 mb-2">
+          <div className="flex justify-between text-xs text-white/45 mb-2">
             <span>Question {current + 1} of {totalQuestions}</span>
             <span>{answeredCount} answered</span>
           </div>
-          <div className="h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.1)' }}>
             <div
-              className="h-full bg-blue-500 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
+              className="h-full rounded-full transition-all duration-300"
+              style={{ width: `${progress}%`, background: 'linear-gradient(90deg,#22c55e,#0d9488)' }}
             />
           </div>
         </div>
@@ -144,46 +241,51 @@ export default function Questionnaire() {
         {/* Part label */}
         {showPartHeader && (
           <div className="mb-3">
-            <span className="inline-block text-xs font-semibold text-blue-600 bg-blue-100 rounded-full px-3 py-1 tracking-wide uppercase">
+            <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide"
+              style={{ background: 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
               {question.part}
             </span>
           </div>
         )}
 
         {/* Question card */}
-        <div className="card shadow-sm mb-4">
-          <p className="text-xs font-medium text-slate-400 uppercase tracking-widest mb-3">
+        <div className="rounded-2xl p-6 mb-4"
+          style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
+          <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3">
             Q{question.id}
           </p>
-          <p className="text-slate-800 font-medium text-lg leading-relaxed mb-5">
+          <p className="text-white font-medium text-lg leading-relaxed mb-5">
             {question.text}
           </p>
 
           {/* Answer options */}
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {ANSWER_OPTIONS.map((opt) => {
               const selected = currentAnswer === opt.value
               return (
                 <button
                   key={opt.value}
                   onClick={() => selectAnswer(opt.value)}
-                  className={`w-full flex items-center gap-4 px-5 py-4 rounded-xl border-2 text-left
-                    transition-all duration-150 active:scale-[0.98]
-                    ${selected
-                      ? 'border-blue-500 bg-blue-50 text-blue-800'
-                      : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300 hover:bg-blue-50/50'
-                    }`}
+                  className="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-150 active:scale-[0.98]"
+                  style={{
+                    background: selected ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
+                    border: `2px solid ${selected ? 'rgba(74,222,128,0.6)' : 'rgba(255,255,255,0.1)'}`,
+                  }}
                 >
                   <span
-                    className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center
-                      text-sm font-bold transition-colors
-                      ${selected ? 'bg-blue-500 text-white' : 'bg-slate-100 text-slate-500'}`}
+                    className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors"
+                    style={{
+                      background: selected ? 'rgba(74,222,128,0.8)' : 'rgba(255,255,255,0.08)',
+                      color: selected ? '#0c1f3a' : 'rgba(255,255,255,0.5)',
+                    }}
                   >
                     {opt.value}
                   </span>
-                  <span className="font-medium">{opt.label}</span>
+                  <span className="font-medium" style={{ color: selected ? '#4ade80' : 'rgba(255,255,255,0.75)' }}>
+                    {opt.label}
+                  </span>
                   {selected && (
-                    <svg className="ml-auto w-5 h-5 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="ml-auto w-5 h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                   )}
@@ -193,7 +295,7 @@ export default function Questionnaire() {
           </div>
 
           {/* Indicator hint */}
-          <div className="mt-5 flex items-start gap-2 text-xs text-slate-400">
+          <div className="mt-5 flex items-start gap-2 text-xs text-white/30">
             <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
@@ -203,7 +305,8 @@ export default function Questionnaire() {
 
         {/* Unanswered warning */}
         {submitAttempted && answeredCount < totalQuestions && (
-          <div className="mb-4 bg-amber-50 border border-amber-200 text-amber-700 rounded-xl px-4 py-3 text-sm">
+          <div className="mb-4 rounded-xl px-4 py-3 text-sm"
+            style={{ background: 'rgba(251,191,36,0.1)', border: '1px solid rgba(251,191,36,0.3)', color: '#fbbf24' }}>
             Please answer all {totalQuestions} questions before submitting.
             You have {totalQuestions - answeredCount} unanswered.
           </div>
@@ -214,7 +317,8 @@ export default function Questionnaire() {
           <button
             onClick={handlePrev}
             disabled={current === 0}
-            className="btn-secondary flex-1 disabled:opacity-40"
+            className="flex-1 py-3 rounded-xl font-semibold text-sm transition-all disabled:opacity-30"
+            style={{ background: 'rgba(255,255,255,0.08)', border: '1.5px solid rgba(255,255,255,0.12)', color: 'rgba(255,255,255,0.7)' }}
           >
             ← Previous
           </button>
@@ -223,12 +327,17 @@ export default function Questionnaire() {
             <button
               onClick={handleSubmit}
               disabled={submitting}
-              className="btn-primary flex-1 disabled:opacity-60"
+              className="flex-1 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95 disabled:opacity-60"
+              style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}
             >
               {submitting ? 'Submitting…' : 'Submit Assessment'}
             </button>
           ) : (
-            <button onClick={handleNext} className="btn-primary flex-1">
+            <button
+              onClick={handleNext}
+              className="flex-1 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
+              style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}
+            >
               Next →
             </button>
           )}
@@ -237,17 +346,19 @@ export default function Questionnaire() {
         {/* Jump to unanswered */}
         {submitAttempted && answeredCount < totalQuestions && (
           <div className="mt-4 flex flex-wrap gap-2">
-            {questions.map((q, idx) =>
-              !answers[q.id] ? (
+            {questions
+              .filter((q) => !answers[q.id])
+              .map((q, idx) => (
                 <button
                   key={q.id}
-                  onClick={() => setCurrent(idx)}
-                  className="text-xs px-3 py-1.5 bg-amber-100 text-amber-700 border border-amber-200 rounded-lg hover:bg-amber-200 transition-colors"
+                  onClick={() => setCurrent(questions.indexOf(q))}
+                  className="text-xs px-3 py-1.5 rounded-lg transition-colors"
+                  style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
                 >
                   Q{q.id}
                 </button>
-              ) : null
-            )}
+              ))
+            }
           </div>
         )}
       </div>
