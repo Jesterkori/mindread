@@ -470,6 +470,17 @@ def delete_user(uid: int, request: Request):
     return {'ok': True}
 
 
+@app.delete('/api/admin/wipe-pending')
+def wipe_pending_users(request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute(
+            "DELETE FROM users WHERE role = 'user' AND (status = 'pending' OR email_verified = FALSE)"
+        )
+        deleted = cur.rowcount
+    return {'ok': True, 'deleted': deleted}
+
+
 @app.post('/api/admin/release-result/{sub_id}')
 def release_result(sub_id: int, body: ReleaseBody, request: Request):
     get_admin(request)
