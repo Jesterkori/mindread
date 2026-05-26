@@ -2,25 +2,24 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-/* Preflex Solutions dot-sphere logo recreated in SVG */
+/* Preflex Solutions dot-globe logo — dots on transparent, no solid fill */
 function PreflexLogo({ size = 36 }) {
+  // Dots arranged in concentric rings to approximate the Preflex sphere mark
+  const outer = [
+    [20,3],[27,6],[33,12],[36,20],[33,28],[27,34],[20,37],[13,34],[7,28],[4,20],[7,12],[13,6],
+  ]
+  const mid = [
+    [20,9],[25,11],[29,17],[29,23],[25,29],[20,31],[15,29],[11,23],[11,17],[15,11],
+  ]
+  const inner = [
+    [20,15],[24,18],[25,22],[22,26],[17,26],[15,22],[15,18],
+  ]
   return (
     <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-      <circle cx="20" cy="20" r="19" fill="url(#pg)" />
-      <defs>
-        <radialGradient id="pg" cx="35%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#f87171" />
-          <stop offset="100%" stopColor="#dc2626" />
-        </radialGradient>
-      </defs>
-      {/* dot grid pattern */}
-      {[
-        [12,12],[18,10],[24,12],[28,17],[27,23],[22,27],[16,27],[11,23],[11,17],
-        [20,20],[15,20],[25,20],[20,15],[20,25],
-      ].map(([cx, cy], i) => (
-        <circle key={i} cx={cx} cy={cy} r={1.8}
-          fill="white" opacity={i < 9 ? 0.9 : 0.6} />
-      ))}
+      {outer.map(([cx,cy],i) => <circle key={`o${i}`} cx={cx} cy={cy} r={2.1} fill="#dc2626" opacity="0.9"/>)}
+      {mid.map(([cx,cy],i)   => <circle key={`m${i}`} cx={cx} cy={cy} r={1.7} fill="#e11d48" opacity="0.85"/>)}
+      {inner.map(([cx,cy],i) => <circle key={`i${i}`} cx={cx} cy={cy} r={1.3} fill="#f43f5e" opacity="0.8"/>)}
+      <circle cx="20" cy="20" r="1.9" fill="#dc2626" opacity="0.9"/>
     </svg>
   )
 }

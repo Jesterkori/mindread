@@ -59,7 +59,12 @@ function GlassSelect({ children, className = '', style = {}, ...props }) {
     <select
       {...props}
       className={className}
-      style={{ ...glassInput, ...style }}
+      style={{
+        ...glassInput,
+        background: 'rgb(10,30,60)',   // solid dark so options are readable
+        colorScheme: 'dark',
+        ...style,
+      }}
     >
       {children}
     </select>
@@ -268,42 +273,94 @@ export default function AdminDashboard() {
       })
   }
 
-  // ── PDF print window ──────────────────────────────────────────────────────
+  // ── PDF print window — full individual reports ────────────────────────────
   function printPDF() {
     const filtered = filteredSubs
     const title = [filterInstitution, filterSection].filter(Boolean).join(' — ') || 'All Submissions'
-    const rows = filtered.map((s) => `
-      <tr>
-        <td>${s.user_name}</td>
-        <td>${s.user_email}</td>
-        <td>${s.institution || '—'}</td>
-        <td>${s.section || '—'}</td>
-        <td>${categoryLabel(s.category)}</td>
-        <td>${s.score}/${s.total * 4}</td>
-        <td>${s.label}</td>
-        <td>${s.safety_flag ? '⚠️ Yes' : 'No'}</td>
-        <td>${s.result_released ? 'Released' : 'Pending'}</td>
-        <td>${fmt(s.submitted_at)}</td>
-      </tr>`).join('')
+
+    function esc(s) {
+      return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    }
+
+    const cards = filtered.map((s, idx) => {
+      const levelColor = s.level === 'healthy' ? '#16a34a' : s.level === 'high' ? '#dc2626' : '#d97706'
+      const answers = Object.entries(s.answers ?? {}).map(([qId, ans]) => {
+        const ansLabel = { A:'Rarely/Never', B:'Sometimes', C:'Often', D:'Almost Always' }
+        return `<span class="ans-chip">${esc(qId)}: <b>${esc(ans)}</b> — ${ansLabel[ans] || ans}</span>`
+      }).join('')
+
+      return `
+      <div class="card" style="page-break-inside:avoid;border:1px solid #e2e8f0;border-radius:10px;padding:20px;margin-bottom:24px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+          <div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span style="font-size:16px;font-weight:700;color:#0f172a">${idx + 1}. ${esc(s.user_name)}</span>
+              <span style="background:${levelColor};color:white;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">${esc(s.label)}</span>
+              ${s.safety_flag ? '<span style="background:#dc2626;color:white;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">⚠️ Safety Flag</span>' : ''}
+              ${s.result_released ? '<span style="background:#15803d;color:white;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">Released</span>' : '<span style="background:#1d4ed8;color:white;font-size:11px;padding:2px 10px;border-radius:20px">Under Review</span>'}
+            </div>
+            <p style="color:#475569;font-size:12px;margin:4px 0 0">${esc(s.user_email)}</p>
+            <p style="color:#64748b;font-size:12px;margin:2px 0 0">
+              ${esc(categoryLabel(s.category))}
+              ${s.institution ? ` &middot; ${esc(s.institution)}` : ''}
+              ${s.section ? ` &middot; Section: ${esc(s.section)}` : ''}
+              &middot; Score: ${s.score}/${s.total * 4}
+              &middot; ${fmt(s.submitted_at)}
+            </p>
+          </div>
+        </div>
+
+        ${answers ? `
+        <div style="margin-bottom:12px">
+          <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px">Answers</p>
+          <div style="display:flex;flex-wrap:wrap;gap:4px">${answers}</div>
+        </div>` : ''}
+
+        ${s.action ? `
+        <div style="margin-bottom:12px">
+          <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">PDF Result</p>
+          <p style="font-size:13px;color:#1e293b;line-height:1.5;background:#f8fafc;padding:10px;border-radius:6px;margin:0">${esc(s.action)}</p>
+        </div>` : ''}
+
+        ${s.admin_action ? `
+        <div style="margin-bottom:12px">
+          <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">Admin Answer (shown to user)</p>
+          <p style="font-size:13px;color:#1e293b;line-height:1.5;background:#f0fdf4;padding:10px;border-radius:6px;border-left:3px solid #16a34a;margin:0">${esc(s.admin_action)}</p>
+        </div>` : ''}
+
+        ${s.ai_analysis ? `
+        <div style="margin-bottom:12px">
+          <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">AI Assessment</p>
+          <p style="font-size:13px;color:#1e293b;line-height:1.6;background:#f8fafc;padding:10px;border-radius:6px;margin:0;white-space:pre-wrap">${esc(s.ai_analysis)}</p>
+        </div>` : ''}
+
+        ${s.admin_notes ? `
+        <div>
+          <p style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:.05em;margin:0 0 4px">Note from Team</p>
+          <p style="font-size:13px;color:#1e293b;line-height:1.5;background:#fffbeb;padding:10px;border-radius:6px;border-left:3px solid #d97706;margin:0">${esc(s.admin_notes)}</p>
+        </div>` : ''}
+
+        ${s.result_released ? `<p style="font-size:11px;color:#94a3b8;margin:10px 0 0">Released: ${fmt(s.released_at)}</p>` : ''}
+      </div>`
+    }).join('')
 
     const win = window.open('', '_blank')
-    win.document.write(`<!DOCTYPE html><html><head><title>MindCheck Results — ${title}</title>
+    win.document.write(`<!DOCTYPE html><html><head>
+      <meta charset="utf-8">
+      <title>MindCheck Full Reports — ${esc(title)}</title>
       <style>
-        body{font-family:Arial,sans-serif;padding:24px;color:#1e293b}
-        h1{font-size:20px;margin-bottom:4px}p.sub{color:#64748b;font-size:13px;margin-bottom:16px}
-        table{width:100%;border-collapse:collapse;font-size:12px}
-        th{background:#0f172a;color:white;padding:8px 10px;text-align:left}
-        td{padding:7px 10px;border-bottom:1px solid #e2e8f0}
-        tr:nth-child(even) td{background:#f8fafc}
-        @media print{body{padding:0}}
-      </style></head><body>
-      <h1>MindCheck Assessment Results</h1>
-      <p class="sub">${title} &nbsp;·&nbsp; ${filtered.length} records &nbsp;·&nbsp; Exported ${new Date().toLocaleDateString('en-IN')}</p>
-      <table><thead><tr>
-        <th>Name</th><th>Email</th><th>Institution</th><th>Section</th><th>Category</th>
-        <th>Score</th><th>Result</th><th>Safety Flag</th><th>Status</th><th>Date</th>
-      </tr></thead><tbody>${rows}</tbody></table>
-      <script>window.onload=()=>{window.print()}<\/script>
+        body{font-family:Arial,sans-serif;padding:28px 32px;color:#1e293b;max-width:900px;margin:auto}
+        h1{font-size:22px;font-weight:700;color:#0f172a;margin:0 0 4px}
+        p.sub{color:#64748b;font-size:13px;margin:0 0 24px}
+        .ans-chip{display:inline-block;font-size:11px;background:#f1f5f9;border:1px solid #e2e8f0;
+                  border-radius:4px;padding:2px 7px;color:#334155}
+        @media print{body{padding:16px}h1{font-size:18px}}
+      </style>
+      </head><body>
+      <h1>MindCheck Assessment Reports</h1>
+      <p class="sub">${esc(title)} &nbsp;·&nbsp; ${filtered.length} record${filtered.length !== 1 ? 's' : ''} &nbsp;·&nbsp; Exported ${new Date().toLocaleDateString('en-IN')}</p>
+      ${cards || '<p style="color:#94a3b8">No records found.</p>'}
+      <script>window.onload=()=>{ setTimeout(()=>window.print(), 300) }<\/script>
       </body></html>`)
     win.document.close()
   }

@@ -398,7 +398,8 @@ def export_csv(request: Request, institution: Optional[str] = None, section: Opt
     get_admin(request)
     query = (
         'SELECT s.id, s.user_name, s.user_email, u.institution, s.section, s.category, '
-        's.score, s.total, s.level, s.label, s.safety_flag, s.result_released, s.submitted_at '
+        's.score, s.total, s.level, s.label, s.action, s.admin_action, s.ai_analysis, '
+        's.admin_notes, s.safety_flag, s.result_released, s.released_at, s.submitted_at '
         'FROM submissions s LEFT JOIN users u ON s.user_id = u.id WHERE 1=1'
     )
     params: list = []
@@ -416,16 +417,25 @@ def export_csv(request: Request, institution: Optional[str] = None, section: Opt
 
     output = io.StringIO()
     writer = csv.writer(output)
-    writer.writerow(['ID', 'Name', 'Email', 'Institution', 'Section', 'Category',
-                     'Score', 'Max Score', 'Level', 'Result', 'Safety Flag', 'Released', 'Date'])
+    writer.writerow([
+        'ID', 'Name', 'Email', 'Institution', 'Section', 'Category',
+        'Score', 'Max Score', 'Level', 'Result Label',
+        'PDF Analysis', 'Admin Answer', 'AI Assessment', 'Team Notes',
+        'Safety Flag', 'Released', 'Released Date', 'Submitted Date',
+    ])
     for r in rows:
         writer.writerow([
             r['id'], r['user_name'], r['user_email'],
             r.get('institution') or '', r.get('section') or '',
             r['category'], r['score'], r['total'] * 4,
             r['level'], r['label'],
+            r.get('action') or '',
+            r.get('admin_action') or '',
+            r.get('ai_analysis') or '',
+            r.get('admin_notes') or '',
             'Yes' if r['safety_flag'] else 'No',
             'Yes' if r['result_released'] else 'No',
+            r.get('released_at') or '',
             r['submitted_at'] or '',
         ])
 

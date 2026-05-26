@@ -4,19 +4,7 @@ import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 
-const PES_SECTIONS = [
-  '1st Year — A', '1st Year — B', '1st Year — C', '1st Year — D',
-  'CSE — A', 'CSE — B', 'CSE — C', 'CSE — D',
-  'ISE — A', 'ISE — B',
-  'ECE — A', 'ECE — B', 'ECE — C',
-  'EEE — A', 'EEE — B',
-  'ME — A', 'ME — B',
-  'Civil',
-  'MBA — A', 'MBA — B',
-  'MCA — A', 'MCA — B',
-  'PhD',
-  'Other',
-]
+const PES_SECTIONS = ['1st Year', '2nd Year', '3rd Year', '4th Year']
 
 function dbRowToQuestion(row) {
   return {
