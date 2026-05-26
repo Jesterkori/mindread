@@ -1,11 +1,22 @@
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_APP_PASSWORD,
   },
+});
+
+// Verify connection on startup — logs success or exact error
+transporter.verify((err) => {
+  if (err) {
+    console.error('[mailer] SMTP connection FAILED:', err.message);
+  } else {
+    console.log('[mailer] SMTP connection OK — ready to send emails');
+  }
 });
 
 async function sendOTP(toEmail, otp) {
