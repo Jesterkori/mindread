@@ -73,7 +73,9 @@ def make_otp() -> str:
     return str(random.randint(100000, 999999))
 
 
-_email_configured = os.environ.get('SMTP_USER', 'your@gmail.com') != 'your@gmail.com'
+_gmail_user = os.environ.get('GMAIL_USER', '')
+_gmail_pass = os.environ.get('GMAIL_APP_PASSWORD', '')
+_email_configured = bool(_gmail_user and _gmail_pass)
 
 
 def send_otp(email: str, otp: str):
@@ -82,17 +84,19 @@ def send_otp(email: str, otp: str):
         return
     msg = MIMEMultipart('alternative')
     msg['Subject'] = 'MindCheck — Your verification code'
-    msg['From'] = os.environ.get('SMTP_FROM', '')
+    msg['From'] = f'"MindCheck" <{_gmail_user}>'
     msg['To'] = email
     msg.attach(MIMEText(
         f'Your MindCheck verification code is: {otp}\n\nThis code expires in 15 minutes.', 'plain'))
     msg.attach(MIMEText(
-        f'<p>Your MindCheck verification code is:</p><h2>{otp}</h2><p>This code expires in 15 minutes.</p>', 'html'))
-    with smtplib.SMTP(os.environ.get('SMTP_HOST', 'smtp.gmail.com'),
-                      int(os.environ.get('SMTP_PORT', 587))) as smtp:
+        f'<p>Your MindCheck verification code is:</p>'
+        f'<h2 style="letter-spacing:8px;color:#1d4ed8">{otp}</h2>'
+        f'<p>This code expires in 15 minutes.</p>', 'html'))
+    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
         smtp.starttls()
-        smtp.login(os.environ.get('SMTP_USER', ''), os.environ.get('SMTP_PASS', ''))
+        smtp.login(_gmail_user, _gmail_pass.replace(' ', ''))
         smtp.send_message(msg)
+    print(f'[mailer] OTP sent to {email}', flush=True)
 
 
 # ── Gemini analysis ───────────────────────────────────────────────────────────
