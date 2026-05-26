@@ -70,8 +70,9 @@ def make_otp() -> str:
     return str(random.randint(100000, 999999))
 
 
-_resend_key = os.environ.get('RESEND_API_KEY', '')
-_email_configured = bool(_resend_key)
+_brevo_key    = os.environ.get('BREVO_API_KEY', '')
+_brevo_sender = os.environ.get('BREVO_SENDER', '')
+_email_configured = bool(_brevo_key and _brevo_sender)
 
 
 def send_otp(email: str, otp: str):
@@ -81,21 +82,21 @@ def send_otp(email: str, otp: str):
     try:
         import httpx
         resp = httpx.post(
-            'https://api.resend.com/emails',
-            headers={'Authorization': f'Bearer {_resend_key}', 'Content-Type': 'application/json'},
+            'https://api.brevo.com/v3/smtp/email',
+            headers={'api-key': _brevo_key, 'Content-Type': 'application/json'},
             json={
-                'from': 'MindCheck <onboarding@resend.dev>',
-                'to': [email],
+                'sender':  {'name': 'MindCheck', 'email': _brevo_sender},
+                'to':      [{'email': email}],
                 'subject': 'MindCheck — Your verification code',
-                'html': f'''
+                'htmlContent': f'''
                   <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;
                               border:1px solid #e5e7eb;border-radius:12px;">
                     <h2 style="color:#1d4ed8;">MindCheck</h2>
-                    <p>Your one-time verification code is:</p>
+                    <p style="color:#374151;">Your one-time verification code is:</p>
                     <div style="font-size:36px;font-weight:700;letter-spacing:10px;
                                 color:#1d4ed8;padding:16px 0;">{otp}</div>
                     <p style="color:#6b7280;font-size:14px;">
-                      Expires in <strong>15 minutes</strong>. Do not share it.
+                      Expires in <strong>15 minutes</strong>. Do not share it with anyone.
                     </p>
                   </div>''',
             },
