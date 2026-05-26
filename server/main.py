@@ -82,21 +82,26 @@ def send_otp(email: str, otp: str):
     if not _email_configured:
         print(f'[DEV] OTP for {email}: {otp}', flush=True)
         return
-    msg = MIMEMultipart('alternative')
-    msg['Subject'] = 'MindCheck — Your verification code'
-    msg['From'] = f'"MindCheck" <{_gmail_user}>'
-    msg['To'] = email
-    msg.attach(MIMEText(
-        f'Your MindCheck verification code is: {otp}\n\nThis code expires in 15 minutes.', 'plain'))
-    msg.attach(MIMEText(
-        f'<p>Your MindCheck verification code is:</p>'
-        f'<h2 style="letter-spacing:8px;color:#1d4ed8">{otp}</h2>'
-        f'<p>This code expires in 15 minutes.</p>', 'html'))
-    with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-        smtp.starttls()
-        smtp.login(_gmail_user, _gmail_pass.replace(' ', ''))
-        smtp.send_message(msg)
-    print(f'[mailer] OTP sent to {email}', flush=True)
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = 'MindCheck — Your verification code'
+        msg['From'] = f'"MindCheck" <{_gmail_user}>'
+        msg['To'] = email
+        msg.attach(MIMEText(
+            f'Your MindCheck verification code is: {otp}\n\nThis code expires in 15 minutes.', 'plain'))
+        msg.attach(MIMEText(
+            f'<p>Your MindCheck verification code is:</p>'
+            f'<h2 style="letter-spacing:8px;color:#1d4ed8">{otp}</h2>'
+            f'<p>This code expires in 15 minutes.</p>', 'html'))
+        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
+            smtp.ehlo()
+            smtp.starttls()
+            smtp.ehlo()
+            smtp.login(_gmail_user, _gmail_pass.replace(' ', ''))
+            smtp.send_message(msg)
+        print(f'[mailer] OTP sent OK to {email}', flush=True)
+    except Exception as exc:
+        print(f'[mailer] FAILED to send OTP to {email}: {exc}', flush=True)
 
 
 # ── Gemini analysis ───────────────────────────────────────────────────────────
