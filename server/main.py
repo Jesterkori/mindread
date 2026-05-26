@@ -1,10 +1,7 @@
 import json
 import os
 import random
-import smtplib
 from datetime import datetime, timedelta, timezone
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from pathlib import Path
 from typing import Optional
 
@@ -73,9 +70,8 @@ def make_otp() -> str:
     return str(random.randint(100000, 999999))
 
 
-_gmail_user = os.environ.get('GMAIL_USER', '')
-_gmail_pass = os.environ.get('GMAIL_APP_PASSWORD', '')
-_email_configured = bool(_gmail_user and _gmail_pass)
+_resend_key = os.environ.get('RESEND_API_KEY', '')
+_email_configured = bool(_resend_key)
 
 
 def send_otp(email: str, otp: str):
@@ -83,22 +79,29 @@ def send_otp(email: str, otp: str):
         print(f'[DEV] OTP for {email}: {otp}', flush=True)
         return
     try:
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = 'MindCheck — Your verification code'
-        msg['From'] = f'"MindCheck" <{_gmail_user}>'
-        msg['To'] = email
-        msg.attach(MIMEText(
-            f'Your MindCheck verification code is: {otp}\n\nThis code expires in 15 minutes.', 'plain'))
-        msg.attach(MIMEText(
-            f'<p>Your MindCheck verification code is:</p>'
-            f'<h2 style="letter-spacing:8px;color:#1d4ed8">{otp}</h2>'
-            f'<p>This code expires in 15 minutes.</p>', 'html'))
-        with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
-            smtp.ehlo()
-            smtp.starttls()
-            smtp.ehlo()
-            smtp.login(_gmail_user, _gmail_pass.replace(' ', ''))
-            smtp.send_message(msg)
+        import httpx
+        resp = httpx.post(
+            'https://api.resend.com/emails',
+            headers={'Authorization': f'Bearer {_resend_key}', 'Content-Type': 'application/json'},
+            json={
+                'from': 'MindCheck <onboarding@resend.dev>',
+                'to': [email],
+                'subject': 'MindCheck — Your verification code',
+                'html': f'''
+                  <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;
+                              border:1px solid #e5e7eb;border-radius:12px;">
+                    <h2 style="color:#1d4ed8;">MindCheck</h2>
+                    <p>Your one-time verification code is:</p>
+                    <div style="font-size:36px;font-weight:700;letter-spacing:10px;
+                                color:#1d4ed8;padding:16px 0;">{otp}</div>
+                    <p style="color:#6b7280;font-size:14px;">
+                      Expires in <strong>15 minutes</strong>. Do not share it.
+                    </p>
+                  </div>''',
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
         print(f'[mailer] OTP sent OK to {email}', flush=True)
     except Exception as exc:
         print(f'[mailer] FAILED to send OTP to {email}: {exc}', flush=True)
