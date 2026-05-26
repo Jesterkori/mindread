@@ -287,14 +287,6 @@ def register(body: RegisterBody):
         )
 
     return {'ok': True}
-        otp = make_otp()
-        otp_expires = datetime.now(timezone.utc) + timedelta(minutes=15)
-        cur.execute(
-            'UPDATE users SET otp = %s, otp_expires_at = %s WHERE email = %s',
-            (otp, otp_expires, body.email)
-        )
-    background_tasks.add_task(send_otp, body.email, otp)
-    return {'ok': True}
 
 
 @app.post('/api/auth/login')
