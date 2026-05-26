@@ -124,17 +124,7 @@ export default function AdminDashboard() {
     load()
   }
 
-  async function wipePending() {
-    if (!confirm('Delete ALL pending / unverified test users? This cannot be undone.')) return
-    setBusy((b) => ({ ...b, wipe: true }))
-    const res = await fetch('/api/admin/wipe-pending', { method: 'DELETE', headers })
-    const data = await res.json()
-    setBusy((b) => ({ ...b, wipe: false }))
-    alert(`Deleted ${data.deleted} user(s).`)
-    load()
-  }
-
-  async function loadCategoryQs(category) {
+async function loadCategoryQs(category) {
     if (categoryQs[category]) return
     const res  = await fetch(`/api/admin/questions?category=${category}`, { headers: authHeader() })
     const data = await res.json()
@@ -457,18 +447,9 @@ export default function AdminDashboard() {
               <p className="text-xs text-slate-500 mt-0.5">Admin Dashboard</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button
-              onClick={wipePending}
-              disabled={busy.wipe}
-              className="text-xs px-3 py-1.5 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 font-medium transition-colors disabled:opacity-50"
-            >
-              {busy.wipe ? 'Wiping…' : '🗑 Wipe test users'}
-            </button>
-            <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-red-500 transition-colors">
-              Sign out
-            </button>
-          </div>
+          <button onClick={handleLogout} className="text-sm text-slate-500 hover:text-red-500 transition-colors">
+            Sign out
+          </button>
         </div>
       </header>
 

@@ -270,19 +270,9 @@ def _fmt(row: dict, *keys):
 # ── Auth routes ───────────────────────────────────────────────────────────────
 
 @app.post('/api/auth/register')
-async def register(body: RegisterBody, background_tasks: BackgroundTasks):
+def register(body: RegisterBody):
     if not all([body.name, body.email, body.password, body.category]):
         raise HTTPException(400, 'All fields are required.')
-
-    captcha_secret = os.environ.get('RECAPTCHA_SECRET', 'your_recaptcha_secret')
-    if captcha_secret != 'your_recaptcha_secret' and body.captchaToken:
-        async with httpx.AsyncClient() as client:
-            r = await client.post(
-                f'https://www.google.com/recaptcha/api/siteverify'
-                f'?secret={captcha_secret}&response={body.captchaToken}'
-            )
-        if not r.json().get('success'):
-            raise HTTPException(400, 'CAPTCHA verification failed.')
 
     with db() as cur:
         cur.execute('SELECT id FROM users WHERE email = %s', (body.email,))
@@ -290,43 +280,13 @@ async def register(body: RegisterBody, background_tasks: BackgroundTasks):
             raise HTTPException(400, 'Email already registered.')
 
         hashed = bcrypt.hashpw(body.password.encode(), bcrypt.gensalt()).decode()
-        otp = make_otp()
-        otp_expires = datetime.now(timezone.utc) + timedelta(minutes=15)
         cur.execute(
-            'INSERT INTO users (name, email, password, category, otp, otp_expires_at) '
-            'VALUES (%s,%s,%s,%s,%s,%s)',
-            (body.name, body.email, hashed, body.category, otp, otp_expires)
+            'INSERT INTO users (name, email, password, category, email_verified, status) '
+            'VALUES (%s,%s,%s,%s,TRUE,%s)',
+            (body.name, body.email, hashed, body.category, 'pending')
         )
 
-    background_tasks.add_task(send_otp, body.email, otp)
     return {'ok': True}
-
-
-@app.post('/api/auth/verify-otp')
-def verify_otp(body: VerifyOtpBody):
-    with db() as cur:
-        cur.execute('SELECT id, otp, otp_expires_at FROM users WHERE email = %s', (body.email,))
-        row = cur.fetchone()
-        if not row:
-            raise HTTPException(400, 'User not found.')
-        uid, stored_otp, expires_at = row
-        if stored_otp != body.otp:
-            raise HTTPException(400, 'Invalid code.')
-        if datetime.utcnow() > expires_at.replace(tzinfo=None):
-            raise HTTPException(400, 'Code has expired. Please request a new one.')
-        cur.execute(
-            'UPDATE users SET email_verified = TRUE, otp = NULL, otp_expires_at = NULL WHERE id = %s',
-            (uid,)
-        )
-    return {'ok': True}
-
-
-@app.post('/api/auth/resend-otp')
-def resend_otp(body: ResendOtpBody, background_tasks: BackgroundTasks):
-    with db() as cur:
-        cur.execute('SELECT id FROM users WHERE email = %s', (body.email,))
-        if not cur.fetchone():
-            raise HTTPException(400, 'User not found.')
         otp = make_otp()
         otp_expires = datetime.now(timezone.utc) + timedelta(minutes=15)
         cur.execute(
