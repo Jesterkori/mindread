@@ -2,24 +2,56 @@ import { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
-/* Preflex Solutions dot-globe logo — dots on transparent, no solid fill */
-function PreflexLogo({ size = 36 }) {
-  // Dots arranged in concentric rings to approximate the Preflex sphere mark
-  const outer = [
-    [20,3],[27,6],[33,12],[36,20],[33,28],[27,34],[20,37],[13,34],[7,28],[4,20],[7,12],[13,6],
-  ]
-  const mid = [
-    [20,9],[25,11],[29,17],[29,23],[25,29],[20,31],[15,29],[11,23],[11,17],[15,11],
-  ]
-  const inner = [
-    [20,15],[24,18],[25,22],[22,26],[17,26],[15,22],[15,18],
+/* Preflex Solutions Pvt.Ltd. logo mark — teardrop shape, 3 colour zones */
+function PreflexLogo({ size = 38 }) {
+  // Teardrop/location-pin: orange-red (left) · navy-indigo (right) · cyan (tip)
+  const dots = [
+    // outer left arc — orange/red (large)
+    ['ol0', 16,  4, 2.5, '#f97316'],
+    ['ol1',  9, 13, 2.5, '#f87171'],
+    ['ol2',  5, 23, 2.4, '#ef4444'],
+    ['ol3',  5, 34, 2.4, '#dc2626'],
+    ['ol4', 10, 44, 2.3, '#dc2626'],
+    ['ol5', 18, 52, 2.1, '#22d3ee'],
+    // top — orange centre
+    ['ot0', 24,  2, 2.5, '#f97316'],
+    // outer right arc — dark navy/indigo (large)
+    ['or0', 34,  2, 2.4, '#1e3a8a'],
+    ['or1', 43,  6, 2.4, '#1e3a8a'],
+    ['or2', 50, 14, 2.3, '#1e40af'],
+    ['or3', 53, 24, 2.3, '#3730a3'],
+    ['or4', 52, 35, 2.2, '#4338ca'],
+    ['or5', 46, 45, 2.1, '#6d28d9'],
+    ['or6', 37, 52, 2.0, '#7c3aed'],
+    // inner left arc — red (medium)
+    ['il0', 23,  9, 2.1, '#f97316'],
+    ['il1', 15, 18, 2.1, '#ef4444'],
+    ['il2', 12, 28, 2.0, '#dc2626'],
+    ['il3', 13, 39, 1.9, '#ef4444'],
+    ['il4', 19, 49, 1.8, '#0ea5e9'],
+    // inner right arc — purple (medium)
+    ['ir0', 33,  9, 2.0, '#1e40af'],
+    ['ir1', 41, 16, 1.9, '#3730a3'],
+    ['ir2', 44, 26, 1.9, '#4338ca'],
+    ['ir3', 42, 37, 1.8, '#6d28d9'],
+    ['ir4', 35, 46, 1.7, '#7c3aed'],
+    // centre fill (small)
+    ['c0',  28, 14, 1.7, '#f97316'],
+    ['c1',  36, 20, 1.5, '#4338ca'],
+    ['c2',  37, 30, 1.4, '#6d28d9'],
+    ['c3',  31, 39, 1.4, '#0ea5e9'],
+    ['c4',  25, 47, 1.3, '#06b6d4'],
+    // bottom tip — cyan (tapering)
+    ['t0',  26, 56, 1.7, '#0ea5e9'],
+    ['t1',  27, 62, 1.4, '#06b6d4'],
+    ['t2',  26, 68, 1.2, '#22d3ee'],
+    ['t3',  27, 74, 1.0, '#67e8f9'],
   ]
   return (
-    <svg width={size} height={size} viewBox="0 0 40 40" fill="none">
-      {outer.map(([cx,cy],i) => <circle key={`o${i}`} cx={cx} cy={cy} r={2.1} fill="#dc2626" opacity="0.9"/>)}
-      {mid.map(([cx,cy],i)   => <circle key={`m${i}`} cx={cx} cy={cy} r={1.7} fill="#e11d48" opacity="0.85"/>)}
-      {inner.map(([cx,cy],i) => <circle key={`i${i}`} cx={cx} cy={cy} r={1.3} fill="#f43f5e" opacity="0.8"/>)}
-      <circle cx="20" cy="20" r="1.9" fill="#dc2626" opacity="0.9"/>
+    <svg width={size} height={Math.round(size * 1.5)} viewBox="0 0 58 78" fill="none">
+      {dots.map(([key, cx, cy, r, fill]) => (
+        <circle key={key} cx={cx} cy={cy} r={r} fill={fill} />
+      ))}
     </svg>
   )
 }
@@ -63,10 +95,10 @@ export default function Navbar({ transparent = false }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
 
         {/* Left — brand */}
-        <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-          <PreflexLogo size={34} />
+        <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+          <PreflexLogo size={30} />
           <div className="leading-tight">
-            <p className={`font-extrabold text-sm tracking-tight ${logoText}`}>Preflex Solutions</p>
+            <p className={`font-extrabold text-sm tracking-tight ${logoText}`}>Preflex Solutions Pvt.Ltd.</p>
             <p className={`text-xs ${subtext}`}>MindCheck Platform</p>
           </div>
         </Link>
