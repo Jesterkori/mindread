@@ -47,11 +47,13 @@ function Counter({ to, suffix = '' }) {
 }
 
 const CATEGORIES = [
-  { icon: '👧🏽', title: 'Child & Teen', age: 'Ages 10–16', color: '#22c55e', desc: 'Self-reflection and mental clarity for school-going students.' },
-  { icon: '👩🏾', title: 'Young Adult',  age: 'Ages 17–25', color: '#0d9488', desc: 'Future readiness and stress management for college students.' },
-  { icon: '💍',   title: 'Adult & Couples', age: 'All Ages', color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
-  { icon: '🌱',   title: 'Divorced / Separated', age: 'All Ages', color: '#e879f9', desc: 'Emotional healing and new beginnings after separation.' },
-  { icon: '👴🏾', title: 'Senior Adult', age: '55+ Years', color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
+  { icon: '👧🏽', title: 'Children & Students',  age: 'Ages 10–16',  color: '#22c55e', desc: 'Self-reflection and mental clarity for school-going students.' },
+  { icon: '👩🏾', title: 'Youngsters & Gen Z',   age: 'Ages 17–25',  color: '#0d9488', desc: 'Future readiness and stress management for college students.' },
+  { icon: '💍',   title: 'Adult & Couples',       age: 'All Ages',    color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
+  { icon: '🌱',   title: 'Divorced / Separated',  age: 'All Ages',    color: '#e879f9', desc: 'Emotional healing and new beginnings after separation.' },
+  { icon: '👴🏾', title: 'Senior Citizens',        age: '55+ Years',   color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
+  { icon: '👩‍👧',  title: 'Single Mother',          age: 'All Ages',    color: '#ec4899', desc: 'Support for the unique stressors of solo motherhood.' },
+  { icon: '👨‍👦',  title: 'Single Father',          age: 'All Ages',    color: '#0ea5e9', desc: 'Support for the unique pressures of solo fatherhood.' },
 ]
 
 const STEPS = [
@@ -312,8 +314,7 @@ export default function Landing() {
           <div className="space-y-4" data-reveal>
             {[
               { icon:'🏫', title:'Enrol Your Institution', desc:'Colleges and schools can register their students under a verified institution.' },
-              { icon:'📋', title:'Section-wise Tracking',  desc:'Students select their section (CS, ECE, MBA…) before taking the assessment.' },
-              { icon:'📥', title:'Download Reports',       desc:'Admins can download full results filtered by institution and section as CSV or PDF.' },
+              { icon:'📋', title:'Section-wise Tracking',  desc:'Students select their section before taking the assessment.' },
             ].map(item => (
               <div key={item.title} className="flex gap-4 p-5 rounded-2xl border border-slate-100 hover:border-green-200 hover:shadow-sm transition-all">
                 <span className="text-2xl flex-shrink-0">{item.icon}</span>
@@ -410,7 +411,7 @@ export default function Landing() {
           </div>
         </div>
         <div className="max-w-6xl mx-auto border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-white/40 text-xs">© 2025 Preflex Solutions Pvt. Ltd. All rights reserved.</p>
+          <p className="text-white/40 text-xs">© 2026 Preflex Solutions Pvt. Ltd. All rights reserved.</p>
           <p className="text-white/40 text-xs">MindCheck — Mental Wellness Assessment Tool</p>
         </div>
       </footer>

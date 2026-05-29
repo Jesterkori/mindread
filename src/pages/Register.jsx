@@ -125,7 +125,7 @@ export default function Register() {
              style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.15)' }}>
           <h2 className="text-lg font-bold text-white mb-1">Register</h2>
           <p className="text-white/45 text-sm mb-6">
-            Fill in your details. Your account will be reviewed and approved by an admin.
+            Fill in your details to create your account.
           </p>
 
           {error && (

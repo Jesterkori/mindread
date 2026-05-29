@@ -10,7 +10,7 @@ export const ANSWER_OPTIONS = [
 export const CATEGORIES = [
   {
     id: 'student',
-    label: 'Student (10–16)',
+    label: 'Children and Students',
     ageRange: '10 – 16 years',
     icon: '📚',
     description: 'For school-going students aged 10 to 16',
@@ -20,7 +20,7 @@ export const CATEGORIES = [
   },
   {
     id: 'young-adult',
-    label: 'Young Adult (17–25)',
+    label: 'Youngsters and Gen Z',
     ageRange: '17 – 25 years',
     icon: '🎓',
     description: 'For college students and young adults aged 17 to 25',
@@ -50,7 +50,7 @@ export const CATEGORIES = [
   },
   {
     id: 'older',
-    label: 'Senior Adult',
+    label: 'Senior Citizens',
     ageRange: '55+ years',
     icon: '🌟',
     description: 'For older adults aged 55 and above',
