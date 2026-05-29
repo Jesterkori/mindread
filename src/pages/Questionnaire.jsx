@@ -4,49 +4,99 @@ import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 
-/* ── Animated emotion face ─────────────────────────────────────────────────── */
-function EmotionFace({ answer }) {
-  const cfg = {
-    '':  { bL:[18,24,30,24], bR:[42,24,54,24], mouth:'M 26 54 L 46 54', tears:false, color:'#64748b', label:'' },
-    'A': { bL:[18,26,30,22], bR:[42,22,54,26], mouth:'M 24 52 Q 36 64 48 52', tears:false, color:'#22c55e', label:'Calm' },
-    'B': { bL:[18,22,30,26], bR:[42,26,54,22], mouth:'M 28 54 Q 36 56 44 54', tears:false, color:'#fbbf24', label:'Mild concern' },
-    'C': { bL:[18,20,30,26], bR:[42,26,54,20], mouth:'M 28 58 Q 36 52 44 58', tears:false, color:'#f97316', label:'Stressed' },
-    'D': { bL:[18,17,30,26], bR:[42,26,54,17], mouth:'M 24 60 Q 36 50 48 60', tears:true,  color:'#f87171', label:'Distressed' },
-  }
-  const c = cfg[answer ?? '']
+/* ── Detect emotion from question text (based on keyword approach) ──────────── */
+function detectEmotion(text) {
+  const t = (text || '').toLowerCase()
+  const SAD     = ['sad','empty','cry','crying','grief','lonel','hopeless','worthless','burden','despair','loss','isolat','depress','emptiness','low mood','nothing to look forward','flat','withdrawn','no one','tears','weep']
+  const ANGRY   = ['angry','anger','frustrat','irritab','annoy','furious','resent','snapping','yelling','outburst','temper','cynical','contempt','rage','hate']
+  const ANXIOUS = ['worry','worrying','worried','anxious','anxiety','panic','dread','overwhelm','afraid','fear','racing heart','racing mind','shortness','dizzi','paralyz','catastroph','scared','heart']
+  if (SAD.some(w => t.includes(w)))     return 'sad'
+  if (ANGRY.some(w => t.includes(w)))   return 'angry'
+  if (ANXIOUS.some(w => t.includes(w))) return 'anxious'
+  return 'neutral'
+}
+
+/* ── Animated emotion face — large, right side of question, no labels ────────── */
+function EmotionFace({ emotion }) {
+  const isSad     = emotion === 'sad'
+  const isAngry   = emotion === 'angry'
+  const isAnxious = emotion === 'anxious'
+
+  const browL = isSad    ? [27,37,47,29]
+              : isAngry  ? [27,29,47,39]
+              : isAnxious? [27,27,47,33]
+              :             [27,32,47,32]
+  const browR = isSad    ? [63,29,83,37]
+              : isAngry  ? [63,39,83,29]
+              : isAnxious? [63,33,83,27]
+              :             [63,32,83,32]
+
+  const eyeRy = isAnxious ? 12 : isAngry ? 6 : 9
+  const mouth = isSad    ? 'M 40 77 Q 55 66 70 77'
+              : isAngry  ? 'M 40 73 L 70 73'
+              : isAnxious? 'M 46 72 Q 55 78 64 72'
+              :              'M 40 70 Q 55 78 70 70'
+  const browW = isAngry ? 5 : 3.5
+
   return (
-    <div className="flex flex-col items-center gap-1" style={{ transition: 'all 0.3s ease' }}>
-      <div className="rounded-xl p-2" style={{
-        background: 'rgba(255,255,255,0.06)',
-        border: `1.5px solid ${c.color}50`,
-        transition: 'border-color 0.3s ease',
-      }}>
-        <svg width="64" height="68" viewBox="0 0 72 76" fill="none">
-          {/* Head */}
-          <circle cx="36" cy="36" r="32" fill="rgba(255,224,196,0.95)" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-          {/* Eyes */}
-          <circle cx="24" cy="32" r="5.5" fill="#1e1b4b"/>
-          <circle cx="48" cy="32" r="5.5" fill="#1e1b4b"/>
-          <circle cx="26" cy="29.5" r="2" fill="white" opacity="0.9"/>
-          <circle cx="50" cy="29.5" r="2" fill="white" opacity="0.9"/>
-          {/* Eyebrows */}
-          <line x1={c.bL[0]} y1={c.bL[1]} x2={c.bL[2]} y2={c.bL[3]} stroke="#555" strokeWidth="2.5" strokeLinecap="round"/>
-          <line x1={c.bR[0]} y1={c.bR[1]} x2={c.bR[2]} y2={c.bR[3]} stroke="#555" strokeWidth="2.5" strokeLinecap="round"/>
-          {/* Mouth */}
-          <path d={c.mouth} stroke="#c07070" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
-          {/* Tears */}
-          {c.tears && <>
-            <ellipse cx="15" cy="43" rx="2.5" ry="5.5" fill="#93c5fd" opacity="0.8"/>
-            <ellipse cx="57" cy="43" rx="2.5" ry="5.5" fill="#93c5fd" opacity="0.8"/>
-          </>}
-        </svg>
-      </div>
-      {c.label && (
-        <span className="text-xs font-semibold" style={{ color: c.color, transition: 'color 0.3s' }}>
-          {c.label}
-        </span>
-      )}
-    </div>
+    <svg width="110" height="115" viewBox="0 0 110 115" fill="none">
+      <g>
+        {isAngry && (
+          <animateTransform attributeName="transform" additive="sum"
+            type="translate" values="0,0;3,0;-3,0;3,0;-3,0;0,0"
+            dur="0.35s" repeatCount="indefinite"/>
+        )}
+
+        {/* Head */}
+        <circle cx="55" cy="55" r="44" fill="rgba(255,220,190,0.95)"
+                stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
+
+        {/* Eyebrows */}
+        <line x1={browL[0]} y1={browL[1]} x2={browL[2]} y2={browL[3]}
+              stroke="#444" strokeWidth={browW} strokeLinecap="round"/>
+        <line x1={browR[0]} y1={browR[1]} x2={browR[2]} y2={browR[3]}
+              stroke="#444" strokeWidth={browW} strokeLinecap="round"/>
+
+        {/* Left eye — blinking */}
+        <ellipse cx="38" cy="55" rx="9" ry={eyeRy} fill="#1a1a2e">
+          <animate attributeName="ry"
+            values={`${eyeRy};${eyeRy};${eyeRy};${eyeRy};0.5;${eyeRy}`}
+            dur="4s" repeatCount="indefinite"/>
+        </ellipse>
+        <circle cx="41" cy="51" r="3" fill="white" opacity="0.9"/>
+
+        {/* Right eye — blinking (offset) */}
+        <ellipse cx="72" cy="55" rx="9" ry={eyeRy} fill="#1a1a2e">
+          <animate attributeName="ry"
+            values={`${eyeRy};${eyeRy};${eyeRy};${eyeRy};0.5;${eyeRy}`}
+            dur="4s" begin="0.15s" repeatCount="indefinite"/>
+        </ellipse>
+        <circle cx="75" cy="51" r="3" fill="white" opacity="0.9"/>
+
+        {/* Mouth */}
+        <path d={mouth} stroke="#b06060" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+
+        {/* Sad — falling tears */}
+        {isSad && <>
+          <ellipse cx="26" cy="65" rx="3.5" ry="7" fill="#93c5fd" opacity="0.85">
+            <animate attributeName="cy" from="65" to="92" dur="1.4s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" from="0.85" to="0" dur="1.4s" repeatCount="indefinite"/>
+          </ellipse>
+          <ellipse cx="84" cy="65" rx="3.5" ry="7" fill="#93c5fd" opacity="0.85">
+            <animate attributeName="cy" from="65" to="92" dur="1.4s" begin="0.6s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" from="0.85" to="0" dur="1.4s" begin="0.6s" repeatCount="indefinite"/>
+          </ellipse>
+        </>}
+
+        {/* Anxious — sweat drop on forehead */}
+        {isAnxious && (
+          <ellipse cx="88" cy="36" rx="4" ry="8" fill="#bfdbfe" opacity="0.8">
+            <animate attributeName="cy" from="36" to="54" dur="2s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" from="0.8" to="0" dur="2s" repeatCount="indefinite"/>
+          </ellipse>
+        )}
+      </g>
+    </svg>
   )
 }
 
@@ -296,62 +346,69 @@ export default function Questionnaire() {
         )}
 
         {/* Question card */}
-        <div className="rounded-2xl p-6 mb-4 relative"
+        <div className="rounded-2xl p-6 mb-4"
           style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
-          {/* Emotion face — top right */}
-          <div className="absolute top-4 right-4">
-            <EmotionFace answer={currentAnswer} />
-          </div>
+          <div className="flex gap-4 items-start">
 
-          <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3 pr-20">
-            Q{question.id}
-          </p>
-          <p className="text-white font-medium text-lg leading-relaxed mb-5 pr-20">
-            {question.text}
-          </p>
+            {/* Left: question text + answers + indicator */}
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3">
+                Q{question.id}
+              </p>
+              <p className="text-white font-medium text-lg leading-relaxed mb-5">
+                {question.text}
+              </p>
 
-          {/* Answer options */}
-          <div className="space-y-2.5">
-            {ANSWER_OPTIONS.map((opt) => {
-              const selected = currentAnswer === opt.value
-              return (
-                <button
-                  key={opt.value}
-                  onClick={() => selectAnswer(opt.value)}
-                  className="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-150 active:scale-[0.98]"
-                  style={{
-                    background: selected ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
-                    border: `2px solid ${selected ? 'rgba(74,222,128,0.6)' : 'rgba(255,255,255,0.1)'}`,
-                  }}
-                >
-                  <span
-                    className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors"
-                    style={{
-                      background: selected ? 'rgba(74,222,128,0.8)' : 'rgba(255,255,255,0.08)',
-                      color: selected ? '#0c1f3a' : 'rgba(255,255,255,0.5)',
-                    }}
-                  >
-                    {opt.value}
-                  </span>
-                  <span className="font-medium" style={{ color: selected ? '#4ade80' : 'rgba(255,255,255,0.75)' }}>
-                    {opt.label}
-                  </span>
-                  {selected && (
-                    <svg className="ml-auto w-5 h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                    </svg>
-                  )}
-                </button>
-              )
-            })}
-          </div>
+              {/* Answer options */}
+              <div className="space-y-2.5">
+                {ANSWER_OPTIONS.map((opt) => {
+                  const selected = currentAnswer === opt.value
+                  return (
+                    <button
+                      key={opt.value}
+                      onClick={() => selectAnswer(opt.value)}
+                      className="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-150 active:scale-[0.98]"
+                      style={{
+                        background: selected ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
+                        border: `2px solid ${selected ? 'rgba(74,222,128,0.6)' : 'rgba(255,255,255,0.1)'}`,
+                      }}
+                    >
+                      <span
+                        className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors"
+                        style={{
+                          background: selected ? 'rgba(74,222,128,0.8)' : 'rgba(255,255,255,0.08)',
+                          color: selected ? '#0c1f3a' : 'rgba(255,255,255,0.5)',
+                        }}
+                      >
+                        {opt.value}
+                      </span>
+                      <span className="font-medium" style={{ color: selected ? '#4ade80' : 'rgba(255,255,255,0.75)' }}>
+                        {opt.label}
+                      </span>
+                      {selected && (
+                        <svg className="ml-auto w-5 h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
 
-          {/* Indicator hint */}
-          <div className="mt-5 flex items-start gap-2 text-xs text-white/30">
-            <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <span>{question.indicator}</span>
+              {/* Indicator hint */}
+              <div className="mt-5 flex items-start gap-2 text-xs text-white/30">
+                <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>{question.indicator}</span>
+              </div>
+            </div>
+
+            {/* Right: emotion face — large, driven by question content */}
+            <div className="flex-shrink-0 hidden sm:flex items-center pt-6">
+              <EmotionFace emotion={detectEmotion(question.text)} />
+            </div>
+
           </div>
         </div>
 
