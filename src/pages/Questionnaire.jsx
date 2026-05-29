@@ -4,7 +4,51 @@ import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 
-const PES_SECTIONS = ['1st Year', '2nd Year', '3rd Year', '4th Year']
+/* ── Animated emotion face ─────────────────────────────────────────────────── */
+function EmotionFace({ answer }) {
+  const cfg = {
+    '':  { bL:[18,24,30,24], bR:[42,24,54,24], mouth:'M 26 54 L 46 54', tears:false, color:'#64748b', label:'' },
+    'A': { bL:[18,26,30,22], bR:[42,22,54,26], mouth:'M 24 52 Q 36 64 48 52', tears:false, color:'#22c55e', label:'Calm' },
+    'B': { bL:[18,22,30,26], bR:[42,26,54,22], mouth:'M 28 54 Q 36 56 44 54', tears:false, color:'#fbbf24', label:'Mild concern' },
+    'C': { bL:[18,20,30,26], bR:[42,26,54,20], mouth:'M 28 58 Q 36 52 44 58', tears:false, color:'#f97316', label:'Stressed' },
+    'D': { bL:[18,17,30,26], bR:[42,26,54,17], mouth:'M 24 60 Q 36 50 48 60', tears:true,  color:'#f87171', label:'Distressed' },
+  }
+  const c = cfg[answer ?? '']
+  return (
+    <div className="flex flex-col items-center gap-1" style={{ transition: 'all 0.3s ease' }}>
+      <div className="rounded-xl p-2" style={{
+        background: 'rgba(255,255,255,0.06)',
+        border: `1.5px solid ${c.color}50`,
+        transition: 'border-color 0.3s ease',
+      }}>
+        <svg width="64" height="68" viewBox="0 0 72 76" fill="none">
+          {/* Head */}
+          <circle cx="36" cy="36" r="32" fill="rgba(255,224,196,0.95)" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+          {/* Eyes */}
+          <circle cx="24" cy="32" r="5.5" fill="#1e1b4b"/>
+          <circle cx="48" cy="32" r="5.5" fill="#1e1b4b"/>
+          <circle cx="26" cy="29.5" r="2" fill="white" opacity="0.9"/>
+          <circle cx="50" cy="29.5" r="2" fill="white" opacity="0.9"/>
+          {/* Eyebrows */}
+          <line x1={c.bL[0]} y1={c.bL[1]} x2={c.bL[2]} y2={c.bL[3]} stroke="#555" strokeWidth="2.5" strokeLinecap="round"/>
+          <line x1={c.bR[0]} y1={c.bR[1]} x2={c.bR[2]} y2={c.bR[3]} stroke="#555" strokeWidth="2.5" strokeLinecap="round"/>
+          {/* Mouth */}
+          <path d={c.mouth} stroke="#c07070" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+          {/* Tears */}
+          {c.tears && <>
+            <ellipse cx="15" cy="43" rx="2.5" ry="5.5" fill="#93c5fd" opacity="0.8"/>
+            <ellipse cx="57" cy="43" rx="2.5" ry="5.5" fill="#93c5fd" opacity="0.8"/>
+          </>}
+        </svg>
+      </div>
+      {c.label && (
+        <span className="text-xs font-semibold" style={{ color: c.color, transition: 'color 0.3s' }}>
+          {c.label}
+        </span>
+      )}
+    </div>
+  )
+}
 
 function dbRowToQuestion(row) {
   return {
@@ -33,9 +77,18 @@ export default function Questionnaire() {
   const [submitting, setSubmitting]           = useState(false)
 
   // Section selection (for institution users)
-  const [section, setSection]           = useState('')
+  const [section, setSection]               = useState('')
   const [sectionConfirmed, setSectionConfirmed] = useState(false)
+  const [availSections, setAvailSections]   = useState(null) // null=loading, []=none
   const needsSection = !!(user?.institution) && user.institution !== 'none'
+
+  useEffect(() => {
+    if (!needsSection) { setAvailSections([]); return }
+    fetch('/api/user/sections', { headers: authHeader() })
+      .then(r => r.json())
+      .then(d => setAvailSections(d.ok ? d.sections.map(s => s.name) : []))
+      .catch(() => setAvailSections([]))
+  }, [needsSection]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!categoryId) { navigate('/dashboard', { replace: true }); return }
@@ -50,7 +103,8 @@ export default function Questionnaire() {
       .catch(() => setQuestions(QUESTIONS[categoryId] ?? []))
   }, [categoryId]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (!categoryId || questions === null) {
+  // Wait for sections to load before showing section picker
+  if (!categoryId || questions === null || (needsSection && !sectionConfirmed && availSections === null)) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={bgStyle}>
         <div className="w-8 h-8 border-2 border-green-400 border-t-transparent rounded-full animate-spin" />
@@ -60,8 +114,13 @@ export default function Questionnaire() {
 
   if (questions.length === 0) return null
 
+  // If institution user but no sections configured, skip section picker
+  if (needsSection && !sectionConfirmed && availSections?.length === 0) {
+    setSectionConfirmed(true)
+  }
+
   // ── Section picker screen ─────────────────────────────────────────────────
-  if (needsSection && !sectionConfirmed) {
+  if (needsSection && !sectionConfirmed && availSections?.length > 0) {
     return (
       <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
         <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.05, pointerEvents: 'none' }}>
@@ -92,7 +151,7 @@ export default function Questionnaire() {
             style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
             <p className="text-sm font-medium text-white/70 mb-3">Your section</p>
             <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
-              {PES_SECTIONS.map((s) => {
+              {availSections.map((s) => {
                 const sel = section === s
                 return (
                   <button
@@ -237,12 +296,17 @@ export default function Questionnaire() {
         )}
 
         {/* Question card */}
-        <div className="rounded-2xl p-6 mb-4"
+        <div className="rounded-2xl p-6 mb-4 relative"
           style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
-          <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3">
+          {/* Emotion face — top right */}
+          <div className="absolute top-4 right-4">
+            <EmotionFace answer={currentAnswer} />
+          </div>
+
+          <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3 pr-20">
             Q{question.id}
           </p>
-          <p className="text-white font-medium text-lg leading-relaxed mb-5">
+          <p className="text-white font-medium text-lg leading-relaxed mb-5 pr-20">
             {question.text}
           </p>
 

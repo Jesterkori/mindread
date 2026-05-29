@@ -58,6 +58,20 @@ with db() as cur:
         ALTER TABLE submissions ADD COLUMN IF NOT EXISTS admin_action TEXT;
         ALTER TABLE users ADD COLUMN IF NOT EXISTS institution VARCHAR(100);
         ALTER TABLE submissions ADD COLUMN IF NOT EXISTS section VARCHAR(100);
+
+        CREATE TABLE IF NOT EXISTS institutions (
+            id         SERIAL PRIMARY KEY,
+            name       VARCHAR(100) UNIQUE NOT NULL,
+            created_at TIMESTAMP NOT NULL DEFAULT NOW()
+        );
+
+        CREATE TABLE IF NOT EXISTS institution_sections (
+            id             SERIAL PRIMARY KEY,
+            institution_id INTEGER REFERENCES institutions(id) ON DELETE CASCADE,
+            name           VARCHAR(100) NOT NULL,
+            created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
+            UNIQUE(institution_id, name)
+        );
     """)
 
 print('Tables ready.')
@@ -75,3 +89,20 @@ with db() as cur:
     )
 
 print(f'Admin ready — {email} / {password}')
+
+# Seed default institution and sections
+with db() as cur:
+    cur.execute(
+        "INSERT INTO institutions (name) VALUES ('PES College') ON CONFLICT (name) DO NOTHING RETURNING id"
+    )
+    row = cur.fetchone()
+    if row:
+        inst_id = row[0]
+        for sec in ['1st Year', '2nd Year', '3rd Year', '4th Year']:
+            cur.execute(
+                'INSERT INTO institution_sections (institution_id, name) VALUES (%s,%s) ON CONFLICT DO NOTHING',
+                (inst_id, sec)
+            )
+        print('Default institution + sections seeded.')
+    else:
+        print('Default institution already exists.')

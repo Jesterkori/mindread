@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import PreflexLogo from '../components/PreflexLogo'
 
 /* ── Scroll-reveal hook ─────────────────────────────────────────────────────── */
 function useReveal() {
@@ -333,10 +334,22 @@ export default function Landing() {
               section-wise assessments to bulk reporting for counsellors and administrators.
             </p>
             <Link to="/register"
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 mb-5"
                   style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
               Register Your Institution
             </Link>
+            <div className="rounded-xl p-4 space-y-2"
+                 style={{ background:'rgba(13,148,136,0.07)', border:'1.5px solid rgba(13,148,136,0.25)' }}>
+              <p className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-1">Contact Preflex Support</p>
+              <a href="mailto:support@preflexsol.com"
+                 className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-teal-600 transition-colors">
+                <span>✉</span> support@preflexsol.com
+              </a>
+              <a href="tel:+919886629446"
+                 className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-teal-600 transition-colors">
+                <span>📞</span> +91 98866 29446
+              </a>
+            </div>
           </div>
         </div>
       </section>
@@ -369,13 +382,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2.5 mb-3">
-              <svg width="32" height="32" viewBox="0 0 40 40" fill="none">
-                <circle cx="20" cy="20" r="19" fill="url(#fg)"/>
-                <defs><radialGradient id="fg" cx="35%" cy="30%" r="70%"><stop offset="0%" stopColor="#f87171"/><stop offset="100%" stopColor="#dc2626"/></radialGradient></defs>
-                {[[12,12],[18,10],[24,12],[28,17],[27,23],[22,27],[16,27],[11,23],[11,17],[20,20]].map(([cx,cy],i)=>(
-                  <circle key={i} cx={cx} cy={cy} r={1.8} fill="white" opacity={i<9?0.9:0.6}/>
-                ))}
-              </svg>
+              <PreflexLogo size={32} />
               <div>
                 <p className="font-bold text-sm">Preflex Solutions Pvt. Ltd.</p>
                 <p className="text-xs text-white/50">MindCheck Platform</p>

@@ -256,6 +256,12 @@ class QuestionUpdate(BaseModel):
 class SeedBody(BaseModel):
     category: Optional[str] = None
 
+class InstitutionBody(BaseModel):
+    name: str
+
+class SectionBody(BaseModel):
+    name: str
+
 
 # ── Utility ───────────────────────────────────────────────────────────────────
 
@@ -527,6 +533,98 @@ def edit_result(sub_id: int, body: ReleaseBody, request: Request):
             'WHERE id = %s',
             (body.adminNotes or None, body.aiAnalysis, body.adminAction or None, sub_id)
         )
+    return {'ok': True}
+
+
+# ── Institution routes (public + user) ───────────────────────────────────────
+
+@app.get('/api/institutions')
+def get_institutions():
+    with db() as cur:
+        cur.execute('SELECT id, name FROM institutions ORDER BY name ASC')
+        rows = _rows(cur)
+    return {'ok': True, 'institutions': rows}
+
+
+@app.get('/api/user/sections')
+def user_sections(request: Request):
+    user = get_current_user(request)
+    institution_name = user.get('institution')
+    if not institution_name:
+        return {'ok': True, 'sections': []}
+    with db() as cur:
+        cur.execute(
+            'SELECT s.id, s.name FROM institution_sections s '
+            'JOIN institutions i ON s.institution_id = i.id '
+            'WHERE i.name = %s ORDER BY s.name ASC',
+            (institution_name,)
+        )
+        rows = _rows(cur)
+    return {'ok': True, 'sections': rows}
+
+
+# ── Admin institution routes ──────────────────────────────────────────────────
+
+@app.get('/api/admin/institutions')
+def admin_get_institutions(request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute('SELECT id, name FROM institutions ORDER BY name ASC')
+        insts = _rows(cur)
+        for inst in insts:
+            cur.execute(
+                'SELECT id, name FROM institution_sections WHERE institution_id = %s ORDER BY name ASC',
+                (inst['id'],)
+            )
+            inst['sections'] = _rows(cur)
+    return {'ok': True, 'institutions': insts}
+
+
+@app.post('/api/admin/institutions')
+def admin_add_institution(body: InstitutionBody, request: Request):
+    get_admin(request)
+    name = body.name.strip()
+    if not name:
+        raise HTTPException(400, 'Institution name is required.')
+    with db() as cur:
+        cur.execute(
+            'INSERT INTO institutions (name) VALUES (%s) ON CONFLICT (name) DO NOTHING RETURNING id',
+            (name,)
+        )
+        if not cur.fetchone():
+            raise HTTPException(400, 'Institution already exists.')
+    return {'ok': True}
+
+
+@app.delete('/api/admin/institutions/{inst_id}')
+def admin_delete_institution(inst_id: int, request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute('DELETE FROM institutions WHERE id = %s', (inst_id,))
+    return {'ok': True}
+
+
+@app.post('/api/admin/institutions/{inst_id}/sections')
+def admin_add_section(inst_id: int, body: SectionBody, request: Request):
+    get_admin(request)
+    name = body.name.strip()
+    if not name:
+        raise HTTPException(400, 'Section name is required.')
+    with db() as cur:
+        cur.execute(
+            'INSERT INTO institution_sections (institution_id, name) VALUES (%s,%s) ON CONFLICT DO NOTHING RETURNING id',
+            (inst_id, name)
+        )
+        if not cur.fetchone():
+            raise HTTPException(400, 'Section already exists for this institution.')
+    return {'ok': True}
+
+
+@app.delete('/api/admin/institution-sections/{sec_id}')
+def admin_delete_section(sec_id: int, request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute('DELETE FROM institution_sections WHERE id = %s', (sec_id,))
     return {'ok': True}
 
 

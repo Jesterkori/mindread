@@ -1,19 +1,18 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { CATEGORIES } from '../data/questions'
 
 const CARD_COLORS = {
-  student:       { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
-  'young-adult': { border: '#0d9488', bg: 'rgba(13,148,136,0.12)',  icon: '🎓' },
-  married:       { border: '#f97316', bg: 'rgba(249,115,22,0.12)',  icon: '💍' },
-  divorced:      { border: '#e879f9', bg: 'rgba(232,121,249,0.12)', icon: '🌱' },
-  older:         { border: '#a855f7', bg: 'rgba(168,85,247,0.12)',  icon: '🌟' },
+  student:               { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
+  'young-adult':         { border: '#0d9488', bg: 'rgba(13,148,136,0.12)',  icon: '🎓' },
+  married:               { border: '#f97316', bg: 'rgba(249,115,22,0.12)',  icon: '💍' },
+  divorced:              { border: '#e879f9', bg: 'rgba(232,121,249,0.12)', icon: '🌱' },
+  older:                 { border: '#a855f7', bg: 'rgba(168,85,247,0.12)',  icon: '🌟' },
+  'working-professional':{ border: '#f59e0b', bg: 'rgba(245,158,11,0.12)', icon: '💼' },
+  'business-leader':     { border: '#64748b', bg: 'rgba(100,116,139,0.12)',icon: '🏢' },
+  'single-mother':       { border: '#ec4899', bg: 'rgba(236,72,153,0.12)', icon: '👩‍👧' },
+  'single-father':       { border: '#0ea5e9', bg: 'rgba(14,165,233,0.12)', icon: '👨‍👦' },
 }
-
-const INSTITUTIONS = [
-  { value: 'none',        label: 'None — Individual / Independent' },
-  { value: 'PES College', label: 'PES College (PES University)' },
-]
 
 export default function Register() {
   const navigate = useNavigate()
@@ -21,6 +20,14 @@ export default function Register() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
+  const [institutions, setInstitutions] = useState([])
+
+  useEffect(() => {
+    fetch('/api/institutions')
+      .then(r => r.json())
+      .then(d => { if (d.ok) setInstitutions(d.institutions) })
+      .catch(() => {})
+  }, [])
 
   function handleChange(e) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))
@@ -148,17 +155,20 @@ export default function Register() {
             <div>
               <p className="text-sm font-medium text-white/70 mb-2">Are you part of an institution?</p>
               <div className="grid grid-cols-1 gap-2">
-                {INSTITUTIONS.map(inst => {
-                  const sel = form.institution === inst.value
+                {/* None option */}
+                {['none', ...institutions.map(i => i.name)].map(val => {
+                  const sel = form.institution === val
+                  const isNone = val === 'none'
+                  const label = isNone ? 'None — Individual / Independent' : val
                   return (
-                    <label key={inst.value} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
+                    <label key={val} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
                       style={{
                         border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
                         background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
                       }}>
-                      <input type="radio" name="institution" value={inst.value} checked={sel} onChange={handleChange} className="sr-only"/>
-                      <span className="text-lg">{inst.value === 'none' ? '👤' : '🏫'}</span>
-                      <span className="text-sm font-medium text-white/85">{inst.label}</span>
+                      <input type="radio" name="institution" value={val} checked={sel} onChange={handleChange} className="sr-only"/>
+                      <span className="text-lg">{isNone ? '👤' : '🏫'}</span>
+                      <span className="text-sm font-medium text-white/85">{label}</span>
                       {sel && <span className="ml-auto text-xs font-bold text-green-400">✓</span>}
                     </label>
                   )

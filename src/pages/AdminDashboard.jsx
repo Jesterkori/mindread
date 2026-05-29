@@ -93,6 +93,14 @@ export default function AdminDashboard() {
   const [filterInstitution, setFilterInstitution] = useState('')
   const [filterSection, setFilterSection]         = useState('')
 
+  // Institutions tab state
+  const [instList, setInstList]           = useState([])
+  const [instLoading, setInstLoading]     = useState(false)
+  const [newInstName, setNewInstName]     = useState('')
+  const [expandedInst, setExpandedInst]   = useState(null)
+  const [newSecName, setNewSecName]       = useState({})
+  const [instBusy, setInstBusy]           = useState({})
+
   // Questions tab state
   const [qCategory, setQCategory]     = useState(CATEGORIES[0]?.id ?? '')
   const [questions, setQuestions]     = useState([])
@@ -124,6 +132,53 @@ export default function AdminDashboard() {
   }, [])
 
   useEffect(() => { load() }, [load])
+
+  // ── Institution helpers ───────────────────────────────────────────────────
+  const loadInstitutions = useCallback(async () => {
+    setInstLoading(true)
+    const res  = await fetch('/api/admin/institutions', { headers: authHeader() })
+    const data = await res.json()
+    if (data.ok) setInstList(data.institutions)
+    setInstLoading(false)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  useEffect(() => { if (tab === 'institutions') loadInstitutions() }, [tab, loadInstitutions])
+
+  async function addInstitution() {
+    const name = newInstName.trim()
+    if (!name) return
+    setInstBusy(b => ({ ...b, addInst: true }))
+    await fetch('/api/admin/institutions', { method: 'POST', headers, body: JSON.stringify({ name }) })
+    setInstBusy(b => ({ ...b, addInst: false }))
+    setNewInstName('')
+    loadInstitutions()
+  }
+
+  async function deleteInstitution(id) {
+    if (!confirm('Delete this institution and ALL its sections? This cannot be undone.')) return
+    setInstBusy(b => ({ ...b, [`delInst-${id}`]: true }))
+    await fetch(`/api/admin/institutions/${id}`, { method: 'DELETE', headers })
+    setInstBusy(b => ({ ...b, [`delInst-${id}`]: false }))
+    loadInstitutions()
+  }
+
+  async function addSection(instId) {
+    const name = (newSecName[instId] || '').trim()
+    if (!name) return
+    setInstBusy(b => ({ ...b, [`addSec-${instId}`]: true }))
+    await fetch(`/api/admin/institutions/${instId}/sections`, { method: 'POST', headers, body: JSON.stringify({ name }) })
+    setInstBusy(b => ({ ...b, [`addSec-${instId}`]: false }))
+    setNewSecName(n => ({ ...n, [instId]: '' }))
+    loadInstitutions()
+  }
+
+  async function deleteSection(secId) {
+    setInstBusy(b => ({ ...b, [`delSec-${secId}`]: true }))
+    await fetch(`/api/admin/institution-sections/${secId}`, { method: 'DELETE', headers })
+    setInstBusy(b => ({ ...b, [`delSec-${secId}`]: false }))
+    loadInstitutions()
+  }
 
   async function approveUser(id) {
     setBusy((b) => ({ ...b, [`approve-${id}`]: true }))
@@ -613,9 +668,10 @@ export default function AdminDashboard() {
         <div className="flex gap-1 rounded-xl p-1 w-fit flex-wrap"
           style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
           {[
-            { key: 'pending',     label: `Pending Approvals${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ''}` },
-            { key: 'submissions', label: `Assessments${submissions.length > 0 ? ` (${submissions.length})` : ''}` },
-            { key: 'questions',   label: 'Questions' },
+            { key: 'pending',      label: `Pending Approvals${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ''}` },
+            { key: 'submissions',  label: `Assessments${submissions.length > 0 ? ` (${submissions.length})` : ''}` },
+            { key: 'institutions', label: `Institutions${instList.length > 0 ? ` (${instList.length})` : ''}` },
+            { key: 'questions',    label: 'Questions' },
           ].map((t) => (
             <button key={t.key} onClick={() => setTab(t.key)}
               className="px-4 py-2 rounded-lg text-sm font-medium transition-all"
@@ -796,6 +852,131 @@ export default function AdminDashboard() {
               </>
             )}
           </>
+        )}
+
+        {/* ── Institutions Tab ─────────────────────────────────────────────── */}
+        {tab === 'institutions' && (
+          <div className="space-y-4">
+            {/* Add institution */}
+            <div className="rounded-2xl p-5" style={glass}>
+              <p className="text-sm font-semibold text-white/70 mb-3">Add New Institution</p>
+              <div className="flex gap-2">
+                <GlassInput
+                  placeholder="Institution name (e.g. Christ University)"
+                  value={newInstName}
+                  onChange={e => setNewInstName(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && addInstitution()}
+                  style={{ flex: 1 }}
+                />
+                <button
+                  onClick={addInstitution}
+                  disabled={instBusy.addInst || !newInstName.trim()}
+                  className="px-5 py-2 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-40"
+                  style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)', whiteSpace: 'nowrap' }}
+                >
+                  {instBusy.addInst ? 'Adding…' : '+ Add'}
+                </button>
+              </div>
+            </div>
+
+            {/* Institution list */}
+            {instLoading ? (
+              <div className="rounded-2xl p-8 text-center" style={glass}>
+                <div className="w-6 h-6 border-2 border-green-400 border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                <p className="text-white/40 text-sm">Loading…</p>
+              </div>
+            ) : instList.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={glass}>
+                <p className="text-3xl mb-2">🏫</p>
+                <p className="text-white/60 font-medium">No institutions yet</p>
+                <p className="text-white/35 text-sm mt-1">Add one above to get started.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {instList.map(inst => {
+                  const open = expandedInst === inst.id
+                  return (
+                    <div key={inst.id} className="rounded-2xl overflow-hidden" style={glass}>
+                      {/* Institution header row */}
+                      <div className="flex items-center gap-3 px-5 py-4">
+                        <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                          style={{ background: 'rgba(74,222,128,0.15)', border: '1px solid rgba(74,222,128,0.3)' }}>
+                          <span className="text-lg">🏫</span>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-white">{inst.name}</p>
+                          <p className="text-xs text-white/40">{inst.sections.length} section{inst.sections.length !== 1 ? 's' : ''}</p>
+                        </div>
+                        <button
+                          onClick={() => setExpandedInst(open ? null : inst.id)}
+                          className="text-sm font-medium text-green-400 hover:text-green-300 transition-colors px-2"
+                        >
+                          {open ? 'Collapse' : 'Manage'}
+                        </button>
+                        <button
+                          onClick={() => deleteInstitution(inst.id)}
+                          disabled={instBusy[`delInst-${inst.id}`]}
+                          className="text-xs px-3 py-1.5 rounded-lg transition-colors disabled:opacity-40"
+                          style={{ background: 'rgba(248,113,113,0.12)', color: '#f87171', border: '1px solid rgba(248,113,113,0.25)' }}
+                        >
+                          {instBusy[`delInst-${inst.id}`] ? '…' : 'Delete'}
+                        </button>
+                      </div>
+
+                      {/* Expanded: sections list + add section */}
+                      {open && (
+                        <div className="px-5 pb-5 space-y-3" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                          <p className="text-xs font-semibold text-white/45 uppercase tracking-widest pt-3">Sections</p>
+
+                          {inst.sections.length === 0 ? (
+                            <p className="text-sm text-white/30 italic">No sections yet — add one below.</p>
+                          ) : (
+                            <div className="flex flex-wrap gap-2">
+                              {inst.sections.map(sec => (
+                                <div key={sec.id} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg"
+                                  style={{ background: 'rgba(96,165,250,0.12)', border: '1px solid rgba(96,165,250,0.25)' }}>
+                                  <span className="text-xs font-medium text-blue-300">{sec.name}</span>
+                                  <button
+                                    onClick={() => deleteSection(sec.id)}
+                                    disabled={instBusy[`delSec-${sec.id}`]}
+                                    className="text-blue-300/50 hover:text-red-400 transition-colors disabled:opacity-40 ml-0.5"
+                                    title="Remove section"
+                                  >
+                                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                  </button>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+
+                          {/* Add section inline */}
+                          <div className="flex gap-2 pt-1">
+                            <GlassInput
+                              placeholder="New section name (e.g. 3rd Year)"
+                              value={newSecName[inst.id] || ''}
+                              onChange={e => setNewSecName(n => ({ ...n, [inst.id]: e.target.value }))}
+                              onKeyDown={e => e.key === 'Enter' && addSection(inst.id)}
+                              style={{ flex: 1 }}
+                            />
+                            <button
+                              onClick={() => addSection(inst.id)}
+                              disabled={instBusy[`addSec-${inst.id}`] || !(newSecName[inst.id] || '').trim()}
+                              className="px-4 py-2 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-40"
+                              style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)', whiteSpace: 'nowrap' }}
+                            >
+                              {instBusy[`addSec-${inst.id}`] ? '…' : '+ Section'}
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+          </div>
         )}
 
         {/* ── Questions Tab ──────────────────────────────────────────────────── */}
