@@ -153,6 +153,25 @@ export default function Questionnaire() {
       .catch(() => setQuestions(QUESTIONS[categoryId] ?? []))
   }, [categoryId]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Keyboard shortcuts: A/B/C/D or 1/2/3/4 = pick answer, Enter/→ = next, ← = prev
+  useEffect(() => {
+    if (!questions) return
+    const q = questions[current]
+    if (!q) return
+    function onKey(e) {
+      if (['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)) return
+      const KEY_MAP = { A:'A', B:'B', C:'C', D:'D', '1':'A', '2':'B', '3':'C', '4':'D' }
+      const pick = KEY_MAP[e.key.toUpperCase()]
+      if (pick) { setAnswers(prev => ({ ...prev, [q.id]: pick })); return }
+      if ((e.key === 'Enter' || e.key === 'ArrowRight') && answers[q.id] && current < questions.length - 1) {
+        setCurrent(c => c + 1)
+      }
+      if (e.key === 'ArrowLeft' && current > 0) setCurrent(c => c - 1)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [current, answers, questions]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Wait for sections to load before showing section picker
   if (!categoryId || questions === null || (needsSection && !sectionConfirmed && availSections === null)) {
     return (
@@ -199,36 +218,35 @@ export default function Questionnaire() {
 
           <div className="rounded-2xl p-6"
             style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
-            <p className="text-sm font-medium text-white/70 mb-3">Your section</p>
-            <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
-              {availSections.map((s) => {
-                const sel = section === s
-                return (
-                  <button
-                    key={s}
-                    type="button"
-                    onClick={() => setSection(s)}
-                    className="px-3 py-2.5 rounded-xl text-sm font-medium text-left transition-all"
-                    style={{
-                      background: sel ? 'rgba(74,222,128,0.2)' : 'rgba(255,255,255,0.05)',
-                      border: `1.5px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.1)'}`,
-                      color: sel ? '#4ade80' : 'rgba(255,255,255,0.7)',
-                    }}
-                  >
-                    {s}
-                  </button>
-                )
-              })}
-            </div>
+            <label className="block text-sm font-medium text-white/70 mb-2">Your section</label>
+            <select
+              value={section}
+              onChange={e => setSection(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && section) setSectionConfirmed(true) }}
+              autoFocus
+              className="w-full px-4 py-3 rounded-xl text-sm font-medium outline-none transition-all"
+              style={{
+                background: 'rgb(8,24,52)',
+                border: `1.5px solid ${section ? 'rgba(74,222,128,0.6)' : 'rgba(255,255,255,0.15)'}`,
+                color: 'white',
+                colorScheme: 'dark',
+              }}
+            >
+              <option value="">— choose your section —</option>
+              {availSections.map(s => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
 
             <button
               onClick={() => { if (section) setSectionConfirmed(true) }}
               disabled={!section}
-              className="mt-5 w-full py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95 disabled:opacity-40"
+              className="mt-4 w-full py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95 disabled:opacity-40"
               style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}
             >
               {section ? `Continue with ${section}` : 'Select a section to continue'}
             </button>
+            <p className="text-center text-white/25 text-xs mt-2">Press Enter to confirm</p>
           </div>
         </div>
       </div>
