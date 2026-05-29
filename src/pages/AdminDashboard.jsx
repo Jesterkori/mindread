@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { CATEGORIES, QUESTIONS } from '../data/questions'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 function categoryLabel(id) {
   return CATEGORIES.find((c) => c.id === id)?.label ?? id
@@ -1104,6 +1105,7 @@ export default function AdminDashboard() {
           </div>
         )}
       </main>
+      <Footer />
     </div>
   )
 }

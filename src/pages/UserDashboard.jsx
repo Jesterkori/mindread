@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 const LEVEL_STYLES = {
   healthy:  { border: 'rgba(74,222,128,0.5)',  badge: 'rgba(74,222,128,0.15)',  badgeText: '#4ade80', dot: '#4ade80'  },
@@ -219,6 +220,7 @@ export default function UserDashboard() {
           )}
         </div>
       </main>
+      <Footer />
     </div>
   )
 }

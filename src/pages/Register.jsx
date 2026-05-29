@@ -2,17 +2,18 @@ import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 const CARD_COLORS = {
-  student:               { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
-  'young-adult':         { border: '#0d9488', bg: 'rgba(13,148,136,0.12)',  icon: '🎓' },
-  married:               { border: '#f97316', bg: 'rgba(249,115,22,0.12)',  icon: '💍' },
-  divorced:              { border: '#e879f9', bg: 'rgba(232,121,249,0.12)', icon: '🌱' },
-  older:                 { border: '#a855f7', bg: 'rgba(168,85,247,0.12)',  icon: '🌟' },
-  'working-professional':{ border: '#f59e0b', bg: 'rgba(245,158,11,0.12)', icon: '💼' },
-  'business-leader':     { border: '#64748b', bg: 'rgba(100,116,139,0.12)',icon: '🏢' },
-  'single-mother':       { border: '#ec4899', bg: 'rgba(236,72,153,0.12)', icon: '👩‍👧' },
-  'single-father':       { border: '#0ea5e9', bg: 'rgba(14,165,233,0.12)', icon: '👨‍👦' },
+  student:              { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
+  'young-adult':        { border: '#0d9488', bg: 'rgba(13,148,136,0.12)',  icon: '🎓' },
+  married:              { border: '#f97316', bg: 'rgba(249,115,22,0.12)',  icon: '💍' },
+  divorced:             { border: '#e879f9', bg: 'rgba(232,121,249,0.12)', icon: '🌱' },
+  older:                { border: '#a855f7', bg: 'rgba(168,85,247,0.12)',  icon: '🌟' },
+  'single-mother':      { border: '#ec4899', bg: 'rgba(236,72,153,0.12)', icon: '👩‍👧' },
+  'single-father':      { border: '#0ea5e9', bg: 'rgba(14,165,233,0.12)', icon: '👨‍👦' },
+  'counselling-10th':   { border: '#f97316', bg: 'rgba(249,115,22,0.12)', icon: '📖' },
+  'counselling-12th':   { border: '#06b6d4', bg: 'rgba(6,182,212,0.12)',  icon: '🏫' },
 }
 
 export default function Register() {
@@ -112,10 +113,6 @@ export default function Register() {
       <div className="relative z-10 w-full max-w-lg">
         {/* Logo */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
-               style={{ background: 'rgba(255,255,255,0.15)', border: '1.5px solid rgba(255,255,255,0.25)' }}>
-            <span className="text-2xl">🧠</span>
-          </div>
           <h1 className="text-3xl font-extrabold text-white tracking-wide">MindCheck</h1>
           <p className="text-white/55 text-sm mt-1">Create your account</p>
         </div>
@@ -211,6 +208,7 @@ export default function Register() {
           <Link to="/login" className="text-green-400 font-semibold hover:text-green-300 transition-colors">Sign in</Link>
         </p>
       </div>
+      <Footer />
     </div>
   )
 }

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/questions'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 /* ── Detect emotion from question text — mirrors the pygame keyword approach ── */
 function detectEmotion(text) {
@@ -381,67 +382,64 @@ export default function Questionnaire() {
         {/* Question card */}
         <div className="rounded-2xl p-6 mb-4"
           style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
-          <div className="flex gap-4 items-stretch">
 
-            {/* Left: question text + answers + indicator */}
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3">
-                Q{question.id}
-              </p>
-              <p className="text-white font-medium text-lg leading-relaxed mb-5">
-                {question.text}
-              </p>
+          {/* Question number + text — full width */}
+          <p className="text-xs font-medium text-white/30 uppercase tracking-widest mb-3">
+            Q{question.id}
+          </p>
+          <p className="text-white font-medium text-lg leading-relaxed mb-5">
+            {question.text}
+          </p>
 
-              {/* Answer options */}
-              <div className="space-y-2.5">
-                {ANSWER_OPTIONS.map((opt) => {
-                  const selected = currentAnswer === opt.value
-                  return (
-                    <button
-                      key={opt.value}
-                      onClick={() => selectAnswer(opt.value)}
-                      className="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-150 active:scale-[0.98]"
+          {/* Answers beside the emotion face — face head starts at first option level */}
+          <div className="flex gap-4 items-start">
+            <div className="flex-1 min-w-0 space-y-2.5">
+              {ANSWER_OPTIONS.map((opt) => {
+                const selected = currentAnswer === opt.value
+                return (
+                  <button
+                    key={opt.value}
+                    onClick={() => selectAnswer(opt.value)}
+                    className="w-full flex items-center gap-4 px-5 py-4 rounded-xl text-left transition-all duration-150 active:scale-[0.98]"
+                    style={{
+                      background: selected ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
+                      border: `2px solid ${selected ? 'rgba(74,222,128,0.6)' : 'rgba(255,255,255,0.1)'}`,
+                    }}
+                  >
+                    <span
+                      className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors"
                       style={{
-                        background: selected ? 'rgba(74,222,128,0.15)' : 'rgba(255,255,255,0.05)',
-                        border: `2px solid ${selected ? 'rgba(74,222,128,0.6)' : 'rgba(255,255,255,0.1)'}`,
+                        background: selected ? 'rgba(74,222,128,0.8)' : 'rgba(255,255,255,0.08)',
+                        color: selected ? '#0c1f3a' : 'rgba(255,255,255,0.5)',
                       }}
                     >
-                      <span
-                        className="flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center text-sm font-bold transition-colors"
-                        style={{
-                          background: selected ? 'rgba(74,222,128,0.8)' : 'rgba(255,255,255,0.08)',
-                          color: selected ? '#0c1f3a' : 'rgba(255,255,255,0.5)',
-                        }}
-                      >
-                        {opt.value}
-                      </span>
-                      <span className="font-medium" style={{ color: selected ? '#4ade80' : 'rgba(255,255,255,0.75)' }}>
-                        {opt.label}
-                      </span>
-                      {selected && (
-                        <svg className="ml-auto w-5 h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                        </svg>
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
-
-              {/* Indicator hint */}
-              <div className="mt-5 flex items-start gap-2 text-xs text-white/30">
-                <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span>{question.indicator}</span>
-              </div>
+                      {opt.value}
+                    </span>
+                    <span className="font-medium" style={{ color: selected ? '#4ade80' : 'rgba(255,255,255,0.75)' }}>
+                      {opt.label}
+                    </span>
+                    {selected && (
+                      <svg className="ml-auto w-5 h-5 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                )
+              })}
             </div>
 
-            {/* Right: full-height emotion face — same block size as question */}
-            <div className="flex-shrink-0 hidden sm:flex" style={{ width: '140px' }}>
+            {/* Emotion face — head starts at same level as first answer option */}
+            <div className="flex-shrink-0 hidden sm:block" style={{ width: '140px', height: '210px' }}>
               <EmotionFace emotion={detectEmotion(question.text)} />
             </div>
+          </div>
 
+          {/* Indicator hint */}
+          <div className="mt-5 flex items-start gap-2 text-xs text-white/30">
+            <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{question.indicator}</span>
           </div>
         </div>
 
@@ -504,6 +502,7 @@ export default function Questionnaire() {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   )
 }

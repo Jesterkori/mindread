@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 export default function Login() {
   const { login } = useAuth()
@@ -63,10 +64,6 @@ export default function Login() {
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl shadow-lg mb-4"
-               style={{ background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(8px)', border: '1.5px solid rgba(255,255,255,0.25)' }}>
-            <span className="text-3xl">🧠</span>
-          </div>
           <h1 className="text-3xl font-extrabold text-white tracking-wide">MindCheck</h1>
           <p className="text-white/60 text-sm mt-1">Mental Wellness Assessment Tool</p>
         </div>
@@ -152,6 +149,7 @@ export default function Login() {
           </Link>
         </p>
       </div>
+      <Footer />
     </div>
   )
 }

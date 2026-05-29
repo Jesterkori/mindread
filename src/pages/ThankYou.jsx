@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
+import Footer from '../components/Footer'
 
 const bgStyle = { background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }
 
@@ -93,6 +94,7 @@ export default function ThankYou() {
           </button>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
-import PreflexLogo from '../components/PreflexLogo'
+import Footer from '../components/Footer'
 
 /* ── Scroll-reveal hook ─────────────────────────────────────────────────────── */
 function useReveal() {
@@ -271,7 +271,7 @@ export default function Landing() {
             <span className="text-xs font-bold uppercase tracking-widest text-green-500 mb-3 block">Assessment Categories</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800">Designed for Every Life Stage</h2>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {CATEGORIES.map((cat, i) => (
               <div key={cat.title} data-reveal data-delay={String(i + 1)}
                    className="rounded-2xl p-5 border-2 hover:-translate-y-1 hover:shadow-lg transition-all cursor-pointer"
@@ -378,43 +378,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── FOOTER ────────────────────────────────────────────────────────────── */}
-      <footer id="contact" className="bg-slate-900 text-white py-12 px-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 mb-8">
-          <div>
-            <div className="flex items-center gap-2.5 mb-3">
-              <PreflexLogo size={32} />
-              <div>
-                <p className="font-bold text-sm">Preflex Solutions Pvt. Ltd.</p>
-                <p className="text-xs text-white/50">MindCheck Platform</p>
-              </div>
-            </div>
-            <p className="text-white/50 text-sm leading-relaxed">
-              A gate to personalized counselling &amp; mental wellness support for all ages.
-            </p>
-          </div>
-          <div>
-            <p className="font-semibold text-sm mb-3">Quick Links</p>
-            <div className="space-y-2">
-              {['Home','About','Features','Register','Sign In'].map(l => (
-                <p key={l} className="text-white/50 text-sm hover:text-white transition-colors cursor-pointer">{l}</p>
-              ))}
-            </div>
-          </div>
-          <div>
-            <p className="font-semibold text-sm mb-3">Contact</p>
-            <p className="text-white/50 text-sm">Preflex Solutions Pvt. Ltd.</p>
-            <a href="https://www.preflexsol.com" target="_blank" rel="noreferrer"
-               className="text-green-400 text-sm hover:text-green-300 transition-colors">
-              www.preflexsol.com
-            </a>
-          </div>
-        </div>
-        <div className="max-w-6xl mx-auto border-t border-white/10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p className="text-white/40 text-xs">© 2026 Preflex Solutions Pvt. Ltd. All rights reserved.</p>
-          <p className="text-white/40 text-xs">MindCheck — Mental Wellness Assessment Tool</p>
-        </div>
-      </footer>
+      <div id="contact"><Footer /></div>
     </div>
   )
 }

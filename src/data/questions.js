@@ -30,10 +30,10 @@ export const CATEGORIES = [
   },
   {
     id: 'married',
-    label: 'Married / Live-in',
+    label: 'Adult & Couples',
     ageRange: 'All ages',
     icon: '💍',
-    description: 'For married or live-in individuals assessing wellbeing in the relationship',
+    description: 'For adults and couples assessing individual and relationship wellbeing',
     color: 'from-rose-500 to-rose-600',
     bg: 'bg-rose-50',
     border: 'border-rose-200',
@@ -59,26 +59,6 @@ export const CATEGORIES = [
     border: 'border-purple-200',
   },
   {
-    id: 'working-professional',
-    label: 'Working Professional',
-    ageRange: 'All ages',
-    icon: '💼',
-    description: 'For working professionals assessing workplace stress and burnout',
-    color: 'from-amber-500 to-amber-600',
-    bg: 'bg-amber-50',
-    border: 'border-amber-200',
-  },
-  {
-    id: 'business-leader',
-    label: 'Business Leader',
-    ageRange: 'All ages',
-    icon: '🏢',
-    description: 'For entrepreneurs and business owners navigating the pressures of leadership',
-    color: 'from-slate-500 to-slate-600',
-    bg: 'bg-slate-50',
-    border: 'border-slate-200',
-  },
-  {
     id: 'single-mother',
     label: 'Single Mother',
     ageRange: 'All ages',
@@ -97,6 +77,26 @@ export const CATEGORIES = [
     color: 'from-sky-500 to-sky-600',
     bg: 'bg-sky-50',
     border: 'border-sky-200',
+  },
+  {
+    id: 'counselling-10th',
+    label: 'Counselling for 10th',
+    ageRange: '15 – 16 years',
+    icon: '📖',
+    description: 'Career aptitude and interest assessment for 10th standard students',
+    color: 'from-orange-500 to-orange-600',
+    bg: 'bg-orange-50',
+    border: 'border-orange-200',
+  },
+  {
+    id: 'counselling-12th',
+    label: 'Counselling for 12th',
+    ageRange: '17 – 18 years',
+    icon: '🏫',
+    description: 'Career direction and college readiness assessment for 12th standard students',
+    color: 'from-cyan-500 to-cyan-600',
+    bg: 'bg-cyan-50',
+    border: 'border-cyan-200',
   },
 ]
 
@@ -1532,17 +1532,45 @@ const singleFatherQuestions = [
   },
 ]
 
+// ─── Counselling for 10th — career aptitude (10 questions) ───────────────────
+const counselling10thQuestions = [
+  { id:1,  part:'Part 1: Technical & Creative Interests', text:'How often do you enjoy taking things apart, building projects, or fixing devices with your hands?', indicator:'Mechanical aptitude and hands-on problem-solving — suited for engineering or technology.', reversed:false, safetyQuestion:false },
+  { id:2,  part:'Part 1: Technical & Creative Interests', text:'How often do you spend your free time sketching, writing, making music, or creating content?', indicator:'Creative and language arts inclination — suited for design, media, or communication.', reversed:false, safetyQuestion:false },
+  { id:3,  part:'Part 2: Academic Strengths', text:'How often do you enjoy solving maths puzzles, logic problems, or coding challenges?', indicator:'Analytical and mathematical aptitude — suited for engineering, technology, or finance.', reversed:false, safetyQuestion:false },
+  { id:4,  part:'Part 2: Academic Strengths', text:'How often do you enjoy science subjects (biology, chemistry, physics) and asking why things work?', indicator:'Scientific curiosity and STEM inclination — suited for medicine, research, or engineering.', reversed:false, safetyQuestion:false },
+  { id:5,  part:'Part 3: People & Leadership Skills', text:'How often do your classmates come to you for advice or emotional support?', indicator:'Empathy and interpersonal aptitude — suited for psychology, counselling, or social work.', reversed:false, safetyQuestion:false },
+  { id:6,  part:'Part 3: People & Leadership Skills', text:'How often do you naturally take charge, organise group projects, or step up as a leader?', indicator:'Leadership and organisational aptitude — suited for management or administration.', reversed:false, safetyQuestion:false },
+  { id:7,  part:'Part 4: Business & Career Interests', text:'How often do you think about starting a business, earning money independently, or selling something?', indicator:'Entrepreneurial spirit and commercial awareness — suited for business or entrepreneurship.', reversed:false, safetyQuestion:false },
+  { id:8,  part:'Part 4: Business & Career Interests', text:'How often do you enjoy helping or explaining things to younger students?', indicator:'Teaching and mentorship aptitude — suited for education careers.', reversed:false, safetyQuestion:false },
+  { id:9,  part:'Part 5: Career Clarity', text:'How often do you feel confident and clear about the career field or stream you want after 10th?', indicator:'Career readiness; low confidence here suggests a need for structured career counselling.', reversed:true, safetyQuestion:false },
+  { id:10, part:'Part 5: Career Clarity', text:'How often do you actively research career options, college pathways, or talk to a mentor about your future?', indicator:'Proactive career exploration; low engagement suggests guidance is needed.', reversed:true, safetyQuestion:false },
+]
+
+// ─── Counselling for 12th — career direction (10 questions) ──────────────────
+const counselling12thQuestions = [
+  { id:1,  part:'Part 1: Stream & Subject Clarity', text:'How often do you feel the stream you chose (Science / Commerce / Arts) truly matches your interests?', indicator:'Alignment between chosen stream and personal aptitude; misalignment suggests re-evaluation.', reversed:true, safetyQuestion:false },
+  { id:2,  part:'Part 1: Stream & Subject Clarity', text:'How often do you feel overwhelmed by the pressure of board exams, entrance tests, and career decisions?', indicator:'Academic stress and career-related anxiety — a primary counselling focus for 12th students.', reversed:false, safetyQuestion:false },
+  { id:3,  part:'Part 2: College & Career Planning', text:'How often do you actively research colleges, entrance exams (JEE/NEET/CUET), or degree programmes?', indicator:'Proactive college planning; low engagement signals need for structured career guidance.', reversed:true, safetyQuestion:false },
+  { id:4,  part:'Part 2: College & Career Planning', text:"How often do you feel your parents' career expectations align with what YOU actually want to do?", indicator:"Family-student expectation alignment; frequent mismatch is a major source of stress.", reversed:true, safetyQuestion:false },
+  { id:5,  part:'Part 2: College & Career Planning', text:'How often do you feel confused or indecisive about which college, course, or career to choose?', indicator:'Decision-making clarity; high confusion signals the need for structured career counselling.', reversed:false, safetyQuestion:false },
+  { id:6,  part:'Part 3: Personal Development', text:'How often do you develop skills outside school (coding, public speaking, sports, art, etc.)?', indicator:'Self-driven skill development beyond academics — important for holistic career readiness.', reversed:true, safetyQuestion:false },
+  { id:7,  part:'Part 3: Personal Development', text:'How often do you feel genuinely excited and motivated when imagining yourself in your future career?', indicator:'Intrinsic career motivation; low excitement may indicate a poor career-interest fit.', reversed:true, safetyQuestion:false },
+  { id:8,  part:'Part 4: Support & Guidance', text:'How often do you discuss your career goals with a teacher, counsellor, or mentor for structured guidance?', indicator:'Access to career guidance; low engagement suggests the student needs more support.', reversed:true, safetyQuestion:false },
+  { id:9,  part:'Part 4: Support & Guidance', text:'How often do you compare yourself to peers and feel unprepared or behind in career planning?', indicator:'Peer comparison and career-related self-esteem issues; frequent comparison signals anxiety.', reversed:false, safetyQuestion:false },
+  { id:10, part:'Part 5: Goal Setting', text:'How often do you feel you have a clear 2-3 year plan for your education and career after 12th?', indicator:'Short-term goal clarity; low clarity is the primary indicator for career counselling need.', reversed:true, safetyQuestion:false },
+]
+
 // ─── All questions by category ────────────────────────────────────────────────
 export const QUESTIONS = {
-  'student':              studentQuestions,
-  'young-adult':          youngAdultQuestions,
-  'married':              marriedQuestions,
-  'divorced':             divorcedQuestions,
-  'older':                olderQuestions,
-  'working-professional': workingProfessionalQuestions,
-  'business-leader':      businessLeaderQuestions,
-  'single-mother':        singleMotherQuestions,
-  'single-father':        singleFatherQuestions,
+  'student':           studentQuestions,
+  'young-adult':       youngAdultQuestions,
+  'married':           marriedQuestions,
+  'divorced':          divorcedQuestions,
+  'older':             olderQuestions,
+  'single-mother':     singleMotherQuestions,
+  'single-father':     singleFatherQuestions,
+  'counselling-10th':  counselling10thQuestions,
+  'counselling-12th':  counselling12thQuestions,
 }
 
 // ─── Scoring ──────────────────────────────────────────────────────────────────
