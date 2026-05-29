@@ -1,30 +1,61 @@
-/* Preflex Solutions Pvt.Ltd. — teardrop dot mark, transparent background */
+/* Preflex Solutions Pvt.Ltd. — two-ring C-arc of red dots, cyan at base */
 export default function PreflexLogo({ size = 38 }) {
+  const R  = '#e63329'   // Preflex brand red
+  const R2 = '#f05540'   // slightly lighter red for inner ring
+  const C  = '#1cc8d4'   // cyan accent at the base
+
+  // All dots laid out on two concentric arcs, C-shape opening to upper-right.
+  // ViewBox 36×36, arc centre (18, 19).
+  // Outer ring radius ≈ 14 | Inner ring radius ≈ 8
+  // Angles use SVG convention (0° = right, clockwise).
+  // Arc spans ~260° from 55° → 315° leaving a gap on the upper-right.
+  //
+  // Outer ring — 8 dots, larger, spanning the full arc
+  // Inner ring — 6 dots, smaller, slightly inside
+  // Base accent — 2 small cyan dots near the lowest point of the arc
+
   const dots = [
-    ['ol0', 16,  4, 2.5, '#f97316'], ['ol1',  9, 13, 2.5, '#f87171'],
-    ['ol2',  5, 23, 2.4, '#ef4444'], ['ol3',  5, 34, 2.4, '#dc2626'],
-    ['ol4', 10, 44, 2.3, '#dc2626'], ['ol5', 18, 52, 2.1, '#22d3ee'],
-    ['ot0', 24,  2, 2.5, '#f97316'],
-    ['or0', 34,  2, 2.4, '#1e3a8a'], ['or1', 43,  6, 2.4, '#1e3a8a'],
-    ['or2', 50, 14, 2.3, '#1e40af'], ['or3', 53, 24, 2.3, '#3730a3'],
-    ['or4', 52, 35, 2.2, '#4338ca'], ['or5', 46, 45, 2.1, '#6d28d9'],
-    ['or6', 37, 52, 2.0, '#7c3aed'],
-    ['il0', 23,  9, 2.1, '#f97316'], ['il1', 15, 18, 2.1, '#ef4444'],
-    ['il2', 12, 28, 2.0, '#dc2626'], ['il3', 13, 39, 1.9, '#ef4444'],
-    ['il4', 19, 49, 1.8, '#0ea5e9'],
-    ['ir0', 33,  9, 2.0, '#1e40af'], ['ir1', 41, 16, 1.9, '#3730a3'],
-    ['ir2', 44, 26, 1.9, '#4338ca'], ['ir3', 42, 37, 1.8, '#6d28d9'],
-    ['ir4', 35, 46, 1.7, '#7c3aed'],
-    ['c0',  28, 14, 1.7, '#f97316'], ['c1',  36, 20, 1.5, '#4338ca'],
-    ['c2',  37, 30, 1.4, '#6d28d9'], ['c3',  31, 39, 1.4, '#0ea5e9'],
-    ['c4',  25, 47, 1.3, '#06b6d4'],
-    ['t0',  26, 56, 1.7, '#0ea5e9'], ['t1',  27, 62, 1.4, '#06b6d4'],
-    ['t2',  26, 68, 1.2, '#22d3ee'], ['t3',  27, 74, 1.0, '#67e8f9'],
+    // ── Outer ring ─────────────────────────────────────────
+    // angle 55°  → lower-right
+    [26.0, 30.7, 2.9, R ],
+    // angle 91°  → bottom-centre
+    [18.0, 33.0, 2.9, R ],
+    // angle 127° → lower-left
+    [ 9.6, 30.2, 2.7, R ],
+    // angle 163° → left
+    [ 4.6, 23.2, 2.6, R ],
+    // angle 199° → left (above centre)
+    [ 4.6, 14.8, 2.6, R ],
+    // angle 235° → upper-left
+    [ 9.8,  7.7, 2.7, R ],
+    // angle 271° → top
+    [18.1,  5.0, 2.9, R ],
+    // angle 307° → upper-right
+    [26.1,  7.3, 2.9, R ],
+
+    // ── Inner ring ─────────────────────────────────────────
+    // angle 73°  → lower inner-right
+    [20.7, 26.7, 1.9, R2],
+    // angle 109° → lower inner-left
+    [15.0, 26.6, 1.8, R2],
+    // angle 155° → inner-left
+    [10.8, 22.2, 1.7, R2],
+    // angle 203° → inner-left (upper)
+    [10.8, 15.8, 1.7, R2],
+    // angle 249° → upper inner-left
+    [15.2, 11.3, 1.8, R2],
+    // angle 285° → upper inner-right
+    [20.8, 11.2, 1.9, R2],
+
+    // ── Cyan base accent (bottom of the arc) ──────────────
+    [18.0, 35.5, 1.5, C ],
+    [18.0, 37.5, 1.1, '#67e8f9'],
   ]
+
   return (
-    <svg width={size} height={Math.round(size * 1.5)} viewBox="0 0 58 78" fill="none">
-      {dots.map(([key, cx, cy, r, fill]) => (
-        <circle key={key} cx={cx} cy={cy} r={r} fill={fill} />
+    <svg width={size} height={Math.round(size * 1.08)} viewBox="0 0 36 39" fill="none">
+      {dots.map(([cx, cy, r, fill], i) => (
+        <circle key={i} cx={cx} cy={cy} r={r} fill={fill} />
       ))}
     </svg>
   )
