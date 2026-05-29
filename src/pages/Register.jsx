@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { CATEGORIES } from '../data/questions'
+import Navbar from '../components/Navbar'
 
 const CARD_COLORS = {
   student:               { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
@@ -92,6 +93,7 @@ export default function Register() {
 
   return (
     <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-10" style={bgStyle}>
+      <Navbar />
       {/* Circuit background */}
       <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.07, pointerEvents: 'none' }}>
         <defs>

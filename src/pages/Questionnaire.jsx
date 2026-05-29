@@ -4,97 +4,112 @@ import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 
-/* ── Detect emotion from question text (based on keyword approach) ──────────── */
+/* ── Detect emotion from question text — mirrors the pygame keyword approach ── */
 function detectEmotion(text) {
   const t = (text || '').toLowerCase()
-  const SAD     = ['sad','empty','cry','crying','grief','lonel','hopeless','worthless','burden','despair','loss','isolat','depress','emptiness','low mood','nothing to look forward','flat','withdrawn','no one','tears','weep']
-  const ANGRY   = ['angry','anger','frustrat','irritab','annoy','furious','resent','snapping','yelling','outburst','temper','cynical','contempt','rage','hate']
-  const ANXIOUS = ['worry','worrying','worried','anxious','anxiety','panic','dread','overwhelm','afraid','fear','racing heart','racing mind','shortness','dizzi','paralyz','catastroph','scared','heart']
-  if (SAD.some(w => t.includes(w)))     return 'sad'
-  if (ANGRY.some(w => t.includes(w)))   return 'angry'
-  if (ANXIOUS.some(w => t.includes(w))) return 'anxious'
+  const SAD      = ['sad','empty','flat','depressed','cry','lonely','down','grief','hopeless','worthless','burden','despair','isolat','withdrawn','emptiness','loss','tears','weep','nothing to look forward','low mood']
+  const HAPPY    = ['happy','joy','excited','good','great','smile','hopeful','positive','energized','enjoy','celebrat','look forward','meaningful','purpose']
+  const ANGRY    = ['angry','mad','furious','hate','frustrated','annoyed','irritab','resent','snapping','yelling','outburst','temper','cynical','contempt','rage','resentful']
+  const SURPRISE = ['panic','dread','overwhelm','racing','shortness','dizzi','paralyz','afraid','fear','sudden','shock','wow','surprise','intense','physical']
+  if (SAD.some(w => t.includes(w)))      return 'sad'
+  if (HAPPY.some(w => t.includes(w)))    return 'happy'
+  if (ANGRY.some(w => t.includes(w)))    return 'angry'
+  if (SURPRISE.some(w => t.includes(w))) return 'surprised'
   return 'neutral'
 }
 
-/* ── Animated emotion face — large, right side of question, no labels ────────── */
+/* ── Full teen character — matches pygame design exactly ─────────────────────── */
 function EmotionFace({ emotion }) {
-  const isSad     = emotion === 'sad'
-  const isAngry   = emotion === 'angry'
-  const isAnxious = emotion === 'anxious'
-
-  const browL = isSad    ? [27,37,47,29]
-              : isAngry  ? [27,29,47,39]
-              : isAnxious? [27,27,47,33]
-              :             [27,32,47,32]
-  const browR = isSad    ? [63,29,83,37]
-              : isAngry  ? [63,39,83,29]
-              : isAnxious? [63,33,83,27]
-              :             [63,32,83,32]
-
-  const eyeRy = isAnxious ? 12 : isAngry ? 6 : 9
-  const mouth = isSad    ? 'M 40 77 Q 55 66 70 77'
-              : isAngry  ? 'M 40 73 L 70 73'
-              : isAnxious? 'M 46 72 Q 55 78 64 72'
-              :              'M 40 70 Q 55 78 70 70'
-  const browW = isAngry ? 5 : 3.5
+  const isSad  = emotion === 'sad'
+  const isHap  = emotion === 'happy'
+  const isAng  = emotion === 'angry'
+  const isSur  = emotion === 'surprised'
+  const eyeR   = isSur ? 13 : 9
 
   return (
-    <svg width="110" height="115" viewBox="0 0 110 115" fill="none">
+    <svg viewBox="0 0 140 250" fill="none" style={{ width: '100%', height: '100%' }}>
+
+      {/* ── Hoodie body ── */}
+      <ellipse cx="70" cy="225" rx="90" ry="90" fill="rgb(40,80,150)"/>
+      <line x1="56" y1="174" x2="56" y2="214" stroke="rgb(200,200,200)" strokeWidth="2.5" strokeLinecap="round"/>
+      <line x1="84" y1="174" x2="84" y2="214" stroke="rgb(200,200,200)" strokeWidth="2.5" strokeLinecap="round"/>
+
+      {/* ── Neck ── */}
+      <rect x="57" y="133" width="26" height="22" fill="rgb(255,218,185)" rx="3"/>
+
+      {/* ── Head group (angry shake via animateTransform) ── */}
       <g>
-        {isAngry && (
-          <animateTransform attributeName="transform" additive="sum"
-            type="translate" values="0,0;3,0;-3,0;3,0;-3,0;0,0"
-            dur="0.35s" repeatCount="indefinite"/>
-        )}
+        {isAng && <animateTransform attributeName="transform" additive="sum"
+          type="translate" values="0,0;3,0;-3,0;3,0;-3,0;0,0" dur="0.35s" repeatCount="indefinite"/>}
 
         {/* Head */}
-        <circle cx="55" cy="55" r="44" fill="rgba(255,220,190,0.95)"
-                stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
+        <circle cx="70" cy="93" r="44" fill="rgb(255,218,185)"/>
 
-        {/* Eyebrows */}
-        <line x1={browL[0]} y1={browL[1]} x2={browL[2]} y2={browL[3]}
-              stroke="#444" strokeWidth={browW} strokeLinecap="round"/>
-        <line x1={browR[0]} y1={browR[1]} x2={browR[2]} y2={browR[3]}
-              stroke="#444" strokeWidth={browW} strokeLinecap="round"/>
+        {/* Backward cap */}
+        <path d="M 28 82 A 44 38 0 0 1 112 82 Z" fill="rgb(200,50,50)"/>
+        <line x1="28" y1="82" x2="9" y2="100" stroke="rgb(200,50,50)" strokeWidth="6" strokeLinecap="round"/>
 
-        {/* Left eye — blinking */}
-        <ellipse cx="38" cy="55" rx="9" ry={eyeRy} fill="#1a1a2e">
-          <animate attributeName="ry"
-            values={`${eyeRy};${eyeRy};${eyeRy};${eyeRy};0.5;${eyeRy}`}
-            dur="4s" repeatCount="indefinite"/>
-        </ellipse>
-        <circle cx="41" cy="51" r="3" fill="white" opacity="0.9"/>
+        {/* Freckles */}
+        {[[50,105],[54,103],[46,101],[90,105],[86,103],[94,101]].map(([x,y],i) => (
+          <circle key={i} cx={x} cy={y} r="2" fill="rgb(210,160,120)"/>
+        ))}
 
-        {/* Right eye — blinking (offset) */}
-        <ellipse cx="72" cy="55" rx="9" ry={eyeRy} fill="#1a1a2e">
-          <animate attributeName="ry"
-            values={`${eyeRy};${eyeRy};${eyeRy};${eyeRy};0.5;${eyeRy}`}
-            dur="4s" begin="0.15s" repeatCount="indefinite"/>
-        </ellipse>
-        <circle cx="75" cy="51" r="3" fill="white" opacity="0.9"/>
+        {/* ── Eyebrows ── */}
+        {isSad ? (<>
+          <line x1="23" y1="75" x2="53" y2="64" stroke="rgb(30,20,20)" strokeWidth="3.5" strokeLinecap="round"/>
+          <line x1="87" y1="64" x2="117" y2="75" stroke="rgb(30,20,20)" strokeWidth="3.5" strokeLinecap="round"/>
+        </>) : isAng ? (<>
+          <line x1="23" y1="64" x2="53" y2="76" stroke="rgb(30,20,20)" strokeWidth="4.5" strokeLinecap="round"/>
+          <line x1="87" y1="76" x2="117" y2="64" stroke="rgb(30,20,20)" strokeWidth="4.5" strokeLinecap="round"/>
+        </>) : isSur ? (<>
+          <path d="M 23 66 Q 38 50 53 66" stroke="rgb(30,20,20)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+          <path d="M 87 66 Q 102 50 117 66" stroke="rgb(30,20,20)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+        </>) : (<>
+          <path d="M 23 68 Q 38 61 53 68" stroke="rgb(30,20,20)" strokeWidth="3" fill="none" strokeLinecap="round"/>
+          <path d="M 87 68 Q 102 61 117 68" stroke="rgb(30,20,20)" strokeWidth="3" fill="none" strokeLinecap="round"/>
+        </>)}
 
-        {/* Mouth */}
-        <path d={mouth} stroke="#b06060" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
+        {/* ── Left eye (blinking) ── */}
+        <g>
+          <g><animate attributeName="opacity" values="1;1;1;1;0;1" dur="4s" repeatCount="indefinite"/>
+            <circle cx="43" cy="87" r={eyeR} fill="rgb(30,20,20)"/>
+            <circle cx="47" cy="83" r="3" fill="white" opacity="0.9"/>
+          </g>
+          <line x1="34" y1="87" x2="52" y2="87" stroke="rgb(30,20,20)" strokeWidth="3" strokeLinecap="round">
+            <animate attributeName="opacity" values="0;0;0;0;1;0" dur="4s" repeatCount="indefinite"/>
+          </line>
+        </g>
 
-        {/* Sad — falling tears */}
+        {/* ── Right eye (blinking, offset) ── */}
+        <g>
+          <g><animate attributeName="opacity" values="1;1;1;1;0;1" dur="4s" begin="0.15s" repeatCount="indefinite"/>
+            <circle cx="97" cy="87" r={eyeR} fill="rgb(30,20,20)"/>
+            <circle cx="101" cy="83" r="3" fill="white" opacity="0.9"/>
+          </g>
+          <line x1="88" y1="87" x2="106" y2="87" stroke="rgb(30,20,20)" strokeWidth="3" strokeLinecap="round">
+            <animate attributeName="opacity" values="0;0;0;0;1;0" dur="4s" begin="0.15s" repeatCount="indefinite"/>
+          </line>
+        </g>
+
+        {/* ── Mouth ── */}
+        {isHap && <path d="M 43 116 A 27 20 0 0 0 97 116" stroke="rgb(100,40,40)" strokeWidth="4" fill="none" strokeLinecap="round"/>}
+        {isSad && <path d="M 43 124 A 27 18 0 0 1 97 124" stroke="rgb(100,40,40)" strokeWidth="4" fill="none" strokeLinecap="round"/>}
+        {isAng && <line x1="45" y1="120" x2="95" y2="120" stroke="rgb(100,40,40)" strokeWidth="4" strokeLinecap="round"/>}
+        {isSur && <ellipse cx="70" cy="120" rx="10" ry="13" fill="rgb(100,40,40)" opacity="0.9"/>}
+        {!isHap && !isSad && !isAng && !isSur &&
+          <line x1="50" y1="119" x2="90" y2="119" stroke="rgb(100,40,40)" strokeWidth="3" strokeLinecap="round"/>}
+
+        {/* ── Sad tears ── */}
         {isSad && <>
-          <ellipse cx="26" cy="65" rx="3.5" ry="7" fill="#93c5fd" opacity="0.85">
-            <animate attributeName="cy" from="65" to="92" dur="1.4s" repeatCount="indefinite"/>
+          <ellipse cx="31" cy="98" rx="3" ry="6" fill="rgb(100,150,255)" opacity="0.85">
+            <animate attributeName="cy" from="98" to="130" dur="1.4s" repeatCount="indefinite"/>
             <animate attributeName="opacity" from="0.85" to="0" dur="1.4s" repeatCount="indefinite"/>
           </ellipse>
-          <ellipse cx="84" cy="65" rx="3.5" ry="7" fill="#93c5fd" opacity="0.85">
-            <animate attributeName="cy" from="65" to="92" dur="1.4s" begin="0.6s" repeatCount="indefinite"/>
+          <ellipse cx="109" cy="98" rx="3" ry="6" fill="rgb(100,150,255)" opacity="0.85">
+            <animate attributeName="cy" from="98" to="130" dur="1.4s" begin="0.6s" repeatCount="indefinite"/>
             <animate attributeName="opacity" from="0.85" to="0" dur="1.4s" begin="0.6s" repeatCount="indefinite"/>
           </ellipse>
         </>}
-
-        {/* Anxious — sweat drop on forehead */}
-        {isAnxious && (
-          <ellipse cx="88" cy="36" rx="4" ry="8" fill="#bfdbfe" opacity="0.8">
-            <animate attributeName="cy" from="36" to="54" dur="2s" repeatCount="indefinite"/>
-            <animate attributeName="opacity" from="0.8" to="0" dur="2s" repeatCount="indefinite"/>
-          </ellipse>
-        )}
       </g>
     </svg>
   )
@@ -366,7 +381,7 @@ export default function Questionnaire() {
         {/* Question card */}
         <div className="rounded-2xl p-6 mb-4"
           style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
-          <div className="flex gap-4 items-start">
+          <div className="flex gap-4 items-stretch">
 
             {/* Left: question text + answers + indicator */}
             <div className="flex-1 min-w-0">
@@ -422,8 +437,8 @@ export default function Questionnaire() {
               </div>
             </div>
 
-            {/* Right: emotion face — large, driven by question content */}
-            <div className="flex-shrink-0 hidden sm:flex items-center pt-6">
+            {/* Right: full-height emotion face — same block size as question */}
+            <div className="flex-shrink-0 hidden sm:flex" style={{ width: '140px' }}>
               <EmotionFace emotion={detectEmotion(question.text)} />
             </div>
 

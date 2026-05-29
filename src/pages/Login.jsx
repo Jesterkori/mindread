@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import Navbar from '../components/Navbar'
 
 export default function Login() {
   const { login } = useAuth()
@@ -35,6 +36,7 @@ export default function Login() {
       className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-10"
       style={{ background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }}
     >
+      <Navbar />
       {/* Circuit SVG background */}
       <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.07, pointerEvents: 'none' }}>
         <defs>
