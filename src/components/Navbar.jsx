@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import PreflexLogo from './PreflexLogo'
 
@@ -10,27 +10,10 @@ const NAV_LINKS = [
   { label: 'Contact',  to: '/#contact'   },
 ]
 
-export default function Navbar({ transparent = false }) {
+export default function Navbar() {
   const { user, logout } = useAuth()
-  const location = useLocation()
   const navigate  = useNavigate()
-  const [scrolled, setScrolled] = useState(false)
-  const [open, setOpen]         = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 20)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  const isLanding = location.pathname === '/'
-  const useDark   = transparent && isLanding && !scrolled
-
-  const bg     = useDark ? 'bg-transparent' : 'bg-white/95 backdrop-blur-md shadow-sm'
-  const text   = useDark ? 'text-white'     : 'text-slate-700'
-  const subtext = useDark ? 'text-white/70' : 'text-slate-500'
-  const border  = useDark ? 'border-white/20' : 'border-slate-200'
-  const logoText = useDark ? 'text-white'   : 'text-slate-800'
+  const [open, setOpen] = useState(false)
 
   function handleLogout() {
     logout()
@@ -38,15 +21,15 @@ export default function Navbar({ transparent = false }) {
   }
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${bg} ${border}`}>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
 
         {/* Left — brand */}
         <Link to="/" className="flex items-center gap-2 flex-shrink-0">
           <PreflexLogo size={30} />
           <div className="leading-tight">
-            <p className={`font-extrabold text-sm tracking-tight ${logoText}`}>Preflex Solutions Pvt.Ltd.</p>
-            <p className={`text-xs ${subtext}`}>MindCheck Platform</p>
+            <p className="font-extrabold text-sm tracking-tight text-slate-800">Preflex Solutions Pvt.Ltd.</p>
+            <p className="text-xs text-slate-500">MindCheck Platform</p>
           </div>
         </Link>
 
@@ -54,7 +37,7 @@ export default function Navbar({ transparent = false }) {
         <div className="hidden md:flex items-center gap-6">
           {NAV_LINKS.map(l => (
             <a key={l.label} href={l.to}
-               className={`text-sm font-medium transition-colors hover:text-green-500 ${text}`}>
+               className="text-sm font-medium text-slate-700 transition-colors hover:text-green-500">
               {l.label}
             </a>
           ))}
@@ -65,7 +48,7 @@ export default function Navbar({ transparent = false }) {
           {user ? (
             <>
               <Link to={user.role === 'admin' ? '/admin' : '/dashboard'}
-                    className={`text-sm font-medium ${text} hover:text-green-500 transition-colors`}>
+                    className="text-sm font-medium text-slate-700 hover:text-green-500 transition-colors">
                 {user.role === 'admin' ? 'Admin Panel' : 'Dashboard'}
               </Link>
               <button onClick={handleLogout}
@@ -77,7 +60,7 @@ export default function Navbar({ transparent = false }) {
           ) : (
             <>
               <Link to="/login"
-                    className={`text-sm font-medium ${text} hover:text-green-500 transition-colors`}>
+                    className="text-sm font-medium text-slate-700 hover:text-green-500 transition-colors">
                 Sign In
               </Link>
               <Link to="/register"

@@ -93,7 +93,7 @@ export default function Landing() {
         .hero-bg { background: linear-gradient(135deg,#0c1f3a 0%,#0d3556 40%,#0b4a52 70%,#0a5c5c 100%); }
       `}</style>
 
-      <Navbar transparent />
+      <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────────────────────── */}
       <section className="hero-bg min-h-screen flex items-center relative overflow-hidden pt-16">

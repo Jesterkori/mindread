@@ -34,7 +34,7 @@ export default function Login() {
 
   return (
     <div
-      className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-10"
+      className="min-h-screen relative overflow-hidden flex flex-col"
       style={{ background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }}
     >
       <Navbar />
@@ -61,7 +61,8 @@ export default function Login() {
       <span className="absolute bottom-24 right-8 text-green-300 text-2xl opacity-25 select-none">⚙</span>
       <span className="absolute bottom-12 left-12 text-purple-300 text-xl opacity-25 select-none">⚙</span>
 
-      <div className="relative z-10 w-full max-w-md">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-24">
+      <div className="w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-extrabold text-white tracking-wide">MindCheck</h1>
@@ -148,6 +149,7 @@ export default function Login() {
             Register here
           </Link>
         </p>
+      </div>
       </div>
       <Footer />
     </div>

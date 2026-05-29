@@ -93,7 +93,7 @@ export default function Register() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center px-4 py-10" style={bgStyle}>
+    <div className="min-h-screen relative overflow-hidden flex flex-col" style={bgStyle}>
       <Navbar />
       {/* Circuit background */}
       <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.07, pointerEvents: 'none' }}>
@@ -110,7 +110,8 @@ export default function Register() {
       <span className="absolute top-16 right-10 text-yellow-300 text-xl opacity-35 select-none">✦</span>
       <span className="absolute bottom-12 left-12 text-purple-300 text-xl opacity-25 select-none">⚙</span>
 
-      <div className="relative z-10 w-full max-w-lg">
+      <div className="relative z-10 flex-1 flex items-center justify-center px-4 py-24">
+      <div className="w-full max-w-lg">
         {/* Logo */}
         <div className="text-center mb-6">
           <h1 className="text-3xl font-extrabold text-white tracking-wide">MindCheck</h1>
@@ -207,6 +208,7 @@ export default function Register() {
           Already have an account?{' '}
           <Link to="/login" className="text-green-400 font-semibold hover:text-green-300 transition-colors">Sign in</Link>
         </p>
+      </div>
       </div>
       <Footer />
     </div>

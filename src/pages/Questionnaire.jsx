@@ -28,7 +28,7 @@ function EmotionFace({ emotion }) {
   const eyeR   = isSur ? 13 : 9
 
   return (
-    <svg viewBox="0 0 140 250" fill="none" style={{ width: '100%', height: '100%' }}>
+    <svg viewBox="0 40 140 210" fill="none" style={{ width: '100%', height: '100%' }}>
 
       {/* ── Hoodie body ── */}
       <ellipse cx="70" cy="225" rx="90" ry="90" fill="rgb(40,80,150)"/>
@@ -429,7 +429,7 @@ export default function Questionnaire() {
             </div>
 
             {/* Emotion face — head starts at same level as first answer option */}
-            <div className="flex-shrink-0 hidden sm:block" style={{ width: '140px', height: '210px' }}>
+            <div className="flex-shrink-0 hidden sm:block" style={{ width: '130px' }}>
               <EmotionFace emotion={detectEmotion(question.text)} />
             </div>
           </div>
