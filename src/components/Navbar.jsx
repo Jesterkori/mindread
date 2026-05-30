@@ -74,7 +74,7 @@ export default function Navbar() {
 
         {/* Mobile hamburger */}
         <button onClick={() => setOpen(o => !o)}
-                className={`md:hidden p-2 rounded-lg ${text}`}>
+                className="md:hidden p-2 rounded-lg text-slate-700 hover:bg-slate-100">
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {open
               ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/>
