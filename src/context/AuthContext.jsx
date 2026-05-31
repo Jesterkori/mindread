@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useState } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 const AuthContext = createContext(null)
 
@@ -19,8 +19,36 @@ function authHeader() {
   return t ? { Authorization: `Bearer ${t}` } : {}
 }
 
+const INACTIVITY_MS = 30 * 60 * 1000 // 30 minutes
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(getStoredUser)
+  const timerRef = useRef(null)
+
+  function clearSession() {
+    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(USER_KEY)
+    setUser(null)
+  }
+
+  function resetTimer() {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(clearSession, INACTIVITY_MS)
+  }
+
+  useEffect(() => {
+    if (!user) {
+      if (timerRef.current) clearTimeout(timerRef.current)
+      return
+    }
+    const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart']
+    events.forEach(e => window.addEventListener(e, resetTimer, { passive: true }))
+    resetTimer()
+    return () => {
+      events.forEach(e => window.removeEventListener(e, resetTimer))
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
+  }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function persist(userData, jwt) {
     localStorage.setItem(USER_KEY, JSON.stringify(userData))
@@ -41,9 +69,7 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
-    localStorage.removeItem(TOKEN_KEY)
-    localStorage.removeItem(USER_KEY)
-    setUser(null)
+    clearSession()
   }
 
   const value = useMemo(

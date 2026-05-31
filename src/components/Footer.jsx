@@ -21,9 +21,9 @@ export default function Footer() {
         <div>
           <p className="font-semibold text-sm mb-3">Quick Links</p>
           <div className="space-y-2">
-            <Link to="/"         className="block text-white/50 text-sm hover:text-white transition-colors">Home</Link>
-            <Link to="/#about"   className="block text-white/50 text-sm hover:text-white transition-colors">About</Link>
-            <Link to="/#features"className="block text-white/50 text-sm hover:text-white transition-colors">Features</Link>
+            <a href="/"          className="block text-white/50 text-sm hover:text-white transition-colors">Home</a>
+            <a href="/#about"    className="block text-white/50 text-sm hover:text-white transition-colors">About</a>
+            <a href="/#features" className="block text-white/50 text-sm hover:text-white transition-colors">Features</a>
             <Link to="/register" className="block text-white/50 text-sm hover:text-white transition-colors">Register</Link>
             <Link to="/login"    className="block text-white/50 text-sm hover:text-white transition-colors">Sign In</Link>
           </div>

@@ -265,6 +265,7 @@ export default function Questionnaire() {
             <p className="text-center text-white/25 text-xs mt-2">Press Enter to confirm</p>
           </div>
         </div>
+        <Footer />
       </div>
     )
   }
