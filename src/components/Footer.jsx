@@ -6,12 +6,8 @@ export default function Footer() {
     <footer className="bg-slate-900 text-white py-10 px-6 mt-auto">
       <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 mb-6">
         <div>
-          <div className="flex items-center gap-2.5 mb-3">
-            <PreflexLogo size={32} />
-            <div>
-              <p className="font-bold text-sm">Preflex Solutions Pvt. Ltd.</p>
-              <p className="text-xs text-white/50">MindCheck Platform</p>
-            </div>
+          <div className="mb-3">
+            <PreflexLogo height={44} />
           </div>
           <p className="text-white/50 text-sm leading-relaxed">
             A gate to personalized counselling &amp; mental wellness support for all ages.

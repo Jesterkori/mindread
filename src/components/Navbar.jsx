@@ -25,12 +25,8 @@ export default function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
 
         {/* Left — brand */}
-        <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-          <PreflexLogo size={30} />
-          <div className="leading-tight">
-            <p className="font-extrabold text-sm tracking-tight text-slate-800">Preflex Solutions Pvt.Ltd.</p>
-            <p className="text-xs text-slate-500">MindCheck Platform</p>
-          </div>
+        <Link to="/" className="flex-shrink-0">
+          <PreflexLogo height={40} />
         </Link>
 
         {/* Centre — nav links (desktop) */}
