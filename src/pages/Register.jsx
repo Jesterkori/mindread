@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom'
 import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import CircuitBackground from '../components/CircuitBackground'
+import { bgStyle } from '../styles/theme'
 
 const CARD_COLORS = {
   student:              { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
@@ -95,17 +97,7 @@ export default function Register() {
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col" style={bgStyle}>
       <Navbar />
-      {/* Circuit background */}
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.07, pointerEvents: 'none' }}>
-        <defs>
-          <pattern id="circ" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-            <path d="M15 60 H45 M45 60 V25 M45 25 H80 M80 25 V60 M80 60 H105" stroke="#4ade80" strokeWidth="1" fill="none"/>
-            <circle cx="45" cy="60" r="3" fill="#4ade80"/><circle cx="80" cy="25" r="3" fill="#4ade80"/>
-            <path d="M25 95 H60 M60 95 V108" stroke="#60a5fa" strokeWidth="1" fill="none"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#circ)"/>
-      </svg>
+      <CircuitBackground />
       <span className="absolute top-12 left-8 text-yellow-300 text-2xl opacity-40 select-none">✦</span>
       <span className="absolute top-16 right-10 text-yellow-300 text-xl opacity-35 select-none">✦</span>
       <span className="absolute bottom-12 left-12 text-purple-300 text-xl opacity-25 select-none">⚙</span>

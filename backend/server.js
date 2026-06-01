@@ -8,6 +8,7 @@ const questionnaireRoutes = require('./routes/questionnaire');
 const userRoutes = require('./routes/user');
 
 const app = express();
+app.disable('x-powered-by');
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',

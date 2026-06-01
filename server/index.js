@@ -7,7 +7,11 @@ const pool     = require('./db');
 require('dotenv').config({ path: require('node:path').join(__dirname, '../.env') });
 
 const app = express();
-app.use(cors());
+app.disable('x-powered-by');
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true,
+}));
 app.use(express.json());
 
 // ── Email transporter ─────────────────────────────────────────────────────────
@@ -22,7 +26,7 @@ const transporter = nodemailer.createTransport({
 
 async function sendOtp(email, otp) {
   if (!emailConfigured) {
-    console.log(`[DEV] OTP for ${email}: ${otp}`);
+    console.log(`[DEV] OTP generated (email not configured)`);
     return;
   }
   await transporter.sendMail({

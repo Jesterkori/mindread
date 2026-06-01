@@ -1,3 +1,4 @@
+import os
 import bcrypt
 from db import db
 from dotenv import load_dotenv
@@ -5,9 +6,12 @@ from pathlib import Path
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / '.env')
 
-email    = 'admin@mindcheck.com'
-password = 'admin123'
-hashed   = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+email    = os.environ.get('ADMIN_EMAIL', 'admin@mindcheck.com')
+password = os.environ.get('ADMIN_PASSWORD')
+if not password:
+    raise EnvironmentError('ADMIN_PASSWORD env var is required')
+
+hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 with db() as cur:
     cur.execute(
@@ -16,4 +20,4 @@ with db() as cur:
         ('Admin', email, hashed)
     )
 
-print(f'Admin created — email: {email}  password: {password}')
+print(f'Admin created — email: {email}')

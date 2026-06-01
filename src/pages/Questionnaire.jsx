@@ -4,6 +4,8 @@ import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import CircuitBackground from '../components/CircuitBackground'
+import { bgStyle } from '../styles/theme'
 
 /* ── Detect emotion from question text — mirrors the pygame keyword approach ── */
 function detectEmotion(text) {
@@ -51,24 +53,27 @@ function EmotionFace({ emotion }) {
         <line x1="28" y1="82" x2="9" y2="100" stroke="rgb(200,50,50)" strokeWidth="6" strokeLinecap="round"/>
 
         {/* Freckles */}
-        {[[50,105],[54,103],[46,101],[90,105],[86,103],[94,101]].map(([x,y],i) => (
-          <circle key={i} cx={x} cy={y} r="2" fill="rgb(210,160,120)"/>
+        {[[50,105],[54,103],[46,101],[90,105],[86,103],[94,101]].map(([x,y]) => (
+          <circle key={`${x}-${y}`} cx={x} cy={y} r="2" fill="rgb(210,160,120)"/>
         ))}
 
         {/* ── Eyebrows ── */}
-        {isSad ? (<>
+        {isSad && <>
           <line x1="23" y1="75" x2="53" y2="64" stroke="rgb(30,20,20)" strokeWidth="3.5" strokeLinecap="round"/>
           <line x1="87" y1="64" x2="117" y2="75" stroke="rgb(30,20,20)" strokeWidth="3.5" strokeLinecap="round"/>
-        </>) : isAng ? (<>
+        </>}
+        {isAng && <>
           <line x1="23" y1="64" x2="53" y2="76" stroke="rgb(30,20,20)" strokeWidth="4.5" strokeLinecap="round"/>
           <line x1="87" y1="76" x2="117" y2="64" stroke="rgb(30,20,20)" strokeWidth="4.5" strokeLinecap="round"/>
-        </>) : isSur ? (<>
+        </>}
+        {isSur && <>
           <path d="M 23 66 Q 38 50 53 66" stroke="rgb(30,20,20)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
           <path d="M 87 66 Q 102 50 117 66" stroke="rgb(30,20,20)" strokeWidth="3.5" fill="none" strokeLinecap="round"/>
-        </>) : (<>
+        </>}
+        {!isSad && !isAng && !isSur && <>
           <path d="M 23 68 Q 38 61 53 68" stroke="rgb(30,20,20)" strokeWidth="3" fill="none" strokeLinecap="round"/>
           <path d="M 87 68 Q 102 61 117 68" stroke="rgb(30,20,20)" strokeWidth="3" fill="none" strokeLinecap="round"/>
-        </>)}
+        </>}
 
         {/* ── Left eye (blinking) ── */}
         <g>
@@ -127,8 +132,6 @@ function dbRowToQuestion(row) {
   }
 }
 
-const bgStyle = { background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }
-
 export default function Questionnaire() {
   const { user, authHeader } = useAuth()
   const navigate = useNavigate()
@@ -156,9 +159,13 @@ export default function Questionnaire() {
       .catch(() => setAvailSections([]))
   }, [needsSection]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const VALID_CATEGORY_IDS = new Set(CATEGORIES.map(c => c.id))
+
   useEffect(() => {
-    if (!categoryId) { navigate('/dashboard', { replace: true }); return }
-    fetch(`/api/questions/${categoryId}`, { headers: authHeader() })
+    if (!categoryId || !VALID_CATEGORY_IDS.has(categoryId)) {
+      navigate('/dashboard', { replace: true }); return
+    }
+    fetch(`/api/questions/${encodeURIComponent(categoryId)}`, { headers: authHeader() })
       .then((r) => r.json())
       .then((data) => {
         const qs = data.ok && data.questions.length > 0
@@ -184,8 +191,8 @@ export default function Questionnaire() {
       }
       if (e.key === 'ArrowLeft' && current > 0) setCurrent(c => c - 1)
     }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    globalThis.addEventListener('keydown', onKey)
+    return () => globalThis.removeEventListener('keydown', onKey)
   }, [current, answers, questions]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Wait for sections to load before showing section picker
@@ -208,15 +215,7 @@ export default function Questionnaire() {
   if (needsSection && !sectionConfirmed && availSections?.length > 0) {
     return (
       <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
-        <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.05, pointerEvents: 'none' }}>
-          <defs>
-            <pattern id="circ-q" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-              <path d="M15 60 H45 M45 60 V25 M45 25 H80 M80 25 V60 M80 60 H105" stroke="#4ade80" strokeWidth="1" fill="none"/>
-              <circle cx="45" cy="60" r="3" fill="#4ade80"/><circle cx="80" cy="25" r="3" fill="#4ade80"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#circ-q)"/>
-        </svg>
+        <CircuitBackground opacity={0.05} />
         <Navbar />
         <div className="relative z-10 max-w-lg mx-auto px-4 pt-28 pb-12">
           <div className="text-center mb-8">
@@ -234,8 +233,9 @@ export default function Questionnaire() {
 
           <div className="rounded-2xl p-6"
             style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
-            <label className="block text-sm font-medium text-white/70 mb-2">Your section</label>
+            <label htmlFor="section-select" className="block text-sm font-medium text-white/70 mb-2">Your section</label>
             <select
+              id="section-select"
               value={section}
               onChange={e => setSection(e.target.value)}
               onKeyDown={e => { if (e.key === 'Enter' && section) setSectionConfirmed(true) }}
@@ -329,15 +329,7 @@ export default function Questionnaire() {
 
   return (
     <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.05, pointerEvents: 'none' }}>
-        <defs>
-          <pattern id="circ-qa" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-            <path d="M15 60 H45 M45 60 V25 M45 25 H80 M80 25 V60 M80 60 H105" stroke="#4ade80" strokeWidth="1" fill="none"/>
-            <circle cx="45" cy="60" r="3" fill="#4ade80"/><circle cx="80" cy="25" r="3" fill="#4ade80"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#circ-qa)"/>
-      </svg>
+      <CircuitBackground opacity={0.05} />
 
       <Navbar />
 

@@ -77,9 +77,13 @@ with db() as cur:
 print('Tables ready.')
 
 # Create admin account if it doesn't exist yet
-email    = 'admin@mindcheck.com'
-password = 'admin123'
-hashed   = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+import os as _os
+email    = _os.environ.get('ADMIN_EMAIL', 'admin@mindcheck.com')
+password = _os.environ.get('ADMIN_PASSWORD')
+if not password:
+    raise EnvironmentError('ADMIN_PASSWORD env var is required')
+
+hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
 with db() as cur:
     cur.execute(
@@ -88,7 +92,7 @@ with db() as cur:
         ('Admin', email, hashed)
     )
 
-print(f'Admin ready — {email} / {password}')
+print(f'Admin ready — {email}')
 
 # Seed default institution and sections
 with db() as cur:

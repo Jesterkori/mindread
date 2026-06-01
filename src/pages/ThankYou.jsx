@@ -1,25 +1,15 @@
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-
-const bgStyle = { background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }
+import CircuitBackground from '../components/CircuitBackground'
+import { bgStyle } from '../styles/theme'
 
 export default function ThankYou() {
   const navigate = useNavigate()
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col" style={bgStyle}>
-      {/* Circuit background */}
-      <svg className="absolute inset-0 w-full h-full" style={{ opacity: 0.05, pointerEvents: 'none' }}>
-        <defs>
-          <pattern id="circ-ty" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-            <path d="M15 60 H45 M45 60 V25 M45 25 H80 M80 25 V60 M80 60 H105" stroke="#4ade80" strokeWidth="1" fill="none"/>
-            <circle cx="45" cy="60" r="3" fill="#4ade80"/><circle cx="80" cy="25" r="3" fill="#4ade80"/>
-            <path d="M25 95 H60 M60 95 V108" stroke="#60a5fa" strokeWidth="1" fill="none"/>
-          </pattern>
-        </defs>
-        <rect width="100%" height="100%" fill="url(#circ-ty)"/>
-      </svg>
+      <CircuitBackground opacity={0.05} />
 
       <Navbar />
 

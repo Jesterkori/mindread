@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
+import CircuitBackground from '../components/CircuitBackground'
 
 /* ── Scroll-reveal hook ─────────────────────────────────────────────────────── */
 function useReveal() {
@@ -97,18 +98,7 @@ export default function Landing() {
 
       {/* ── HERO ──────────────────────────────────────────────────────────────── */}
       <section className="hero-bg min-h-screen flex items-center relative overflow-hidden pt-16">
-        {/* Circuit SVG */}
-        <svg className="absolute inset-0 w-full h-full" style={{ opacity:.07, pointerEvents:'none' }}>
-          <defs>
-            <pattern id="c" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
-              <path d="M15 60H45M45 60V25M45 25H80M80 25V60M80 60H105" stroke="#4ade80" strokeWidth="1" fill="none"/>
-              <circle cx="45" cy="60" r="3" fill="#4ade80"/>
-              <circle cx="80" cy="25" r="3" fill="#4ade80"/>
-              <path d="M25 95H60M60 95V108" stroke="#60a5fa" strokeWidth="1" fill="none"/>
-            </pattern>
-          </defs>
-          <rect width="100%" height="100%" fill="url(#c)"/>
-        </svg>
+        <CircuitBackground />
 
         {/* Decorative blobs */}
         <div className="absolute top-24 right-16 w-64 h-64 rounded-full opacity-10 drift"

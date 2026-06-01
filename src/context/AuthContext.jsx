@@ -42,18 +42,26 @@ export function AuthProvider({ children }) {
       return
     }
     const events = ['mousemove', 'keydown', 'click', 'scroll', 'touchstart']
-    events.forEach(e => window.addEventListener(e, resetTimer, { passive: true }))
+    events.forEach(e => globalThis.addEventListener(e, resetTimer, { passive: true }))
     resetTimer()
     return () => {
-      events.forEach(e => window.removeEventListener(e, resetTimer))
+      events.forEach(e => globalThis.removeEventListener(e, resetTimer))
       if (timerRef.current) clearTimeout(timerRef.current)
     }
   }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
 
   function persist(userData, jwt) {
-    localStorage.setItem(USER_KEY, JSON.stringify(userData))
-    localStorage.setItem(TOKEN_KEY, jwt)
-    setUser(userData)
+    const safe = {
+      id:          userData.id,
+      name:        userData.name,
+      email:       userData.email,
+      role:        userData.role,
+      category:    userData.category,
+      institution: userData.institution ?? null,
+    }
+    localStorage.setItem(USER_KEY, JSON.stringify(safe))
+    localStorage.setItem(TOKEN_KEY, String(jwt))
+    setUser(safe)
   }
 
   async function login(email, password) {
