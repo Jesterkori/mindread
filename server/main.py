@@ -2,7 +2,7 @@ import csv
 import io
 import json
 import os
-import random
+import secrets
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Optional
@@ -70,7 +70,7 @@ def get_admin(request: Request) -> dict:
 # ── OTP / Email ───────────────────────────────────────────────────────────────
 
 def make_otp() -> str:
-    return str(random.randint(100000, 999999))
+    return str(100000 + secrets.randbelow(900000))
 
 
 _brevo_key    = os.environ.get('BREVO_API_KEY', '')
