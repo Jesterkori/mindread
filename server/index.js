@@ -498,3 +498,5 @@ app.post('/api/admin/questions/seed', adminAuth, async (req, res) => {
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Kept for reference only — production backend is server/main.py (FastAPI/uvicorn)

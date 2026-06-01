@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
-import { bgStyle } from '../styles/theme'
+import { bgStyle, glassCard } from '../styles/theme'
 
 export default function ThankYou() {
   const navigate = useNavigate()
@@ -35,7 +35,7 @@ export default function ThankYou() {
 
           {/* Card */}
           <div className="mt-8 rounded-2xl p-5 text-left space-y-3"
-            style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
+            style={glassCard}>
             <div className="flex items-start gap-3">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 mt-0.5"
                 style={{ background: 'rgba(74,222,128,0.15)' }}>

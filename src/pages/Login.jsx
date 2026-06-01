@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
-import { bgStyle } from '../styles/theme'
+import { bgStyle, glassCard } from '../styles/theme'
 
 export default function Login() {
   const { login } = useAuth()
@@ -58,8 +58,7 @@ export default function Login() {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl p-8 shadow-2xl"
-             style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.15)' }}>
+        <div className="rounded-2xl p-8 shadow-2xl" style={glassCard}>
 
           <h2 className="text-xl font-bold text-white mb-1">Welcome back</h2>
           <p className="text-white/50 text-sm mb-6">Sign in to continue your assessment</p>
@@ -80,8 +79,9 @@ export default function Login() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-white/70 mb-1.5">Email address</label>
+              <label htmlFor="login-email" className="block text-sm font-medium text-white/70 mb-1.5">Email address</label>
               <input
+                id="login-email"
                 type="email"
                 name="email"
                 value={form.email}
@@ -100,8 +100,9 @@ export default function Login() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-white/70 mb-1.5">Password</label>
+              <label htmlFor="login-password" className="block text-sm font-medium text-white/70 mb-1.5">Password</label>
               <input
+                id="login-password"
                 type="password"
                 name="password"
                 value={form.password}

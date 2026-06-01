@@ -24,11 +24,12 @@ load_dotenv(dotenv_path=Path(__file__).parent.parent / '.env')
 
 app = FastAPI()
 
+_FRONTEND = os.environ.get('FRONTEND_URL', 'http://localhost:5173')
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=[_FRONTEND],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
 )
 
 @app.exception_handler(HTTPException)

@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
 import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/questions'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
-import { bgStyle } from '../styles/theme'
+import { bgStyle, glassCard } from '../styles/theme'
 
 /* ── Detect emotion from question text — mirrors the pygame keyword approach ── */
 function detectEmotion(text) {
@@ -22,7 +23,7 @@ function detectEmotion(text) {
 }
 
 /* ── Full teen character — matches pygame design exactly ─────────────────────── */
-function EmotionFace({ emotion }) {
+function EmotionFace({ emotion = 'neutral' }) {
   const isSad  = emotion === 'sad'
   const isHap  = emotion === 'happy'
   const isAng  = emotion === 'angry'
@@ -120,6 +121,7 @@ function EmotionFace({ emotion }) {
     </svg>
   )
 }
+EmotionFace.propTypes = { emotion: PropTypes.string }
 
 function dbRowToQuestion(row) {
   return {
@@ -186,7 +188,8 @@ export default function Questionnaire() {
       const KEY_MAP = { A:'A', B:'B', C:'C', D:'D', '1':'A', '2':'B', '3':'C', '4':'D' }
       const pick = KEY_MAP[e.key.toUpperCase()]
       if (pick) { setAnswers(prev => ({ ...prev, [q.id]: pick })); return }
-      if ((e.key === 'Enter' || e.key === 'ArrowRight') && answers[q.id] && current < questions.length - 1) {
+      const isNext = e.key === 'Enter' || e.key === 'ArrowRight'
+      if (isNext && answers[q.id] && current < questions.length - 1) {
         setCurrent(c => c + 1)
       }
       if (e.key === 'ArrowLeft' && current > 0) setCurrent(c => c - 1)
@@ -232,7 +235,7 @@ export default function Questionnaire() {
           </div>
 
           <div className="rounded-2xl p-6"
-            style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
+            style={glassCard}>
             <label htmlFor="section-select" className="block text-sm font-medium text-white/70 mb-2">Your section</label>
             <select
               id="section-select"

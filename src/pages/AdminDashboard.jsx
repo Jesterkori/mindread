@@ -5,7 +5,7 @@ import { CATEGORIES, QUESTIONS } from '../data/questions'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
-import { bgStyle } from '../styles/theme'
+import { bgStyle, glassCard } from '../styles/theme'
 
 function categoryLabel(id) {
   return CATEGORIES.find((c) => c.id === id)?.label ?? id
@@ -20,7 +20,7 @@ function fmt(dateStr) {
 
 const EMPTY_Q = { part: '', text: '', indicator: '', reversed: false, safety_question: false }
 
-const glass   = { background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.12)' }
+const glass   = glassCard
 const glassInput = {
   background: 'rgba(255,255,255,0.08)',
   border: '1.5px solid rgba(255,255,255,0.15)',
@@ -77,6 +77,7 @@ export default function AdminDashboard() {
   const { logout, authHeader } = useAuth()
   const navigate = useNavigate()
 
+  const [pendingConfirm, setPendingConfirm] = useState(null)
   const [tab, setTab]                   = useState('pending')
   const [pendingUsers, setPendingUsers] = useState([])
   const [submissions, setSubmissions]   = useState([])
@@ -157,12 +158,13 @@ export default function AdminDashboard() {
     loadInstitutions()
   }
 
-  async function deleteInstitution(id) {
-    if (!confirm('Delete this institution and ALL its sections? This cannot be undone.')) return
-    setInstBusy(b => ({ ...b, [`delInst-${id}`]: true }))
-    await fetch(`/api/admin/institutions/${id}`, { method: 'DELETE', headers })
-    setInstBusy(b => ({ ...b, [`delInst-${id}`]: false }))
-    loadInstitutions()
+  function deleteInstitution(id) {
+    setPendingConfirm({ message: 'Delete this institution and ALL its sections? This cannot be undone.', action: async () => {
+      setInstBusy(b => ({ ...b, [`delInst-${id}`]: true }))
+      await fetch(`/api/admin/institutions/${id}`, { method: 'DELETE', headers })
+      setInstBusy(b => ({ ...b, [`delInst-${id}`]: false }))
+      loadInstitutions()
+    }})
   }
 
   async function addSection(instId) {
@@ -228,12 +230,13 @@ export default function AdminDashboard() {
     load()
   }
 
-  async function deleteUser(id) {
-    if (!confirm('Delete this user and all their submissions? This cannot be undone.')) return
-    setBusy((b) => ({ ...b, [`del-user-${id}`]: true }))
-    await fetch(`/api/admin/users/${id}`, { method: 'DELETE', headers })
-    setBusy((b) => ({ ...b, [`del-user-${id}`]: false }))
-    load()
+  function deleteUser(id) {
+    setPendingConfirm({ message: 'Delete this user and all their submissions? This cannot be undone.', action: async () => {
+      setBusy((b) => ({ ...b, [`del-user-${id}`]: true }))
+      await fetch(`/api/admin/users/${id}`, { method: 'DELETE', headers })
+      setBusy((b) => ({ ...b, [`del-user-${id}`]: false }))
+      load()
+    }})
   }
 
   async function loadCategoryQs(category) {
@@ -273,12 +276,13 @@ export default function AdminDashboard() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, qCategory])
 
-  async function seedCategory() {
-    if (!confirm(`Reset all "${categoryLabel(qCategory)}" questions to defaults? This cannot be undone.`)) return
-    setQBusy((b) => ({ ...b, seed: true }))
-    await fetch('/api/admin/questions/seed', { method: 'POST', headers, body: JSON.stringify({ category: qCategory }) })
-    setQBusy((b) => ({ ...b, seed: false }))
-    loadQuestions(qCategory)
+  function seedCategory() {
+    setPendingConfirm({ message: `Reset all "${categoryLabel(qCategory)}" questions to defaults? This cannot be undone.`, action: async () => {
+      setQBusy((b) => ({ ...b, seed: true }))
+      await fetch('/api/admin/questions/seed', { method: 'POST', headers, body: JSON.stringify({ category: qCategory }) })
+      setQBusy((b) => ({ ...b, seed: false }))
+      loadQuestions(qCategory)
+    }})
   }
 
   async function saveEdit(id) {
@@ -289,12 +293,13 @@ export default function AdminDashboard() {
     loadQuestions(qCategory)
   }
 
-  async function deleteQuestion(id) {
-    if (!confirm('Delete this question?')) return
-    setQBusy((b) => ({ ...b, [`del-${id}`]: true }))
-    await fetch(`/api/admin/questions/${id}`, { method: 'DELETE', headers })
-    setQBusy((b) => ({ ...b, [`del-${id}`]: false }))
-    loadQuestions(qCategory)
+  function deleteQuestion(id) {
+    setPendingConfirm({ message: 'Delete this question?', action: async () => {
+      setQBusy((b) => ({ ...b, [`del-${id}`]: true }))
+      await fetch(`/api/admin/questions/${id}`, { method: 'DELETE', headers })
+      setQBusy((b) => ({ ...b, [`del-${id}`]: false }))
+      loadQuestions(qCategory)
+    }})
   }
 
   async function addQuestion() {
@@ -636,6 +641,24 @@ export default function AdminDashboard() {
       <CircuitBackground opacity={0.05} />
 
       <Navbar />
+
+      {pendingConfirm && (
+        <div className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-4">
+          <div className="rounded-2xl px-6 py-4 flex items-center gap-4 shadow-2xl max-w-lg w-full" style={glass}>
+            <p className="flex-1 text-white/80 text-sm">{pendingConfirm.message}</p>
+            <button onClick={() => { pendingConfirm.action(); setPendingConfirm(null) }}
+                    className="px-4 py-1.5 rounded-xl text-sm font-semibold text-white shrink-0"
+                    style={{ background: 'linear-gradient(135deg,#ef4444,#dc2626)' }}>
+              Confirm
+            </button>
+            <button onClick={() => setPendingConfirm(null)}
+                    className="px-4 py-1.5 rounded-xl text-sm font-semibold shrink-0"
+                    style={{ background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.6)' }}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
 
       <main className="relative z-10 max-w-5xl mx-auto px-4 pt-24 pb-12 space-y-6">
 

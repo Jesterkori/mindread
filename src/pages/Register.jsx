@@ -4,7 +4,7 @@ import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
-import { bgStyle } from '../styles/theme'
+import { glassCard } from '../styles/theme'
 
 const CARD_COLORS = {
   student:              { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
@@ -111,8 +111,7 @@ export default function Register() {
         </div>
 
         {/* Card */}
-        <div className="rounded-2xl p-8 shadow-2xl"
-             style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(16px)', border: '1.5px solid rgba(255,255,255,0.15)' }}>
+        <div className="rounded-2xl p-8 shadow-2xl" style={glassCard}>
           <h2 className="text-lg font-bold text-white mb-1">Register</h2>
           <p className="text-white/45 text-sm mb-6">
             Fill in your details to create your account.
