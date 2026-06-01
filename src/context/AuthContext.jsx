@@ -50,17 +50,20 @@ export function AuthProvider({ children }) {
     }
   }, [user]) // eslint-disable-line react-hooks/exhaustive-deps
 
+  const ALLOWED_ROLES = new Set(['user', 'admin'])
+
   function persist(userData, jwt) {
     const safe = {
-      id:          userData.id,
-      name:        userData.name,
-      email:       userData.email,
-      role:        userData.role,
-      category:    userData.category,
-      institution: userData.institution ?? null,
+      id:          Number(userData.id)   || 0,
+      name:        String(userData.name  || '').trim(),
+      email:       String(userData.email || '').toLowerCase().trim(),
+      role:        ALLOWED_ROLES.has(userData.role) ? userData.role : 'user',
+      category:    String(userData.category    || ''),
+      institution: userData.institution ? String(userData.institution) : null,
     }
-    localStorage.setItem(USER_KEY, JSON.stringify(safe))
-    localStorage.setItem(TOKEN_KEY, String(jwt))
+    const token = String(jwt)
+    localStorage.setItem(USER_KEY,  JSON.stringify(safe))
+    localStorage.setItem(TOKEN_KEY, token)
     setUser(safe)
   }
 

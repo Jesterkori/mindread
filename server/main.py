@@ -43,6 +43,15 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 JWT_SECRET = os.environ.get('JWT_SECRET', 'mindcheck_secret_key')
 ALGO = 'HS256'
 
+# ── Shared response schemas ───────────────────────────────────────────────────
+
+_R400  = {400: {'description': 'Bad request'}}
+_R401  = {401: {'description': 'Unauthorized — missing or invalid token'}}
+_R403  = {403: {'description': 'Forbidden — admin access required'}}
+_R404  = {404: {'description': 'Not found'}}
+_R500  = {500: {'description': 'Server error'}}
+_RAUTH = {**_R401, **_R403}
+
 # ── Auth helpers ──────────────────────────────────────────────────────────────
 
 def make_token(payload: dict) -> str:
@@ -280,7 +289,7 @@ def _fmt(row: dict, *keys):
 
 # ── Auth routes ───────────────────────────────────────────────────────────────
 
-@app.post('/api/auth/register')
+@app.post('/api/auth/register', responses=_R400)
 def register(body: RegisterBody):
     if not all([body.name, body.email, body.password, body.category]):
         raise HTTPException(400, 'All fields are required.')
@@ -301,7 +310,7 @@ def register(body: RegisterBody):
     return {'ok': True}
 
 
-@app.post('/api/auth/login')
+@app.post('/api/auth/login', responses=_R400)
 def login(body: LoginBody):
     with db() as cur:
         cur.execute(
@@ -331,7 +340,7 @@ def login(body: LoginBody):
 
 # ── Questionnaire routes ──────────────────────────────────────────────────────
 
-@app.post('/api/questionnaire/submit')
+@app.post('/api/questionnaire/submit', responses=_R401)
 async def submit(body: SubmitBody, request: Request, background_tasks: BackgroundTasks):
     user = get_current_user(request)
 
@@ -356,7 +365,7 @@ async def submit(body: SubmitBody, request: Request, background_tasks: Backgroun
     return {'ok': True}
 
 
-@app.get('/api/user/results')
+@app.get('/api/user/results', responses=_R401)
 def user_results(request: Request):
     user = get_current_user(request)
     with db() as cur:
@@ -373,7 +382,7 @@ def user_results(request: Request):
 
 # ── Admin routes ──────────────────────────────────────────────────────────────
 
-@app.get('/api/admin/pending-users')
+@app.get('/api/admin/pending-users', responses=_RAUTH)
 def pending_users(request: Request):
     get_admin(request)
     with db() as cur:
@@ -385,7 +394,7 @@ def pending_users(request: Request):
     return {'ok': True, 'users': rows}
 
 
-@app.get('/api/admin/submissions')
+@app.get('/api/admin/submissions', responses=_RAUTH)
 def admin_submissions(request: Request):
     get_admin(request)
     with db() as cur:
@@ -400,10 +409,8 @@ def admin_submissions(request: Request):
     return {'ok': True, 'submissions': rows}
 
 
-@app.get('/api/admin/export/csv')
-def export_csv(request: Request, institution: Optional[str] = None, section: Optional[str] = None):
-    get_admin(request)
-    query = (
+def _export_query(institution: Optional[str], section: Optional[str]):
+    sql = (
         'SELECT s.id, s.user_name, s.user_email, u.institution, s.section, s.category, '
         's.score, s.total, s.level, s.label, s.action, s.admin_action, s.ai_analysis, '
         's.admin_notes, s.safety_flag, s.result_released, s.released_at, s.submitted_at '
@@ -411,15 +418,41 @@ def export_csv(request: Request, institution: Optional[str] = None, section: Opt
     )
     params: list = []
     if institution:
-        query += ' AND u.institution = %s'
+        sql += ' AND u.institution = %s'
         params.append(institution)
     if section:
-        query += ' AND s.section = %s'
+        sql += ' AND s.section = %s'
         params.append(section)
-    query += ' ORDER BY s.submitted_at DESC'
+    return sql + ' ORDER BY s.submitted_at DESC', params
+
+
+def _export_fname(institution: Optional[str], section: Optional[str]) -> str:
+    suffix = (f'_{institution.replace(" ", "_")}' if institution else '') + \
+             (f'_{section.replace(" ", "_")}' if section else '')
+    return f'mindcheck{suffix}_results.csv'
+
+
+def _csv_row(r: dict) -> list:
+    return [
+        r['id'], r['user_name'], r['user_email'],
+        r.get('institution') or '', r.get('section') or '',
+        r['category'], r['score'], r['total'] * 4,
+        r['level'], r['label'],
+        r.get('action') or '', r.get('admin_action') or '',
+        r.get('ai_analysis') or '', r.get('admin_notes') or '',
+        'Yes' if r['safety_flag'] else 'No',
+        'Yes' if r['result_released'] else 'No',
+        r.get('released_at') or '', r['submitted_at'] or '',
+    ]
+
+
+@app.get('/api/admin/export/csv', responses=_RAUTH)
+def export_csv(request: Request, institution: Optional[str] = None, section: Optional[str] = None):
+    get_admin(request)
+    sql, params = _export_query(institution, section)
 
     with db() as cur:
-        cur.execute(query, params)
+        cur.execute(sql, params)
         rows = _rows(cur)
 
     output = io.StringIO()
@@ -431,27 +464,9 @@ def export_csv(request: Request, institution: Optional[str] = None, section: Opt
         'Safety Flag', 'Released', 'Released Date', 'Submitted Date',
     ])
     for r in rows:
-        writer.writerow([
-            r['id'], r['user_name'], r['user_email'],
-            r.get('institution') or '', r.get('section') or '',
-            r['category'], r['score'], r['total'] * 4,
-            r['level'], r['label'],
-            r.get('action') or '',
-            r.get('admin_action') or '',
-            r.get('ai_analysis') or '',
-            r.get('admin_notes') or '',
-            'Yes' if r['safety_flag'] else 'No',
-            'Yes' if r['result_released'] else 'No',
-            r.get('released_at') or '',
-            r['submitted_at'] or '',
-        ])
+        writer.writerow(_csv_row(r))
 
-    fname = 'mindcheck'
-    if institution:
-        fname += f'_{institution.replace(" ", "_")}'
-    if section:
-        fname += f'_{section.replace(" ", "_")}'
-    fname += '_results.csv'
+    fname = _export_fname(institution, section)
 
     output.seek(0)
     return StreamingResponse(
@@ -461,7 +476,7 @@ def export_csv(request: Request, institution: Optional[str] = None, section: Opt
     )
 
 
-@app.get('/api/admin/stats')
+@app.get('/api/admin/stats', responses=_RAUTH)
 def admin_stats(request: Request):
     get_admin(request)
     with db() as cur:
@@ -474,7 +489,7 @@ def admin_stats(request: Request):
     return {'ok': True, 'pendingUsers': pending, 'totalSubmissions': total, 'unreviewedSafetyFlags': flags}
 
 
-@app.post('/api/admin/approve-user/{uid}')
+@app.post('/api/admin/approve-user/{uid}', responses=_RAUTH)
 def approve_user(uid: int, request: Request):
     get_admin(request)
     with db() as cur:
@@ -484,7 +499,7 @@ def approve_user(uid: int, request: Request):
     return {'ok': True}
 
 
-@app.post('/api/admin/decline-user/{uid}')
+@app.post('/api/admin/decline-user/{uid}', responses=_RAUTH)
 def decline_user(uid: int, request: Request):
     get_admin(request)
     with db() as cur:
@@ -492,7 +507,7 @@ def decline_user(uid: int, request: Request):
     return {'ok': True}
 
 
-@app.delete('/api/admin/users/{uid}')
+@app.delete('/api/admin/users/{uid}', responses=_RAUTH)
 def delete_user(uid: int, request: Request):
     get_admin(request)
     with db() as cur:
@@ -501,7 +516,7 @@ def delete_user(uid: int, request: Request):
     return {'ok': True}
 
 
-@app.delete('/api/admin/wipe-pending')
+@app.delete('/api/admin/wipe-pending', responses=_RAUTH)
 def wipe_pending_users(request: Request):
     get_admin(request)
     with db() as cur:
@@ -512,7 +527,7 @@ def wipe_pending_users(request: Request):
     return {'ok': True, 'deleted': deleted}
 
 
-@app.post('/api/admin/release-result/{sub_id}')
+@app.post('/api/admin/release-result/{sub_id}', responses=_RAUTH)
 def release_result(sub_id: int, body: ReleaseBody, request: Request):
     get_admin(request)
     with db() as cur:
@@ -525,7 +540,7 @@ def release_result(sub_id: int, body: ReleaseBody, request: Request):
     return {'ok': True}
 
 
-@app.put('/api/admin/edit-result/{sub_id}')
+@app.put('/api/admin/edit-result/{sub_id}', responses=_RAUTH)
 def edit_result(sub_id: int, body: ReleaseBody, request: Request):
     get_admin(request)
     with db() as cur:
@@ -547,7 +562,7 @@ def get_institutions():
     return {'ok': True, 'institutions': rows}
 
 
-@app.get('/api/user/sections')
+@app.get('/api/user/sections', responses=_R401)
 def user_sections(request: Request):
     user = get_current_user(request)
     institution_name = user.get('institution')
@@ -566,7 +581,7 @@ def user_sections(request: Request):
 
 # ── Admin institution routes ──────────────────────────────────────────────────
 
-@app.get('/api/admin/institutions')
+@app.get('/api/admin/institutions', responses=_RAUTH)
 def admin_get_institutions(request: Request):
     get_admin(request)
     with db() as cur:
@@ -581,7 +596,7 @@ def admin_get_institutions(request: Request):
     return {'ok': True, 'institutions': insts}
 
 
-@app.post('/api/admin/institutions')
+@app.post('/api/admin/institutions', responses={**_RAUTH, **_R400})
 def admin_add_institution(body: InstitutionBody, request: Request):
     get_admin(request)
     name = body.name.strip()
@@ -597,7 +612,7 @@ def admin_add_institution(body: InstitutionBody, request: Request):
     return {'ok': True}
 
 
-@app.delete('/api/admin/institutions/{inst_id}')
+@app.delete('/api/admin/institutions/{inst_id}', responses=_RAUTH)
 def admin_delete_institution(inst_id: int, request: Request):
     get_admin(request)
     with db() as cur:
@@ -605,7 +620,7 @@ def admin_delete_institution(inst_id: int, request: Request):
     return {'ok': True}
 
 
-@app.post('/api/admin/institutions/{inst_id}/sections')
+@app.post('/api/admin/institutions/{inst_id}/sections', responses={**_RAUTH, **_R400})
 def admin_add_section(inst_id: int, body: SectionBody, request: Request):
     get_admin(request)
     name = body.name.strip()
@@ -621,7 +636,7 @@ def admin_add_section(inst_id: int, body: SectionBody, request: Request):
     return {'ok': True}
 
 
-@app.delete('/api/admin/institution-sections/{sec_id}')
+@app.delete('/api/admin/institution-sections/{sec_id}', responses=_RAUTH)
 def admin_delete_section(sec_id: int, request: Request):
     get_admin(request)
     with db() as cur:
@@ -631,7 +646,7 @@ def admin_delete_section(sec_id: int, request: Request):
 
 # ── Questions routes ──────────────────────────────────────────────────────────
 
-@app.get('/api/questions/{category}')
+@app.get('/api/questions/{category}', responses=_R401)
 def get_questions(category: str, request: Request):
     get_current_user(request)
     with db() as cur:
@@ -644,7 +659,7 @@ def get_questions(category: str, request: Request):
     return {'ok': True, 'questions': rows}
 
 
-@app.get('/api/admin/questions')
+@app.get('/api/admin/questions', responses=_RAUTH)
 def admin_get_questions(request: Request, category: Optional[str] = None):
     get_admin(request)
     with db() as cur:
@@ -656,7 +671,7 @@ def admin_get_questions(request: Request, category: Optional[str] = None):
     return {'ok': True, 'questions': rows}
 
 
-@app.post('/api/admin/questions')
+@app.post('/api/admin/questions', responses={**_RAUTH, **_R400})
 def admin_create_question(body: QuestionBody, request: Request):
     get_admin(request)
     if not body.category_id or not body.part or not body.text or not body.indicator:
@@ -673,7 +688,7 @@ def admin_create_question(body: QuestionBody, request: Request):
     return {'ok': True, 'question': row}
 
 
-@app.put('/api/admin/questions/{qid}')
+@app.put('/api/admin/questions/{qid}', responses={**_RAUTH, **_R404})
 def admin_update_question(qid: int, body: QuestionUpdate, request: Request):
     get_admin(request)
     with db() as cur:
@@ -694,7 +709,7 @@ def admin_update_question(qid: int, body: QuestionUpdate, request: Request):
     return {'ok': True, 'question': q}
 
 
-@app.delete('/api/admin/questions/{qid}')
+@app.delete('/api/admin/questions/{qid}', responses=_RAUTH)
 def admin_delete_question(qid: int, request: Request):
     get_admin(request)
     with db() as cur:
@@ -702,7 +717,7 @@ def admin_delete_question(qid: int, request: Request):
     return {'ok': True}
 
 
-@app.post('/api/admin/questions/seed')
+@app.post('/api/admin/questions/seed', responses={**_RAUTH, **_R500})
 def admin_seed_questions(body: SeedBody, request: Request):
     get_admin(request)
     defaults_path = Path(__file__).parent / 'defaultQuestions.json'

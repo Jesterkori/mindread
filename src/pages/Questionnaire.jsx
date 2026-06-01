@@ -161,13 +161,10 @@ export default function Questionnaire() {
       .catch(() => setAvailSections([]))
   }, [needsSection]) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const VALID_CATEGORY_IDS = new Set(CATEGORIES.map(c => c.id))
-
   useEffect(() => {
-    if (!categoryId || !VALID_CATEGORY_IDS.has(categoryId)) {
-      navigate('/dashboard', { replace: true }); return
-    }
-    fetch(`/api/questions/${encodeURIComponent(categoryId)}`, { headers: authHeader() })
+    const safeCategory = CATEGORIES.find(c => c.id === categoryId)?.id
+    if (!safeCategory) { navigate('/dashboard', { replace: true }); return }
+    fetch(`/api/questions/${encodeURIComponent(safeCategory)}`, { headers: authHeader() })
       .then((r) => r.json())
       .then((data) => {
         const qs = data.ok && data.questions.length > 0
