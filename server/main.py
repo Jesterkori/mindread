@@ -266,6 +266,9 @@ class QuestionUpdate(BaseModel):
 class SeedBody(BaseModel):
     category: Optional[str] = None
 
+class SiteConfigBody(BaseModel):
+    configs: dict
+
 class InstitutionBody(BaseModel):
     name: str
 
@@ -310,8 +313,20 @@ def register(body: RegisterBody):
     return {'ok': True}
 
 
+def _log_activity(user_id, user_name, user_email, action, ip_address, session_id=None):
+    try:
+        with db() as cur:
+            cur.execute(
+                'INSERT INTO activity_logs (user_id, user_name, user_email, action, ip_address, session_id) '
+                'VALUES (%s, %s, %s, %s, %s, %s)',
+                (user_id, user_name, user_email, action, ip_address, session_id)
+            )
+    except Exception as exc:
+        print(f'[log] failed: {exc}', flush=True)
+
+
 @app.post('/api/auth/login', responses=_R400)
-def login(body: LoginBody):
+def login(body: LoginBody, request: Request, background_tasks: BackgroundTasks):
     with db() as cur:
         cur.execute(
             'SELECT id, name, email, password, role, category, institution, email_verified, status '
@@ -331,11 +346,31 @@ def login(body: LoginBody):
         raise HTTPException(400, 'Your account is pending admin approval.')
     if status == 'declined':
         raise HTTPException(400, 'Your account registration was declined.')
+    if status == 'disabled':
+        raise HTTPException(400, 'Your account has been disabled. Please contact the administrator.')
     if not bcrypt.checkpw(body.password.encode(), pw_hash.encode()):
         raise HTTPException(400, 'Invalid email or password.')
 
-    payload = {'id': uid, 'name': name, 'email': email, 'role': role, 'category': category, 'institution': institution}
+    ip = request.client.host if request.client else None
+    session_id = f'{uid}_{int(datetime.now(timezone.utc).timestamp())}'
+    background_tasks.add_task(_log_activity, uid, name, email, 'login', ip, session_id)
+
+    payload = {'id': uid, 'name': name, 'email': email, 'role': role, 'category': category,
+               'institution': institution, 'session_id': session_id}
     return {'token': make_token(payload), 'user': payload}
+
+
+@app.post('/api/auth/logout')
+def logout_log(request: Request, background_tasks: BackgroundTasks):
+    try:
+        user = get_current_user(request)
+        ip = request.client.host if request.client else None
+        background_tasks.add_task(
+            _log_activity, user['id'], user['name'], user['email'], 'logout', ip, user.get('session_id')
+        )
+    except Exception:
+        pass
+    return {'ok': True}
 
 
 # ── Questionnaire routes ──────────────────────────────────────────────────────
@@ -549,6 +584,76 @@ def edit_result(sub_id: int, body: ReleaseBody, request: Request):
             'WHERE id = %s',
             (body.adminNotes or None, body.aiAnalysis, body.adminAction or None, sub_id)
         )
+    return {'ok': True}
+
+
+@app.get('/api/admin/members', responses=_RAUTH)
+def admin_members(request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute(
+            "SELECT id, name, email, category, status, email_verified, institution, created_at "
+            "FROM users WHERE role != 'admin' ORDER BY created_at DESC"
+        )
+        rows = [_fmt(r, 'created_at') for r in _rows(cur)]
+    return {'ok': True, 'members': rows}
+
+
+@app.post('/api/admin/disable-user/{uid}', responses=_RAUTH)
+def disable_user(uid: int, request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute("UPDATE users SET status = 'disabled' WHERE id = %s AND role != 'admin'", (uid,))
+    return {'ok': True}
+
+
+@app.post('/api/admin/enable-user/{uid}', responses=_RAUTH)
+def enable_user(uid: int, request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute("UPDATE users SET status = 'approved' WHERE id = %s", (uid,))
+    return {'ok': True}
+
+
+@app.get('/api/admin/logs', responses=_RAUTH)
+def admin_logs(request: Request, search: Optional[str] = None, limit: int = 200):
+    get_admin(request)
+    with db() as cur:
+        if search:
+            cur.execute(
+                'SELECT id, user_id, user_name, user_email, action, ip_address, session_id, created_at '
+                'FROM activity_logs WHERE user_name ILIKE %s OR user_email ILIKE %s '
+                'ORDER BY created_at DESC LIMIT %s',
+                (f'%{search}%', f'%{search}%', limit)
+            )
+        else:
+            cur.execute(
+                'SELECT id, user_id, user_name, user_email, action, ip_address, session_id, created_at '
+                'FROM activity_logs ORDER BY created_at DESC LIMIT %s',
+                (limit,)
+            )
+        rows = [_fmt(r, 'created_at') for r in _rows(cur)]
+    return {'ok': True, 'logs': rows}
+
+
+@app.get('/api/config')
+def get_site_config():
+    with db() as cur:
+        cur.execute('SELECT key, value FROM site_config')
+        rows = cur.fetchall()
+    return {'ok': True, 'config': {r[0]: r[1] for r in rows}}
+
+
+@app.put('/api/admin/config', responses=_RAUTH)
+def update_site_config(body: SiteConfigBody, request: Request):
+    get_admin(request)
+    with db() as cur:
+        for key, value in body.configs.items():
+            cur.execute(
+                'INSERT INTO site_config (key, value) VALUES (%s, %s) '
+                'ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = NOW()',
+                (str(key), str(value))
+            )
     return {'ok': True}
 
 

@@ -104,6 +104,21 @@ export default function AdminDashboard() {
   const [newSecName, setNewSecName]       = useState({})
   const [instBusy, setInstBusy]           = useState({})
 
+  // Members tab state
+  const [members, setMembers]               = useState([])
+  const [membersLoading, setMembersLoading] = useState(false)
+  const [memberSearch, setMemberSearch]     = useState('')
+
+  // Logs tab state
+  const [logs, setLogs]               = useState([])
+  const [logsLoading, setLogsLoading] = useState(false)
+  const [logsSearch, setLogsSearch]   = useState('')
+
+  // Site Config tab state
+  const [configDraft, setConfigDraft]   = useState({})
+  const [configBusy, setConfigBusy]     = useState(false)
+  const [configLoaded, setConfigLoaded] = useState(false)
+
   // Questions tab state
   const [qCategory, setQCategory]     = useState(CATEGORIES[0]?.id ?? '')
   const [questions, setQuestions]     = useState([])
@@ -147,6 +162,59 @@ export default function AdminDashboard() {
   }, [])
 
   useEffect(() => { if (tab === 'institutions') loadInstitutions() }, [tab, loadInstitutions])
+
+  // ── Members helpers ───────────────────────────────────────────────────────
+  async function loadMembers() {
+    setMembersLoading(true)
+    const res  = await fetch('/api/admin/members', { headers: authHeader() })
+    const data = await res.json()
+    if (data.ok) setMembers(data.members)
+    setMembersLoading(false)
+  }
+
+  useEffect(() => { if (tab === 'members') loadMembers() }, [tab]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function disableMember(id) {
+    setBusy(b => ({ ...b, [`disable-${id}`]: true }))
+    await fetch(`/api/admin/disable-user/${id}`, { method: 'POST', headers })
+    setBusy(b => ({ ...b, [`disable-${id}`]: false }))
+    loadMembers()
+  }
+
+  async function enableMember(id) {
+    setBusy(b => ({ ...b, [`enable-${id}`]: true }))
+    await fetch(`/api/admin/enable-user/${id}`, { method: 'POST', headers })
+    setBusy(b => ({ ...b, [`enable-${id}`]: false }))
+    loadMembers()
+  }
+
+  // ── Logs helpers ──────────────────────────────────────────────────────────
+  async function loadLogs(search = '') {
+    setLogsLoading(true)
+    const q   = search ? `?search=${encodeURIComponent(search)}` : ''
+    const res = await fetch(`/api/admin/logs${q}`, { headers: authHeader() })
+    const data = await res.json()
+    if (data.ok) setLogs(data.logs)
+    setLogsLoading(false)
+  }
+
+  useEffect(() => { if (tab === 'logs') loadLogs(logsSearch) }, [tab]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // ── Site Config helpers ───────────────────────────────────────────────────
+  async function loadConfig() {
+    const res  = await fetch('/api/config')
+    const data = await res.json()
+    if (data.ok) { setConfigDraft(data.config); setConfigLoaded(true) }
+  }
+
+  useEffect(() => { if (tab === 'config' && !configLoaded) loadConfig() }, [tab, configLoaded]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  async function saveConfig() {
+    setConfigBusy(true)
+    await fetch('/api/admin/config', { method: 'PUT', headers, body: JSON.stringify({ configs: configDraft }) })
+    setConfigBusy(false)
+    loadConfig()
+  }
 
   async function addInstitution() {
     const name = newInstName.trim()
@@ -684,8 +752,11 @@ export default function AdminDashboard() {
         <div className="flex gap-1 rounded-xl p-1 w-fit flex-wrap"
           style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}>
           {[
-            { key: 'pending',      label: `Pending Approvals${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ''}` },
+            { key: 'pending',      label: `Pending${pendingUsers.length > 0 ? ` (${pendingUsers.length})` : ''}` },
             { key: 'submissions',  label: `Assessments${submissions.length > 0 ? ` (${submissions.length})` : ''}` },
+            { key: 'members',      label: `Members${members.length > 0 ? ` (${members.length})` : ''}` },
+            { key: 'logs',         label: 'Activity Logs' },
+            { key: 'config',       label: 'Site Config' },
             { key: 'institutions', label: `Institutions${instList.length > 0 ? ` (${instList.length})` : ''}` },
             { key: 'questions',    label: 'Questions' },
           ].map((t) => (
@@ -1119,6 +1190,175 @@ export default function AdminDashboard() {
             )}
           </div>
         )}
+        {/* ── Members Tab ───────────────────────────────────────────────────── */}
+        {tab === 'members' && (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <GlassInput
+                placeholder="Search by name or email…"
+                value={memberSearch}
+                onChange={(e) => setMemberSearch(e.target.value)}
+                style={{ maxWidth: 300 }}
+              />
+              <button onClick={loadMembers} className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
+                style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.3)' }}>
+                Refresh
+              </button>
+            </div>
+            {membersLoading ? (
+              <div className="rounded-2xl p-10 text-center" style={glass}>
+                <div className="w-7 h-7 border-2 border-green-400 border-t-transparent rounded-full animate-spin mx-auto" />
+              </div>
+            ) : members.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={glass}>
+                <p className="text-white/50">No members yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {members
+                  .filter(m => !memberSearch || m.name.toLowerCase().includes(memberSearch.toLowerCase()) || m.email.toLowerCase().includes(memberSearch.toLowerCase()))
+                  .map(m => (
+                  <div key={m.id} className="rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center gap-3" style={glass}>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="font-semibold text-white">{m.name}</p>
+                        {m.status === 'approved'  && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background:'rgba(74,222,128,0.15)', color:'#4ade80' }}>Active</span>}
+                        {m.status === 'disabled'  && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background:'rgba(248,113,113,0.15)', color:'#f87171' }}>Disabled</span>}
+                        {m.status === 'declined'  && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background:'rgba(251,191,36,0.15)', color:'#fbbf24' }}>Declined</span>}
+                        {m.status === 'pending'   && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background:'rgba(148,163,184,0.15)', color:'#94a3b8' }}>Pending</span>}
+                      </div>
+                      <p className="text-sm text-white/50">{m.email}</p>
+                      <p className="text-xs text-white/35 mt-0.5">
+                        {categoryLabel(m.category)}
+                        {m.institution && <> &middot; {m.institution}</>}
+                        &nbsp;&middot; Joined {fmt(m.created_at)}
+                      </p>
+                    </div>
+                    <div className="flex gap-2 shrink-0 flex-wrap">
+                      {m.status === 'disabled' ? (
+                        <button onClick={() => enableMember(m.id)} disabled={busy[`enable-${m.id}`]}
+                          className="px-3 py-1.5 rounded-xl text-xs font-medium transition-all disabled:opacity-50"
+                          style={{ background:'rgba(74,222,128,0.15)', color:'#4ade80', border:'1px solid rgba(74,222,128,0.3)' }}>
+                          {busy[`enable-${m.id}`] ? 'Enabling…' : 'Enable'}
+                        </button>
+                      ) : (
+                        <button onClick={() => disableMember(m.id)} disabled={busy[`disable-${m.id}`]}
+                          className="px-3 py-1.5 rounded-xl text-xs font-medium transition-all disabled:opacity-50"
+                          style={{ background:'rgba(251,191,36,0.1)', color:'#fbbf24', border:'1px solid rgba(251,191,36,0.25)' }}>
+                          {busy[`disable-${m.id}`] ? 'Disabling…' : 'Disable'}
+                        </button>
+                      )}
+                      <button onClick={() => deleteUser(m.id)} disabled={busy[`del-user-${m.id}`]}
+                        className="px-3 py-1.5 rounded-xl text-xs font-medium transition-all disabled:opacity-50"
+                        style={{ background:'rgba(248,113,113,0.1)', color:'#f87171', border:'1px solid rgba(248,113,113,0.25)' }}>
+                        {busy[`del-user-${m.id}`] ? 'Deleting…' : 'Delete'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Activity Logs Tab ──────────────────────────────────────────────── */}
+        {tab === 'logs' && (
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <GlassInput
+                placeholder="Search by name or email…"
+                value={logsSearch}
+                onChange={(e) => setLogsSearch(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && loadLogs(logsSearch)}
+                style={{ maxWidth: 300 }}
+              />
+              <button onClick={() => loadLogs(logsSearch)}
+                className="px-4 py-2 rounded-xl text-sm font-medium transition-all"
+                style={{ background:'rgba(74,222,128,0.15)', color:'#4ade80', border:'1px solid rgba(74,222,128,0.3)' }}>
+                Search
+              </button>
+              {logsSearch && (
+                <button onClick={() => { setLogsSearch(''); loadLogs('') }}
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-white/50 transition-all"
+                  style={{ background:'rgba(255,255,255,0.06)' }}>
+                  Clear
+                </button>
+              )}
+            </div>
+            {logsLoading ? (
+              <div className="rounded-2xl p-10 text-center" style={glass}>
+                <div className="w-7 h-7 border-2 border-green-400 border-t-transparent rounded-full animate-spin mx-auto" />
+              </div>
+            ) : logs.length === 0 ? (
+              <div className="rounded-2xl p-10 text-center" style={glass}>
+                <p className="text-white/50">No activity logs yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {logs.map(log => (
+                  <div key={log.id} className="rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center gap-2" style={glass}>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${
+                        log.action === 'login'
+                          ? 'bg-green-500/15 text-green-400'
+                          : 'bg-orange-500/15 text-orange-400'
+                      }`}>
+                        {log.action === 'login' ? '→ Login' : '← Logout'}
+                      </span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <span className="text-sm font-semibold text-white">{log.user_name}</span>
+                      <span className="text-xs text-white/40 ml-2">{log.user_email}</span>
+                    </div>
+                    <div className="flex items-center gap-4 text-xs text-white/35 shrink-0">
+                      {log.ip_address && <span>IP: {log.ip_address}</span>}
+                      <span>{fmt(log.created_at)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Site Config Tab ────────────────────────────────────────────────── */}
+        {tab === 'config' && (
+          <div className="space-y-4 max-w-2xl">
+            <p className="text-sm text-white/50">Edit homepage content without touching the code. Changes go live immediately after saving.</p>
+            {[
+              { key: 'powered_by',    label: 'Powered-by badge text',    rows: 1 },
+              { key: 'hero_title',    label: 'Hero heading (line 1)',     rows: 1 },
+              { key: 'hero_line2',    label: 'Hero heading (line 2 — gradient)', rows: 1 },
+              { key: 'hero_subtitle', label: 'Hero subtitle paragraph',  rows: 3 },
+              { key: 'contact_email', label: 'Contact email',            rows: 1 },
+              { key: 'contact_phone', label: 'Contact phone',            rows: 1 },
+            ].map(({ key, label, rows }) => (
+              <div key={key} className="space-y-1.5">
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">{label}</p>
+                {rows === 1 ? (
+                  <GlassInput
+                    value={configDraft[key] ?? ''}
+                    onChange={(e) => setConfigDraft(d => ({ ...d, [key]: e.target.value }))}
+                    placeholder={`Enter ${label.toLowerCase()}…`}
+                  />
+                ) : (
+                  <GlassTextarea
+                    rows={rows}
+                    value={configDraft[key] ?? ''}
+                    onChange={(e) => setConfigDraft(d => ({ ...d, [key]: e.target.value }))}
+                    placeholder={`Enter ${label.toLowerCase()}…`}
+                  />
+                )}
+              </div>
+            ))}
+            <button onClick={saveConfig} disabled={configBusy}
+              className="px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-50 mt-2"
+              style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
+              {configBusy ? 'Saving…' : 'Save Changes'}
+            </button>
+          </div>
+        )}
+
       </main>
       <Footer />
     </div>

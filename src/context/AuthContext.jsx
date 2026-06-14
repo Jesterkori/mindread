@@ -80,6 +80,13 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
+    const token = localStorage.getItem(TOKEN_KEY)
+    if (token) {
+      fetch('/api/auth/logout', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {})
+    }
     clearSession()
   }
 

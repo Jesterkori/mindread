@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -73,8 +73,25 @@ const FEATURES = [
   { icon: '🤝', title: 'Professional Review',  desc: 'Every result is reviewed by a counsellor before being released.' },
 ]
 
+const DEFAULT_CONFIG = {
+  powered_by:    'Preflex Solutions Pvt. Ltd.',
+  hero_title:    'Mental Wellness',
+  hero_line2:    'Assessment Tool',
+  hero_subtitle: 'A gate to personalized counselling & support for all ages. Understand your mental wellness and get connected to the right help.',
+  contact_email: 'support@preflexsol.com',
+  contact_phone: '+91 98866 29446',
+}
+
 export default function Landing() {
   useReveal()
+  const [cfg, setCfg] = useState(DEFAULT_CONFIG)
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then((r) => r.json())
+      .then((d) => { if (d.ok) setCfg({ ...DEFAULT_CONFIG, ...d.config }) })
+      .catch(() => {})
+  }, [])
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
@@ -116,17 +133,16 @@ export default function Landing() {
             <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 text-xs font-semibold text-green-300"
                  style={{ background:'rgba(74,222,128,0.15)', border:'1px solid rgba(74,222,128,0.3)' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"/>
-              Powered by Preflex Solutions Pvt. Ltd.
+              Powered by {cfg.powered_by}
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
-              Mental Wellness<br/>
+              {cfg.hero_title}<br/>
               <span style={{ background:'linear-gradient(90deg,#22c55e,#0d9488)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
-                Assessment Tool
+                {cfg.hero_line2}
               </span>
             </h1>
             <p className="text-white/70 text-lg mb-8 leading-relaxed max-w-lg">
-              A gate to personalized counselling &amp; support for all ages.
-              Understand your mental wellness and get connected to the right help.
+              {cfg.hero_subtitle}
             </p>
             <div className="flex flex-wrap gap-4">
               <Link to="/register"
@@ -332,13 +348,13 @@ export default function Landing() {
             <div className="rounded-xl p-4 space-y-2"
                  style={{ background:'rgba(13,148,136,0.07)', border:'1.5px solid rgba(13,148,136,0.25)' }}>
               <p className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-1">Contact Preflex Support</p>
-              <a href="mailto:support@preflexsol.com"
+              <a href={`mailto:${cfg.contact_email}`}
                  className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-teal-600 transition-colors">
-                <span>✉</span> support@preflexsol.com
+                <span>✉</span> {cfg.contact_email}
               </a>
-              <a href="tel:+919886629446"
+              <a href={`tel:${cfg.contact_phone.replace(/\s/g, '')}`}
                  className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-teal-600 transition-colors">
-                <span>📞</span> +91 98866 29446
+                <span>📞</span> {cfg.contact_phone}
               </a>
             </div>
           </div>

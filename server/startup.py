@@ -72,7 +72,37 @@ with db() as cur:
             created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
             UNIQUE(institution_id, name)
         );
+
+        CREATE TABLE IF NOT EXISTS site_config (
+            key        VARCHAR(100) PRIMARY KEY,
+            value      TEXT NOT NULL,
+            updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+        );
+
+        CREATE TABLE IF NOT EXISTS activity_logs (
+            id         SERIAL PRIMARY KEY,
+            user_id    INTEGER,
+            user_name  VARCHAR(100),
+            user_email VARCHAR(150),
+            action     VARCHAR(50) NOT NULL,
+            ip_address VARCHAR(50),
+            session_id VARCHAR(100),
+            created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+        );
     """)
+
+with db() as cur:
+    cur.executemany(
+        'INSERT INTO site_config (key, value) VALUES (%s, %s) ON CONFLICT (key) DO NOTHING',
+        [
+            ('powered_by',    'Preflex Solutions Pvt. Ltd.'),
+            ('hero_title',    'Mental Wellness'),
+            ('hero_line2',    'Assessment Tool'),
+            ('hero_subtitle', 'A gate to personalized counselling & support for all ages. Understand your mental wellness and get connected to the right help.'),
+            ('contact_email', 'support@preflexsol.com'),
+            ('contact_phone', '+91 98866 29446'),
+        ]
+    )
 
 print('Tables ready.')
 
