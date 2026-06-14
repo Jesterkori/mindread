@@ -50,11 +50,10 @@ function Counter({ to, suffix = '' }) {
 const CATEGORIES = [
   { icon: '👧🏽', title: 'Children & Students',  age: 'Ages 10–16',  color: '#22c55e', desc: 'Self-reflection and mental clarity for school-going students.' },
   { icon: '👩🏾', title: 'Youngsters & Gen Z',   age: 'Ages 17–25',  color: '#0d9488', desc: 'Future readiness and stress management for college students.' },
-  { icon: '💍',   title: 'Adult & Couples',       age: 'All Ages',    color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
-  { icon: '🌱',   title: 'Divorced / Separated',  age: 'All Ages',    color: '#e879f9', desc: 'Emotional healing and new beginnings after separation.' },
-  { icon: '👴🏾', title: 'Senior Citizens',        age: '55+ Years',   color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
-  { icon: '👩‍👧',  title: 'Single Mother',          age: 'All Ages',    color: '#ec4899', desc: 'Support for the unique stressors of solo motherhood.' },
-  { icon: '👨‍👦',  title: 'Single Father',          age: 'All Ages',    color: '#0ea5e9', desc: 'Support for the unique pressures of solo fatherhood.' },
+  { icon: '💍',   title: 'Adult & Couples',   age: 'All Ages',   color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
+  { icon: '💼',   title: 'Working Adults',    age: 'All Ages',   color: '#e879f9', desc: 'Managing professional stress and work-life balance.' },
+  { icon: '👴🏾', title: 'Senior Citizens',   age: '55+ Years',  color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
+  { icon: '🤝',   title: 'Single Parents',    age: 'All Ages',   color: '#ec4899', desc: 'Support for the unique challenges of solo parenting.' },
 ]
 
 const STEPS = [

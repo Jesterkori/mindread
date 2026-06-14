@@ -10,10 +10,10 @@ const CARD_COLORS = {
   student:              { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
   'young-adult':        { border: '#0d9488', bg: 'rgba(13,148,136,0.12)',  icon: '🎓' },
   married:              { border: '#f97316', bg: 'rgba(249,115,22,0.12)',  icon: '💍' },
-  divorced:             { border: '#e879f9', bg: 'rgba(232,121,249,0.12)', icon: '🌱' },
+  divorced:             { border: '#e879f9', bg: 'rgba(232,121,249,0.12)', icon: '💼' },
   older:                { border: '#a855f7', bg: 'rgba(168,85,247,0.12)',  icon: '🌟' },
-  'single-mother':      { border: '#ec4899', bg: 'rgba(236,72,153,0.12)', icon: '👩‍👧' },
-  'single-father':      { border: '#0ea5e9', bg: 'rgba(14,165,233,0.12)', icon: '👨‍👦' },
+  'single-mother':      { border: '#ec4899', bg: 'rgba(236,72,153,0.12)', icon: '🤝' },
+  'single-father':      { border: '#0ea5e9', bg: 'rgba(14,165,233,0.12)', icon: '🤝' },
   'counselling-10th':   { border: '#f97316', bg: 'rgba(249,115,22,0.12)', icon: '📖' },
   'counselling-12th':   { border: '#06b6d4', bg: 'rgba(6,182,212,0.12)',  icon: '🏫' },
 }
