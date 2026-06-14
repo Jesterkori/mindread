@@ -216,6 +216,28 @@ export default function AdminDashboard() {
     loadConfig()
   }
 
+  function getAboutCards() {
+    try { return JSON.parse(configDraft.about_cards_json || '[]') } catch { return [] }
+  }
+  function updateAboutCard(i, field, value) {
+    const updated = getAboutCards().map((c, idx) => idx === i ? { ...c, [field]: value } : c)
+    setConfigDraft(d => ({ ...d, about_cards_json: JSON.stringify(updated) }))
+  }
+  function getFeatCards() {
+    try { return JSON.parse(configDraft.features_json || '[]') } catch { return [] }
+  }
+  function updateFeatCard(i, field, value) {
+    const updated = getFeatCards().map((c, idx) => idx === i ? { ...c, [field]: value } : c)
+    setConfigDraft(d => ({ ...d, features_json: JSON.stringify(updated) }))
+  }
+  function handleLogoUpload(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setConfigDraft(d => ({ ...d, logo_base64: reader.result }))
+    reader.readAsDataURL(file)
+  }
+
   async function addInstitution() {
     const name = newInstName.trim()
     if (!name) return
@@ -1323,36 +1345,136 @@ export default function AdminDashboard() {
 
         {/* ── Site Config Tab ────────────────────────────────────────────────── */}
         {tab === 'config' && (
-          <div className="space-y-4 max-w-2xl">
+          <div className="space-y-6 max-w-2xl">
             <p className="text-sm text-white/50">Edit homepage content without touching the code. Changes go live immediately after saving.</p>
-            {[
-              { key: 'powered_by',    label: 'Powered-by badge text',    rows: 1 },
-              { key: 'hero_title',    label: 'Hero heading (line 1)',     rows: 1 },
-              { key: 'hero_line2',    label: 'Hero heading (line 2 — gradient)', rows: 1 },
-              { key: 'hero_subtitle', label: 'Hero subtitle paragraph',  rows: 3 },
-              { key: 'contact_email', label: 'Contact email',            rows: 1 },
-              { key: 'contact_phone', label: 'Contact phone',            rows: 1 },
-            ].map(({ key, label, rows }) => (
-              <div key={key} className="space-y-1.5">
-                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">{label}</p>
-                {rows === 1 ? (
-                  <GlassInput
-                    value={configDraft[key] ?? ''}
-                    onChange={(e) => setConfigDraft(d => ({ ...d, [key]: e.target.value }))}
-                    placeholder={`Enter ${label.toLowerCase()}…`}
-                  />
-                ) : (
-                  <GlassTextarea
-                    rows={rows}
-                    value={configDraft[key] ?? ''}
-                    onChange={(e) => setConfigDraft(d => ({ ...d, [key]: e.target.value }))}
-                    placeholder={`Enter ${label.toLowerCase()}…`}
-                  />
-                )}
+
+            {/* Hero */}
+            <div className="rounded-2xl p-5 space-y-4" style={glass}>
+              <p className="text-xs font-bold text-white/60 uppercase tracking-widest">Hero Section</p>
+              {[
+                { key: 'powered_by',    label: 'Powered-by badge text',           rows: 1 },
+                { key: 'hero_title',    label: 'Hero heading (line 1)',            rows: 1 },
+                { key: 'hero_line2',    label: 'Hero heading (line 2 — gradient)', rows: 1 },
+                { key: 'hero_subtitle', label: 'Hero subtitle paragraph',          rows: 3 },
+              ].map(({ key, label, rows }) => (
+                <div key={key} className="space-y-1.5">
+                  <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">{label}</p>
+                  {rows === 1
+                    ? <GlassInput value={configDraft[key] ?? ''} onChange={e => setConfigDraft(d => ({ ...d, [key]: e.target.value }))} />
+                    : <GlassTextarea rows={rows} value={configDraft[key] ?? ''} onChange={e => setConfigDraft(d => ({ ...d, [key]: e.target.value }))} />}
+                </div>
+              ))}
+            </div>
+
+            {/* Logo */}
+            <div className="rounded-2xl p-5 space-y-4" style={glass}>
+              <p className="text-xs font-bold text-white/60 uppercase tracking-widest">Logo</p>
+              {configDraft.logo_base64 && (
+                <div className="flex items-center gap-4">
+                  <img src={configDraft.logo_base64} alt="Current logo"
+                    style={{ height: 48, maxWidth: 200, objectFit: 'contain', background: 'white', borderRadius: 8, padding: 6 }} />
+                  <button onClick={() => setConfigDraft(d => ({ ...d, logo_base64: '' }))}
+                    className="text-xs px-3 py-1.5 rounded-lg transition-colors"
+                    style={{ background: 'rgba(248,113,113,0.12)', color: '#f87171', border: '1px solid rgba(248,113,113,0.25)' }}>
+                    Remove Logo
+                  </button>
+                </div>
+              )}
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Upload New Logo (JPG / PNG)</p>
+                <input type="file" accept="image/*" onChange={handleLogoUpload}
+                  className="text-white/60 text-sm file:mr-3 file:px-4 file:py-1.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:text-white file:cursor-pointer" />
+                <p className="text-xs text-white/30">Stored as base64 in the database — persists across deploys. Keep under 500 KB. Leave empty to use the default Preflex logo.</p>
               </div>
-            ))}
+            </div>
+
+            {/* About section */}
+            <div className="rounded-2xl p-5 space-y-4" style={glass}>
+              <p className="text-xs font-bold text-white/60 uppercase tracking-widest">About Section</p>
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Heading</p>
+                <GlassInput value={configDraft.about_title ?? ''} onChange={e => setConfigDraft(d => ({ ...d, about_title: e.target.value }))} />
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Paragraph 1</p>
+                <GlassTextarea rows={3} value={configDraft.about_p1 ?? ''} onChange={e => setConfigDraft(d => ({ ...d, about_p1: e.target.value }))} />
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Paragraph 2</p>
+                <GlassTextarea rows={3} value={configDraft.about_p2 ?? ''} onChange={e => setConfigDraft(d => ({ ...d, about_p2: e.target.value }))} />
+              </div>
+              <div className="space-y-3 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Mini-Cards (4 items)</p>
+                {getAboutCards().map((card, i) => (
+                  <div key={i} className="rounded-xl p-3 space-y-2"
+                    style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                    <p className="text-xs text-white/35">Card {i + 1}</p>
+                    <div className="grid grid-cols-3 gap-2">
+                      <div>
+                        <p className="text-xs text-white/30 mb-1">Icon</p>
+                        <GlassInput value={card.icon ?? ''} onChange={e => updateAboutCard(i, 'icon', e.target.value)}
+                          style={{ textAlign: 'center', fontSize: '1.2rem' }} />
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/30 mb-1">Label</p>
+                        <GlassInput value={card.label ?? ''} onChange={e => updateAboutCard(i, 'label', e.target.value)} />
+                      </div>
+                      <div>
+                        <p className="text-xs text-white/30 mb-1">Subtitle</p>
+                        <GlassInput value={card.sub ?? ''} onChange={e => updateAboutCard(i, 'sub', e.target.value)} />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Features section */}
+            <div className="rounded-2xl p-5 space-y-4" style={glass}>
+              <p className="text-xs font-bold text-white/60 uppercase tracking-widest">Features Section (6 Cards)</p>
+              {getFeatCards().map((feat, i) => (
+                <div key={i} className="rounded-xl p-3 space-y-2"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <p className="text-xs text-white/35">Feature {i + 1}</p>
+                  <div className="grid grid-cols-5 gap-2">
+                    <div>
+                      <p className="text-xs text-white/30 mb-1">Icon</p>
+                      <GlassInput value={feat.icon ?? ''} onChange={e => updateFeatCard(i, 'icon', e.target.value)}
+                        style={{ textAlign: 'center', fontSize: '1.2rem' }} />
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-xs text-white/30 mb-1">Title</p>
+                      <GlassInput value={feat.title ?? ''} onChange={e => updateFeatCard(i, 'title', e.target.value)} />
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-xs text-white/30 mb-1">Description</p>
+                      <GlassInput value={feat.desc ?? ''} onChange={e => updateFeatCard(i, 'desc', e.target.value)} />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Institution section */}
+            <div className="rounded-2xl p-5 space-y-4" style={glass}>
+              <p className="text-xs font-bold text-white/60 uppercase tracking-widest">Institution Section</p>
+              {[
+                { key: 'institution_title', label: 'Section Title', rows: 1 },
+                { key: 'institution_desc',  label: 'Description',   rows: 3 },
+                { key: 'contact_email',     label: 'Contact Email', rows: 1 },
+                { key: 'contact_phone',     label: 'Contact Phone', rows: 1 },
+              ].map(({ key, label, rows }) => (
+                <div key={key} className="space-y-1.5">
+                  <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">{label}</p>
+                  {rows === 1
+                    ? <GlassInput value={configDraft[key] ?? ''} onChange={e => setConfigDraft(d => ({ ...d, [key]: e.target.value }))} />
+                    : <GlassTextarea rows={rows} value={configDraft[key] ?? ''} onChange={e => setConfigDraft(d => ({ ...d, [key]: e.target.value }))} />}
+                </div>
+              ))}
+            </div>
+
             <button onClick={saveConfig} disabled={configBusy}
-              className="px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-50 mt-2"
+              className="px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-50"
               style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
               {configBusy ? 'Saving…' : 'Save Changes'}
             </button>

@@ -51,7 +51,7 @@ const CATEGORIES = [
   { icon: '👧🏽', title: 'Children & Students',  age: 'Ages 10–16',  color: '#22c55e', desc: 'Self-reflection and mental clarity for school-going students.' },
   { icon: '👩🏾', title: 'Youngsters & Gen Z',   age: 'Ages 17–25',  color: '#0d9488', desc: 'Future readiness and stress management for college students.' },
   { icon: '💍',   title: 'Adult & Couples',   age: 'All Ages',   color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
-  { icon: '💼',   title: 'Working Adults',    age: 'All Ages',   color: '#e879f9', desc: 'Managing professional stress and work-life balance.' },
+  { icon: '💼',   title: 'Working Professionals', age: 'All Ages',   color: '#e879f9', desc: 'Managing professional stress and work-life balance.' },
   { icon: '👴🏾', title: 'Senior Citizens',   age: '55+ Years',  color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
   { icon: '🤝',   title: 'Single Parents',    age: 'All Ages',   color: '#ec4899', desc: 'Support for the unique challenges of solo parenting.' },
 ]
@@ -72,13 +72,28 @@ const FEATURES = [
   { icon: '🤝', title: 'Professional Review',  desc: 'Every result is reviewed by a counsellor before being released.' },
 ]
 
+const DEFAULT_ABOUT_CARDS = [
+  { icon: '🎓', label: 'Students',  sub: 'School & College' },
+  { icon: '💑', label: 'Couples',   sub: 'Relationship Support' },
+  { icon: '🌱', label: 'Recovery',  sub: 'After Separation' },
+  { icon: '🌟', label: 'Seniors',   sub: 'Healthy Ageing' },
+]
+
 const DEFAULT_CONFIG = {
-  powered_by:    'Preflex Solutions Pvt. Ltd.',
-  hero_title:    'Mental Wellness',
-  hero_line2:    'Assessment Tool',
-  hero_subtitle: 'A gate to personalized counselling & support for all ages. Understand your mental wellness and get connected to the right help.',
-  contact_email: 'support@preflexsol.com',
-  contact_phone: '+91 98866 29446',
+  powered_by:         'Preflex Solutions Pvt. Ltd.',
+  hero_title:         'Mental Wellness',
+  hero_line2:         'Assessment Tool',
+  hero_subtitle:      'A gate to personalized counselling & support for all ages. Understand your mental wellness and get connected to the right help.',
+  contact_email:      'support@preflexsol.com',
+  contact_phone:      '+91 98866 29446',
+  about_title:        'Why Mental Wellness Matters Today',
+  about_p1:           'MindCheck is a professional mental wellness self-assessment platform developed by Preflex Solutions Pvt. Ltd. to help individuals across all age groups understand and manage their mental health.',
+  about_p2:           'From school students to senior adults, our tailored assessments provide actionable insights and connect users with qualified counsellors when professional help is needed.',
+  about_cards_json:   JSON.stringify(DEFAULT_ABOUT_CARDS),
+  features_json:      JSON.stringify(FEATURES),
+  institution_title:  'Built for Colleges & Schools',
+  institution_desc:   'MindCheck offers dedicated institution support — from student enrolment and section-wise assessments to bulk reporting for counsellors and administrators.',
+  logo_base64:        '',
 }
 
 export default function Landing() {
@@ -91,6 +106,9 @@ export default function Landing() {
       .then((d) => { if (d.ok) setCfg({ ...DEFAULT_CONFIG, ...d.config }) })
       .catch(() => {})
   }, [])
+
+  const features = (() => { try { return JSON.parse(cfg.features_json) } catch { return FEATURES } })()
+  const aboutCards = (() => { try { return JSON.parse(cfg.about_cards_json) } catch { return DEFAULT_ABOUT_CARDS } })()
 
   return (
     <div className="min-h-screen bg-white overflow-x-hidden">
@@ -212,17 +230,10 @@ export default function Landing() {
           <div data-reveal>
             <span className="text-xs font-bold uppercase tracking-widest text-green-500 mb-3 block">About MindCheck</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 leading-tight mb-5">
-              Why Mental Wellness<br/>Matters Today
+              {cfg.about_title}
             </h2>
-            <p className="text-slate-500 leading-relaxed mb-4">
-              MindCheck is a professional mental wellness self-assessment platform developed by
-              <strong className="text-slate-700"> Preflex Solutions Pvt. Ltd.</strong> to help individuals
-              across all age groups understand and manage their mental health.
-            </p>
-            <p className="text-slate-500 leading-relaxed mb-6">
-              From school students to senior adults, our tailored assessments provide actionable
-              insights and connect users with qualified counsellors when professional help is needed.
-            </p>
+            <p className="text-slate-500 leading-relaxed mb-4">{cfg.about_p1}</p>
+            <p className="text-slate-500 leading-relaxed mb-6">{cfg.about_p2}</p>
             <Link to="/register"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
                   style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
@@ -233,12 +244,7 @@ export default function Landing() {
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-4" data-reveal data-delay="2">
-            {[
-              { icon:'🎓', label:'Students',  sub:'School & College' },
-              { icon:'💑', label:'Couples',   sub:'Relationship Support' },
-              { icon:'🌱', label:'Recovery',  sub:'After Separation' },
-              { icon:'🌟', label:'Seniors',   sub:'Healthy Ageing' },
-            ].map(({ icon, label, sub }) => (
+            {aboutCards.map(({ icon, label, sub }) => (
               <div key={label} className="rounded-2xl p-5 text-center border border-slate-100 hover:border-green-200 hover:shadow-md transition-all">
                 <span className="text-3xl">{icon}</span>
                 <p className="font-bold text-slate-800 text-sm mt-2">{label}</p>
@@ -257,7 +263,7 @@ export default function Landing() {
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800">Everything You Need</h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map((f, i) => (
+            {features.map((f, i) => (
               <div key={f.title} data-reveal data-delay={String(i % 3 + 1)}
                    className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md hover:-translate-y-1 transition-all">
                 <span className="text-3xl">{f.icon}</span>
@@ -333,12 +339,9 @@ export default function Landing() {
           <div data-reveal data-delay="2">
             <span className="text-xs font-bold uppercase tracking-widest text-green-500 mb-3 block">For Institutions</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 leading-tight mb-4">
-              Built for Colleges<br/>&amp; Schools
+              {cfg.institution_title}
             </h2>
-            <p className="text-slate-500 leading-relaxed mb-6">
-              MindCheck offers dedicated institution support — from student enrolment and
-              section-wise assessments to bulk reporting for counsellors and administrators.
-            </p>
+            <p className="text-slate-500 leading-relaxed mb-6">{cfg.institution_desc}</p>
             <Link to="/register"
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 mb-5"
                   style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>

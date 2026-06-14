@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import PreflexLogo from './PreflexLogo'
@@ -14,6 +14,14 @@ export default function Navbar() {
   const { user, logout } = useAuth()
   const navigate  = useNavigate()
   const [open, setOpen] = useState(false)
+  const [logoSrc, setLogoSrc] = useState('')
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(d => { if (d.ok && d.config.logo_base64) setLogoSrc(d.config.logo_base64) })
+      .catch(() => {})
+  }, [])
 
   function handleLogout() {
     logout()
@@ -26,7 +34,9 @@ export default function Navbar() {
 
         {/* Left — brand */}
         <Link to="/" className="flex-shrink-0">
-          <PreflexLogo height={40} />
+          {logoSrc
+            ? <img src={logoSrc} alt="Logo" style={{ height: 40, maxWidth: 160, objectFit: 'contain' }} />
+            : <PreflexLogo height={40} />}
         </Link>
 
         {/* Centre — nav links (desktop) */}

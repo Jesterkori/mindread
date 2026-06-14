@@ -40,10 +40,10 @@ export const CATEGORIES = [
   },
   {
     id: 'divorced',
-    label: 'Working Adults',
+    label: 'Working Professionals',
     ageRange: 'All ages',
     icon: '💼',
-    description: 'For working adults managing professional stress and work-life balance',
+    description: 'For working professionals managing career stress and work-life balance',
     color: 'from-emerald-500 to-emerald-600',
     bg: 'bg-emerald-50',
     border: 'border-emerald-200',

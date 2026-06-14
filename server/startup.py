@@ -95,12 +95,20 @@ with db() as cur:
     cur.executemany(
         'INSERT INTO site_config (key, value) VALUES (%s, %s) ON CONFLICT (key) DO NOTHING',
         [
-            ('powered_by',    'Preflex Solutions Pvt. Ltd.'),
-            ('hero_title',    'Mental Wellness'),
-            ('hero_line2',    'Assessment Tool'),
-            ('hero_subtitle', 'A gate to personalized counselling & support for all ages. Understand your mental wellness and get connected to the right help.'),
-            ('contact_email', 'support@preflexsol.com'),
-            ('contact_phone', '+91 98866 29446'),
+            ('powered_by',         'Preflex Solutions Pvt. Ltd.'),
+            ('hero_title',         'Mental Wellness'),
+            ('hero_line2',         'Assessment Tool'),
+            ('hero_subtitle',      'A gate to personalized counselling & support for all ages. Understand your mental wellness and get connected to the right help.'),
+            ('contact_email',      'support@preflexsol.com'),
+            ('contact_phone',      '+91 98866 29446'),
+            ('about_title',        'Why Mental Wellness Matters Today'),
+            ('about_p1',           'MindCheck is a professional mental wellness self-assessment platform developed by Preflex Solutions Pvt. Ltd. to help individuals across all age groups understand and manage their mental health.'),
+            ('about_p2',           'From school students to senior adults, our tailored assessments provide actionable insights and connect users with qualified counsellors when professional help is needed.'),
+            ('about_cards_json',   '[{"icon":"\U0001f393","label":"Students","sub":"School & College"},{"icon":"\U0001f491","label":"Couples","sub":"Relationship Support"},{"icon":"\U0001f331","label":"Recovery","sub":"After Separation"},{"icon":"\U0001f31f","label":"Seniors","sub":"Healthy Ageing"}]'),
+            ('features_json',      '[{"icon":"\U0001f512","title":"Confidential","desc":"Your responses are private and reviewed only by verified professionals."},{"icon":"\U0001f3af","title":"Personalised","desc":"Questions and results are tailored to your age group and life situation."},{"icon":"\U0001f3eb","title":"Institution Support","desc":"Colleges and schools can enrol students and track wellness by section."},{"icon":"\U0001f4c8","title":"Actionable Insights","desc":"Admins get CSV/PDF reports sortable by institution and section."},{"icon":"⚡","title":"Fast & Simple","desc":"The full assessment takes under 10 minutes on any device."},{"icon":"\U0001f91d","title":"Professional Review","desc":"Every result is reviewed by a counsellor before being released."}]'),
+            ('institution_title',  'Built for Colleges & Schools'),
+            ('institution_desc',   'MindCheck offers dedicated institution support — from student enrolment and section-wise assessments to bulk reporting for counsellors and administrators.'),
+            ('logo_base64',        ''),
         ]
     )
 
