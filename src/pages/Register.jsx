@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, Navigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -19,6 +20,7 @@ const CARD_COLORS = {
 }
 
 export default function Register() {
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', category: '', institution: 'none' })
   const [error, setError] = useState('')
@@ -32,6 +34,10 @@ export default function Register() {
       .then(d => { if (d.ok) setInstitutions(d.institutions) })
       .catch(() => {})
   }, [])
+
+  if (user) {
+    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />
+  }
 
   function handleChange(e) {
     setForm(f => ({ ...f, [e.target.name]: e.target.value }))

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
@@ -98,6 +99,8 @@ const DEFAULT_CONFIG = {
 
 export default function Landing() {
   useReveal()
+  const { user } = useAuth()
+  const ctaPath = user ? '/dashboard' : '/register'
   const [cfg, setCfg] = useState(DEFAULT_CONFIG)
 
   useEffect(() => {
@@ -162,7 +165,7 @@ export default function Landing() {
               {cfg.hero_subtitle}
             </p>
             <div className="flex flex-wrap gap-4">
-              <Link to="/register"
+              <Link to={ctaPath}
                     className="px-7 py-3.5 rounded-xl font-bold text-white text-sm shadow-lg transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
                     style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
                 Take Assessment →
@@ -234,7 +237,7 @@ export default function Landing() {
             </h2>
             <p className="text-slate-500 leading-relaxed mb-4">{cfg.about_p1}</p>
             <p className="text-slate-500 leading-relaxed mb-6">{cfg.about_p2}</p>
-            <Link to="/register"
+            <Link to={ctaPath}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
                   style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
               Start Your Assessment
@@ -342,7 +345,7 @@ export default function Landing() {
               {cfg.institution_title}
             </h2>
             <p className="text-slate-500 leading-relaxed mb-6">{cfg.institution_desc}</p>
-            <Link to="/register"
+            <Link to={ctaPath}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 mb-5"
                   style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
               Register Your Institution
@@ -373,7 +376,7 @@ export default function Landing() {
             It takes less than 10 minutes. Your responses are private. Get started today.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/register"
+            <Link to={ctaPath}
                   className="px-8 py-3.5 rounded-xl font-bold text-sm bg-white text-green-700 hover:bg-green-50 transition-all hover:-translate-y-0.5 shadow-lg">
               Create Free Account
             </Link>
