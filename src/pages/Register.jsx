@@ -49,6 +49,7 @@ export default function Register() {
     if (!form.name.trim())              return setError('Please enter your full name.')
     if (!form.email.trim())             return setError('Please enter your email address.')
     if (!form.category)                 return setError('Please select your category.')
+    if (form.institution !== 'none' && !form.institution) return setError('Please select an institution from the dropdown.')
     if (form.password.length < 6)       return setError('Password must be at least 6 characters.')
     if (form.password !== form.confirm) return setError('Passwords do not match.')
 
@@ -151,26 +152,40 @@ export default function Register() {
             {/* Institution */}
             <div>
               <p className="text-sm font-medium text-white/70 mb-2">Are you part of an institution?</p>
-              <div className="grid grid-cols-1 gap-2">
-                {/* None option */}
-                {['none', ...institutions.map(i => i.name)].map(val => {
-                  const sel = form.institution === val
-                  const isNone = val === 'none'
-                  const label = isNone ? 'None — Individual / Independent' : val
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { val: 'none', icon: '👤', label: 'None',        sub: 'Individual / Independent' },
+                  { val: 'join', icon: '🏫', label: 'Institution', sub: 'College or School' },
+                ].map(({ val, icon, label, sub }) => {
+                  const sel = val === 'none' ? form.institution === 'none' : form.institution !== 'none'
                   return (
-                    <label key={val} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
+                    <button key={val} type="button"
+                      onClick={() => setForm(f => ({ ...f, institution: val === 'none' ? 'none' : '' }))}
+                      className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
                       style={{
                         border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
                         background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
                       }}>
-                      <input type="radio" name="institution" value={val} checked={sel} onChange={handleChange} className="sr-only"/>
-                      <span className="text-lg">{isNone ? '👤' : '🏫'}</span>
-                      <span className="text-sm font-medium text-white/85">{label}</span>
-                      {sel && <span className="ml-auto text-xs font-bold text-green-400">✓</span>}
-                    </label>
+                      <span className="text-2xl">{icon}</span>
+                      <span className="text-sm font-semibold text-white/90">{label}</span>
+                      <span className="text-xs text-white/45">{sub}</span>
+                      {sel && <span className="text-xs font-bold text-green-400">✓</span>}
+                    </button>
                   )
                 })}
               </div>
+              {form.institution !== 'none' && (
+                <div className="mt-2">
+                  <select
+                    value={form.institution}
+                    onChange={e => setForm(f => ({ ...f, institution: e.target.value }))}
+                    className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none"
+                    style={{ background: 'rgb(10,30,60)', border: '1.5px solid rgba(255,255,255,0.15)', colorScheme: 'dark' }}>
+                    <option value="">— Select your institution —</option>
+                    {institutions.map(i => <option key={i.id ?? i.name} value={i.name}>{i.name}</option>)}
+                  </select>
+                </div>
+              )}
             </div>
 
             {/* Category */}
