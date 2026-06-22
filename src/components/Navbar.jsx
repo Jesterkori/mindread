@@ -42,10 +42,9 @@ export default function Navbar() {
         {/* Centre — nav links (desktop) */}
         <div className="hidden md:flex items-center gap-6">
           {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.to}
-               className="text-sm font-medium text-slate-700 transition-colors hover:text-green-500">
-              {l.label}
-            </a>
+            l.to === '/'
+              ? <Link key={l.label} to="/" className="text-sm font-medium text-slate-700 transition-colors hover:text-green-500">{l.label}</Link>
+              : <a key={l.label} href={l.to} className="text-sm font-medium text-slate-700 transition-colors hover:text-green-500">{l.label}</a>
           ))}
         </div>
 
@@ -93,10 +92,9 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden bg-white border-t border-slate-100 px-4 py-4 space-y-3 shadow-lg">
           {NAV_LINKS.map(l => (
-            <a key={l.label} href={l.to} onClick={() => setOpen(false)}
-               className="block text-sm font-medium text-slate-700 hover:text-green-500 transition-colors py-1">
-              {l.label}
-            </a>
+            l.to === '/'
+              ? <Link key={l.label} to="/" onClick={() => setOpen(false)} className="block text-sm font-medium text-slate-700 hover:text-green-500 transition-colors py-1">{l.label}</Link>
+              : <a key={l.label} href={l.to} onClick={() => setOpen(false)} className="block text-sm font-medium text-slate-700 hover:text-green-500 transition-colors py-1">{l.label}</a>
           ))}
           <div className="pt-2 border-t border-slate-100 flex flex-col gap-2">
             {user ? (

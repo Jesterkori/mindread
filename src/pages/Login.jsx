@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link, useLocation } from 'react-router-dom'
+import { useNavigate, Link, useLocation, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -7,7 +7,7 @@ import CircuitBackground from '../components/CircuitBackground'
 import { bgStyle, glassCard } from '../styles/theme'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, user } = useAuth()
   const navigate = useNavigate()
   const location = useLocation()
 
@@ -16,6 +16,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
 
   const registered = location.state?.registered
+
+  if (user) {
+    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />
+  }
 
   function handleChange(e) {
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }))
