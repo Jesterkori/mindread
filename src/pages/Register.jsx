@@ -191,21 +191,20 @@ export default function Register() {
             {/* Category */}
             <div>
               <p className="text-sm font-medium text-white/70 mb-2">Select your category</p>
-              <div className="grid grid-cols-1 gap-2 max-h-52 overflow-y-auto pr-1">
+              <select
+                name="category"
+                value={form.category}
+                onChange={handleChange}
+                className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none"
+                style={{ background: 'rgb(10,30,60)', border: '1.5px solid rgba(255,255,255,0.15)', colorScheme: 'dark' }}>
+                <option value="">— Select a category —</option>
                 {CATEGORIES.map(cat => {
-                  const meta = CARD_COLORS[cat.id] ?? { border: '#60a5fa', bg: 'rgba(96,165,250,0.12)', icon: cat.icon }
-                  const sel = form.category === cat.id
+                  const meta = CARD_COLORS[cat.id] ?? { icon: cat.icon }
                   return (
-                    <label key={cat.id} className="flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all"
-                      style={{ border: `2px solid ${sel ? meta.border : 'rgba(255,255,255,0.12)'}`, background: sel ? meta.bg : 'rgba(255,255,255,0.04)' }}>
-                      <input type="radio" name="category" value={cat.id} checked={sel} onChange={handleChange} className="sr-only"/>
-                      <span className="text-xl">{meta.icon}</span>
-                      <span className="text-sm font-medium text-white/85">{cat.label}</span>
-                      {sel && <span className="ml-auto text-xs font-bold" style={{ color: meta.border }}>✓</span>}
-                    </label>
+                    <option key={cat.id} value={cat.id}>{meta.icon} {cat.label}</option>
                   )
                 })}
-              </div>
+              </select>
             </div>
 
             <button type="submit" disabled={loading}
