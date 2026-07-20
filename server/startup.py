@@ -58,6 +58,8 @@ with db() as cur:
         ALTER TABLE submissions ADD COLUMN IF NOT EXISTS admin_action TEXT;
         ALTER TABLE users ADD COLUMN IF NOT EXISTS institution VARCHAR(100);
         ALTER TABLE submissions ADD COLUMN IF NOT EXISTS section VARCHAR(100);
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS service VARCHAR(20) DEFAULT 'mindcheck';
+        ALTER TABLE users ADD COLUMN IF NOT EXISTS grade VARCHAR(10);
 
         CREATE TABLE IF NOT EXISTS institutions (
             id         SERIAL PRIMARY KEY,

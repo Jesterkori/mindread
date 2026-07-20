@@ -212,9 +212,11 @@ class RegisterBody(BaseModel):
     name: str
     email: str
     password: str
-    category: str
+    category: Optional[str] = None
     institution: Optional[str] = None
     captchaToken: Optional[str] = None
+    service: str = 'mindcheck'
+    grade: Optional[str] = None
 
 class VerifyOtpBody(BaseModel):
     email: str
@@ -294,7 +296,9 @@ def _fmt(row: dict, *keys):
 
 @app.post('/api/auth/register', responses=_R400)
 def register(body: RegisterBody):
-    if not all([body.name, body.email, body.password, body.category]):
+    if body.service == 'mindcheck' and not body.category:
+        raise HTTPException(400, 'All fields are required.')
+    if not all([body.name, body.email, body.password]):
         raise HTTPException(400, 'All fields are required.')
 
     with db() as cur:
@@ -305,9 +309,9 @@ def register(body: RegisterBody):
         hashed = bcrypt.hashpw(body.password.encode(), bcrypt.gensalt()).decode()
         institution = body.institution if body.institution and body.institution != 'none' else None
         cur.execute(
-            'INSERT INTO users (name, email, password, category, institution, email_verified, status) '
-            'VALUES (%s,%s,%s,%s,%s,TRUE,%s)',
-            (body.name, body.email, hashed, body.category, institution, 'pending')
+            'INSERT INTO users (name, email, password, category, institution, email_verified, status, service, grade) '
+            'VALUES (%s,%s,%s,%s,%s,TRUE,%s,%s,%s)',
+            (body.name, body.email, hashed, body.category, institution, 'pending', body.service, body.grade)
         )
 
     return {'ok': True}
@@ -329,7 +333,7 @@ def _log_activity(user_id, user_name, user_email, action, ip_address, session_id
 def login(body: LoginBody, request: Request, background_tasks: BackgroundTasks):
     with db() as cur:
         cur.execute(
-            'SELECT id, name, email, password, role, category, institution, email_verified, status '
+            'SELECT id, name, email, password, role, category, institution, email_verified, status, service, grade '
             'FROM users WHERE email = %s',
             (body.email,)
         )
@@ -338,7 +342,7 @@ def login(body: LoginBody, request: Request, background_tasks: BackgroundTasks):
     if not row:
         raise HTTPException(400, 'Invalid email or password.')
 
-    uid, name, email, pw_hash, role, category, institution, email_verified, status = row
+    uid, name, email, pw_hash, role, category, institution, email_verified, status, service, grade = row
 
     if not email_verified:
         raise HTTPException(400, 'Please verify your email first.')
@@ -356,7 +360,8 @@ def login(body: LoginBody, request: Request, background_tasks: BackgroundTasks):
     background_tasks.add_task(_log_activity, uid, name, email, 'login', ip, session_id)
 
     payload = {'id': uid, 'name': name, 'email': email, 'role': role, 'category': category,
-               'institution': institution, 'session_id': session_id}
+               'institution': institution, 'session_id': session_id,
+               'service': service or 'mindcheck', 'grade': grade}
     return {'token': make_token(payload), 'user': payload}
 
 

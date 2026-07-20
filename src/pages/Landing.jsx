@@ -100,7 +100,12 @@ const DEFAULT_CONFIG = {
 export default function Landing() {
   useReveal()
   const { user } = useAuth()
-  const ctaPath = user ? '/dashboard' : '/register'
+  let ctaPath = '/register'
+  let careerCtaPath = '/career/register'
+  if (user) {
+    ctaPath      = user.service === 'career_fit' ? '/career/dashboard' : '/dashboard'
+    careerCtaPath = user.service === 'career_fit' ? '/career/dashboard' : '/career/register'
+  }
   const [cfg, setCfg] = useState(DEFAULT_CONFIG)
 
   useEffect(() => {
@@ -206,6 +211,77 @@ export default function Landing() {
           <span className="text-white/40 text-xs">Scroll to explore</span>
           <div className="w-5 h-8 rounded-full border border-white/30 flex items-start justify-center pt-1.5">
             <div className="w-1 h-2 rounded-full bg-white/60 animate-bounce"/>
+          </div>
+        </div>
+      </section>
+
+      {/* ── OUR SERVICES ──────────────────────────────────────────────────────── */}
+      <section className="py-20 bg-slate-50" id="services">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-12" data-reveal>
+            <span className="inline-block text-xs font-bold uppercase tracking-widest text-green-600 mb-3">Our Platforms</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Two Services, One Goal</h2>
+            <p className="text-slate-500 mt-3 max-w-xl mx-auto">Choose the platform that fits your needs — mental wellness support or career guidance for students.</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* MindCheck card */}
+            <div className="rounded-2xl p-8 flex flex-col shadow-lg hover:-translate-y-1 transition-transform duration-300"
+                 style={{ background: 'linear-gradient(135deg,#0c1f3a,#0b4a52)', border: '1.5px solid rgba(34,197,94,0.3)' }}
+                 data-reveal>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                     style={{ background: 'rgba(34,197,94,0.2)' }}>🧠</div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-white">MindCheck</h3>
+                  <span className="text-xs text-green-400 font-medium">Mental Wellness Platform</span>
+                </div>
+              </div>
+              <p className="text-white/65 text-sm leading-relaxed mb-3">
+                A professional mental wellness self-assessment platform for all age groups — students, couples, working professionals, seniors, and single parents.
+              </p>
+              <ul className="space-y-1.5 mb-6">
+                {['Ages 10 – 65+', '6 tailored categories', 'Counsellor-reviewed results'].map(t => (
+                  <li key={t} className="flex items-center gap-2 text-sm text-white/70">
+                    <span className="text-green-400 font-bold">✓</span> {t}
+                  </li>
+                ))}
+              </ul>
+              <Link to={ctaPath}
+                    className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
+                    style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}>
+                Take Assessment →
+              </Link>
+            </div>
+
+            {/* Career Fit card */}
+            <div className="rounded-2xl p-8 flex flex-col shadow-lg hover:-translate-y-1 transition-transform duration-300"
+                 style={{ background: 'linear-gradient(135deg,#1c1404,#3b2000)', border: '1.5px solid rgba(251,191,36,0.3)' }}
+                 data-reveal data-delay="2">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
+                     style={{ background: 'rgba(251,191,36,0.2)' }}>🎓</div>
+                <div>
+                  <h3 className="text-lg font-extrabold text-white">Student Career Fit</h3>
+                  <span className="text-xs text-amber-400 font-medium">Career Evaluation Platform</span>
+                </div>
+              </div>
+              <p className="text-white/65 text-sm leading-relaxed mb-3">
+                A gateway to personalized career counseling and support for 10th and 12th-grade students. Understand your core strengths and get connected to the right career path.
+              </p>
+              <ul className="space-y-1.5 mb-6">
+                {['Ages 15 – 20', '10th & 12th grade counselling', 'Career path recommendations'].map(t => (
+                  <li key={t} className="flex items-center gap-2 text-sm text-white/70">
+                    <span className="text-amber-400 font-bold">✓</span> {t}
+                  </li>
+                ))}
+              </ul>
+              <Link to={careerCtaPath}
+                    className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
+                    style={{ background: 'linear-gradient(135deg,#f59e0b,#d97706)' }}>
+                Join Now →
+              </Link>
+            </div>
           </div>
         </div>
       </section>

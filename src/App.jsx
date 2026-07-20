@@ -4,6 +4,8 @@ import AdminRoute from './components/AdminRoute'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import CareerRegister from './pages/CareerRegister'
+import CareerDashboard from './pages/CareerDashboard'
 import UserDashboard from './pages/UserDashboard'
 import AdminDashboard from './pages/AdminDashboard'
 import Questionnaire from './pages/Questionnaire'
@@ -38,6 +40,17 @@ export default function App() {
         element={
           <ProtectedRoute>
             <ThankYou />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Career Fit pages */}
+      <Route path="/career/register" element={<CareerRegister />} />
+      <Route
+        path="/career/dashboard"
+        element={
+          <ProtectedRoute>
+            <CareerDashboard />
           </ProtectedRoute>
         }
       />

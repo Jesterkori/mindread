@@ -36,7 +36,10 @@ export default function Register() {
   }, [])
 
   if (user) {
-    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />
+    let dest = '/dashboard'
+    if (user.role === 'admin') dest = '/admin'
+    else if (user.service === 'career_fit') dest = '/career/dashboard'
+    return <Navigate to={dest} replace />
   }
 
   function handleChange(e) {

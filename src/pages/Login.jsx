@@ -18,7 +18,10 @@ export default function Login() {
   const registered = location.state?.registered
 
   if (user) {
-    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />
+    let dest = '/dashboard'
+    if (user.role === 'admin') dest = '/admin'
+    else if (user.service === 'career_fit') dest = '/career/dashboard'
+    return <Navigate to={dest} replace />
   }
 
   function handleChange(e) {
@@ -32,7 +35,10 @@ export default function Login() {
     const result = await login(form.email.trim(), form.password)
     setLoading(false)
     if (result.ok) {
-      navigate(result.role === 'admin' ? '/admin' : '/dashboard', { replace: true })
+      let dest = '/dashboard'
+      if (result.role === 'admin') dest = '/admin'
+      else if (result.service === 'career_fit') dest = '/career/dashboard'
+      navigate(dest, { replace: true })
     } else {
       setError(result.error)
     }

@@ -60,6 +60,8 @@ export function AuthProvider({ children }) {
       role:        ALLOWED_ROLES.has(userData.role) ? userData.role : 'user',
       category:    String(userData.category    || ''),
       institution: userData.institution ? String(userData.institution) : null,
+      service:     userData.service || 'mindcheck',
+      grade:       userData.grade   || null,
     }
     const token = String(jwt)
     localStorage.setItem(USER_KEY,  JSON.stringify(safe))
@@ -76,7 +78,7 @@ export function AuthProvider({ children }) {
     const data = await res.json()
     if (!res.ok) return { ok: false, error: data.error }
     persist(data.user, data.token)
-    return { ok: true, role: data.user.role }
+    return { ok: true, role: data.user.role, service: data.user.service || 'mindcheck' }
   }
 
   function logout() {
