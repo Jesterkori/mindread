@@ -133,10 +133,17 @@ export default function Landing() {
         @keyframes drift { 0%,100%{transform:translate(0,0) rotate(0deg)} 33%{transform:translate(8px,-8px) rotate(5deg)} 66%{transform:translate(-5px,5px) rotate(-3deg)} }
         @keyframes glow-green { 0%,100%{box-shadow:0 0 30px rgba(34,197,94,0.12),0 0 0 1.5px rgba(34,197,94,0.35)} 50%{box-shadow:0 0 60px rgba(34,197,94,0.28),0 0 0 1.5px rgba(34,197,94,0.55)} }
         @keyframes glow-amber { 0%,100%{box-shadow:0 0 30px rgba(251,191,36,0.12),0 0 0 1.5px rgba(251,191,36,0.35)} 50%{box-shadow:0 0 60px rgba(251,191,36,0.28),0 0 0 1.5px rgba(251,191,36,0.55)} }
+        @keyframes fadeInUp { from{opacity:0;transform:translateY(30px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes gradShift { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
         .float { animation: float 4s ease-in-out infinite }
         .drift { animation: drift 8s ease-in-out infinite }
         .glow-green { animation: glow-green 4s ease-in-out infinite }
         .glow-amber { animation: glow-amber 4s ease-in-out infinite; animation-delay:-2s }
+        .hero-title { animation: fadeInUp 0.75s cubic-bezier(0.22,1,0.36,1) both }
+        .hero-sub { animation: fadeInUp 0.75s cubic-bezier(0.22,1,0.36,1) 0.2s both }
+        .hero-card-1 { animation: fadeInUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.38s both }
+        .hero-card-2 { animation: fadeInUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.52s both }
+        .grad-animate { background-size:200% auto; animation: gradShift 5s ease infinite }
         .hero-bg { background: linear-gradient(135deg,#0c1f3a 0%,#0d3556 40%,#0b4a52 70%,#0a5c5c 100%); }
       `}</style>
 
@@ -162,106 +169,117 @@ export default function Landing() {
 
         <div className="relative z-10 max-w-6xl mx-auto px-6 w-full flex flex-col items-center">
 
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 text-xs font-semibold text-green-300"
-               style={{ background:'rgba(74,222,128,0.12)', border:'1px solid rgba(74,222,128,0.25)' }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"/>
-            Powered by {cfg.powered_by}
-          </div>
-
           {/* Headline */}
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white text-center leading-tight mb-4">
+          <h1 className="hero-title text-4xl sm:text-5xl lg:text-[3.75rem] font-extrabold text-white text-center leading-tight mb-5"
+              style={{ textShadow:'0 2px 40px rgba(34,197,94,0.18)' }}>
             Two Platforms.
             <br/>
-            <span style={{ background:'linear-gradient(90deg,#22c55e 0%,#0d9488 45%,#f59e0b 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
+            <span className="grad-animate"
+                  style={{ background:'linear-gradient(90deg,#22c55e,#0d9488,#f59e0b,#22c55e)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>
               One Mission.
             </span>
           </h1>
-          <p className="text-white/55 text-base sm:text-lg text-center mb-10 max-w-xl leading-relaxed">
-            Mental wellness support for all ages, and career guidance for students — choose the platform that's right for you.
+
+          {/* Subtitle */}
+          <p className="hero-sub text-center mb-10 max-w-2xl leading-relaxed text-base sm:text-lg">
+            <span className="font-semibold" style={{ color:'#fbbf24' }}>Career guidance</span>
+            <span className="text-white/60"> support for students, and </span>
+            <span className="font-semibold" style={{ color:'#4ade80' }}>mental wellness</span>
+            <span className="text-white/60"> for all ages —</span>
+            <span className="text-white/75"> choose the platform that&apos;s right for you.</span>
           </p>
 
           {/* ── Two service cards ─────────────────────────────────────────── */}
           <div className="grid md:grid-cols-2 gap-5 w-full">
 
             {/* MindCheck */}
-            <div className="rounded-2xl p-7 flex flex-col glow-green"
-                 style={{ background:'rgba(255,255,255,0.055)', backdropFilter:'blur(18px)' }}>
+            <div className="hero-card-1 rounded-2xl p-7 flex flex-col glow-green"
+                 style={{
+                   background:'linear-gradient(160deg,rgba(34,197,94,0.1) 0%,rgba(255,255,255,0.04) 100%)',
+                   backdropFilter:'blur(20px)',
+                   borderTop:'1px solid rgba(74,222,128,0.2)',
+                 }}>
               <div className="flex items-start gap-4 mb-5">
-                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl"
-                     style={{ background:'rgba(34,197,94,0.18)', border:'1px solid rgba(34,197,94,0.35)' }}>
+                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl shadow-lg"
+                     style={{ background:'linear-gradient(135deg,rgba(34,197,94,0.3),rgba(13,148,136,0.2))', border:'1px solid rgba(34,197,94,0.45)' }}>
                   🧠
                 </div>
                 <div>
-                  <h2 className="text-xl font-extrabold text-white">MindCheck</h2>
-                  <span className="text-xs font-semibold text-green-400">Mental Wellness Platform</span>
+                  <h2 className="text-xl font-extrabold text-white" style={{ textShadow:'0 1px 12px rgba(34,197,94,0.3)' }}>MindCheck</h2>
+                  <span className="text-xs font-semibold text-green-400 tracking-wide">Mental Wellness Platform</span>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <span className="w-1 h-1 rounded-full bg-green-400 animate-pulse"/>
-                    <span className="text-xs text-white/35">Ages 10 – 65+</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"/>
+                    <span className="text-xs text-white/45">Ages 10 – 65+</span>
                   </div>
                 </div>
               </div>
 
-              <p className="text-white/58 text-sm leading-relaxed mb-5">
+              <p className="text-white/70 text-sm leading-relaxed mb-5">
                 A professional mental wellness self-assessment platform for all age groups — students, couples, working professionals, seniors, and single parents.
               </p>
 
-              <ul className="space-y-2.5 mb-7 flex-1">
+              <ul className="space-y-3 mb-7 flex-1">
                 {[
-                  { icon: '🔒', t: 'Confidential & professionally reviewed' },
-                  { icon: '🎯', t: '6 categories tailored to every life stage' },
-                  { icon: '📊', t: 'Personalised results with clear guidance' },
-                ].map(({ icon, t }) => (
-                  <li key={t} className="flex items-center gap-3 text-sm text-white/65">
-                    <span className="text-base flex-shrink-0">{icon}</span> {t}
+                  { dot:'#4ade80', t: 'Confidential & professionally reviewed' },
+                  { dot:'#4ade80', t: '6 categories tailored to every life stage' },
+                  { dot:'#4ade80', t: 'Personalised results with clear guidance' },
+                ].map(({ dot, t }) => (
+                  <li key={t} className="flex items-center gap-3 text-sm text-white/75">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background:dot, boxShadow:`0 0 6px ${dot}` }}/>
+                    {t}
                   </li>
                 ))}
               </ul>
 
               <Link to={ctaPath}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
-                    style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95 shadow-lg"
+                    style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)', boxShadow:'0 4px 24px rgba(34,197,94,0.3)' }}>
                 Take Assessment →
               </Link>
             </div>
 
             {/* Career Fit */}
-            <div className="rounded-2xl p-7 flex flex-col glow-amber"
-                 style={{ background:'rgba(255,255,255,0.055)', backdropFilter:'blur(18px)' }}>
+            <div className="hero-card-2 rounded-2xl p-7 flex flex-col glow-amber"
+                 style={{
+                   background:'linear-gradient(160deg,rgba(251,191,36,0.1) 0%,rgba(255,255,255,0.04) 100%)',
+                   backdropFilter:'blur(20px)',
+                   borderTop:'1px solid rgba(251,191,36,0.2)',
+                 }}>
               <div className="flex items-start gap-4 mb-5">
-                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl"
-                     style={{ background:'rgba(251,191,36,0.18)', border:'1px solid rgba(251,191,36,0.35)' }}>
+                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl shadow-lg"
+                     style={{ background:'linear-gradient(135deg,rgba(251,191,36,0.3),rgba(217,119,6,0.2))', border:'1px solid rgba(251,191,36,0.45)' }}>
                   🎓
                 </div>
                 <div>
-                  <h2 className="text-xl font-extrabold text-white">Student Career Fit</h2>
-                  <span className="text-xs font-semibold text-amber-400">Career Evaluation Platform</span>
+                  <h2 className="text-xl font-extrabold text-white" style={{ textShadow:'0 1px 12px rgba(251,191,36,0.3)' }}>Student Career Fit</h2>
+                  <span className="text-xs font-semibold text-amber-400 tracking-wide">Career Evaluation Platform</span>
                   <div className="flex items-center gap-1.5 mt-1">
-                    <span className="w-1 h-1 rounded-full bg-amber-400 animate-pulse" style={{ animationDelay:'.5s' }}/>
-                    <span className="text-xs text-white/35">Ages 15 – 20</span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" style={{ animationDelay:'.5s' }}/>
+                    <span className="text-xs text-white/45">Ages 15 – 20</span>
                   </div>
                 </div>
               </div>
 
-              <p className="text-white/58 text-sm leading-relaxed mb-5">
+              <p className="text-white/70 text-sm leading-relaxed mb-5">
                 A gateway to personalized career counseling and support for 10th and 12th-grade students. Understand your core strengths and get connected to the right career path.
               </p>
 
-              <ul className="space-y-2.5 mb-7 flex-1">
+              <ul className="space-y-3 mb-7 flex-1">
                 {[
-                  { icon: '📖', t: '10th & 12th grade counselling support' },
-                  { icon: '🌟', t: 'Identify strengths and career aptitude' },
-                  { icon: '🗺️', t: 'Connected to the right career path' },
-                ].map(({ icon, t }) => (
-                  <li key={t} className="flex items-center gap-3 text-sm text-white/65">
-                    <span className="text-base flex-shrink-0">{icon}</span> {t}
+                  { dot:'#fbbf24', t: '10th & 12th grade counselling support' },
+                  { dot:'#fbbf24', t: 'Identify strengths and career aptitude' },
+                  { dot:'#fbbf24', t: 'Connected to the right career path' },
+                ].map(({ dot, t }) => (
+                  <li key={t} className="flex items-center gap-3 text-sm text-white/75">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background:dot, boxShadow:`0 0 6px ${dot}` }}/>
+                    {t}
                   </li>
                 ))}
               </ul>
 
               <Link to={careerCtaPath}
-                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
-                    style={{ background:'linear-gradient(135deg,#f59e0b,#d97706)' }}>
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95 shadow-lg"
+                    style={{ background:'linear-gradient(135deg,#f59e0b,#d97706)', boxShadow:'0 4px 24px rgba(251,191,36,0.3)' }}>
                 Join Now →
               </Link>
             </div>
