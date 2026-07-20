@@ -131,157 +131,149 @@ export default function Landing() {
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
         @keyframes pulse-ring { 0%{transform:scale(1);opacity:.6} 100%{transform:scale(1.6);opacity:0} }
         @keyframes drift { 0%,100%{transform:translate(0,0) rotate(0deg)} 33%{transform:translate(8px,-8px) rotate(5deg)} 66%{transform:translate(-5px,5px) rotate(-3deg)} }
+        @keyframes glow-green { 0%,100%{box-shadow:0 0 30px rgba(34,197,94,0.12),0 0 0 1.5px rgba(34,197,94,0.35)} 50%{box-shadow:0 0 60px rgba(34,197,94,0.28),0 0 0 1.5px rgba(34,197,94,0.55)} }
+        @keyframes glow-amber { 0%,100%{box-shadow:0 0 30px rgba(251,191,36,0.12),0 0 0 1.5px rgba(251,191,36,0.35)} 50%{box-shadow:0 0 60px rgba(251,191,36,0.28),0 0 0 1.5px rgba(251,191,36,0.55)} }
         .float { animation: float 4s ease-in-out infinite }
         .drift { animation: drift 8s ease-in-out infinite }
+        .glow-green { animation: glow-green 4s ease-in-out infinite }
+        .glow-amber { animation: glow-amber 4s ease-in-out infinite; animation-delay:-2s }
         .hero-bg { background: linear-gradient(135deg,#0c1f3a 0%,#0d3556 40%,#0b4a52 70%,#0a5c5c 100%); }
       `}</style>
 
       <Navbar />
 
       {/* ── HERO ──────────────────────────────────────────────────────────────── */}
-      <section className="hero-bg min-h-screen flex items-center relative overflow-hidden pt-16">
+      <section className="hero-bg min-h-screen flex flex-col items-center justify-center relative overflow-hidden pt-16 pb-10">
         <CircuitBackground />
 
         {/* Decorative blobs */}
-        <div className="absolute top-24 right-16 w-64 h-64 rounded-full opacity-10 drift"
+        <div className="absolute top-20 right-10 w-72 h-72 rounded-full opacity-10 drift pointer-events-none"
              style={{ background:'radial-gradient(circle,#22c55e,transparent)' }}/>
-        <div className="absolute bottom-24 left-8 w-48 h-48 rounded-full opacity-10 drift"
-             style={{ background:'radial-gradient(circle,#0d9488,transparent)', animationDelay:'-3s' }}/>
-        <span className="absolute top-32 left-12 text-yellow-300 text-2xl opacity-50 select-none drift" style={{ animationDelay:'-1s' }}>✦</span>
-        <span className="absolute top-48 right-24 text-cyan-300 text-lg opacity-40 select-none float">✦</span>
-        <span className="absolute bottom-32 right-12 text-green-300 text-3xl opacity-30 select-none drift" style={{ animationDelay:'-5s' }}>⚙</span>
-        <span className="absolute bottom-20 left-20 text-purple-300 text-2xl opacity-30 select-none float" style={{ animationDelay:'-2s' }}>⚙</span>
+        <div className="absolute bottom-20 left-6 w-56 h-56 rounded-full opacity-10 drift pointer-events-none"
+             style={{ background:'radial-gradient(circle,#f59e0b,transparent)', animationDelay:'-3s' }}/>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full opacity-5 pointer-events-none"
+             style={{ background:'radial-gradient(circle,#0d9488,transparent)' }}/>
+        <span className="absolute top-32 left-12 text-yellow-300 text-2xl opacity-40 select-none drift" style={{ animationDelay:'-1s' }}>✦</span>
+        <span className="absolute top-40 right-20 text-cyan-300 text-lg opacity-35 select-none float">✦</span>
+        <span className="absolute top-1/3 left-1/4 text-green-300 text-sm opacity-20 select-none float" style={{ animationDelay:'-3s' }}>✦</span>
+        <span className="absolute top-1/3 right-1/4 text-amber-300 text-sm opacity-20 select-none float" style={{ animationDelay:'-1.5s' }}>✦</span>
+        <span className="absolute bottom-28 right-10 text-amber-300 text-xl opacity-25 select-none drift" style={{ animationDelay:'-5s' }}>⚙</span>
+        <span className="absolute bottom-16 left-16 text-purple-300 text-xl opacity-20 select-none float" style={{ animationDelay:'-2s' }}>⚙</span>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left */}
-          <div>
-            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 text-xs font-semibold text-green-300"
-                 style={{ background:'rgba(74,222,128,0.15)', border:'1px solid rgba(74,222,128,0.3)' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"/>
-              Powered by {cfg.powered_by}
-            </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-6">
-              {cfg.hero_title}<br/>
-              <span style={{ background:'linear-gradient(90deg,#22c55e,#0d9488)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
-                {cfg.hero_line2}
-              </span>
-            </h1>
-            <p className="text-white/70 text-lg mb-8 leading-relaxed max-w-lg">
-              {cfg.hero_subtitle}
-            </p>
-            <div className="flex flex-wrap gap-4">
+        <div className="relative z-10 max-w-6xl mx-auto px-6 w-full flex flex-col items-center">
+
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 text-xs font-semibold text-green-300"
+               style={{ background:'rgba(74,222,128,0.12)', border:'1px solid rgba(74,222,128,0.25)' }}>
+            <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"/>
+            Powered by {cfg.powered_by}
+          </div>
+
+          {/* Headline */}
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white text-center leading-tight mb-4">
+            Two Platforms.
+            <br/>
+            <span style={{ background:'linear-gradient(90deg,#22c55e 0%,#0d9488 45%,#f59e0b 100%)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>
+              One Mission.
+            </span>
+          </h1>
+          <p className="text-white/55 text-base sm:text-lg text-center mb-10 max-w-xl leading-relaxed">
+            Mental wellness support for all ages, and career guidance for students — choose the platform that's right for you.
+          </p>
+
+          {/* ── Two service cards ─────────────────────────────────────────── */}
+          <div className="grid md:grid-cols-2 gap-5 w-full">
+
+            {/* MindCheck */}
+            <div className="rounded-2xl p-7 flex flex-col glow-green"
+                 style={{ background:'rgba(255,255,255,0.055)', backdropFilter:'blur(18px)' }}>
+              <div className="flex items-start gap-4 mb-5">
+                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl"
+                     style={{ background:'rgba(34,197,94,0.18)', border:'1px solid rgba(34,197,94,0.35)' }}>
+                  🧠
+                </div>
+                <div>
+                  <h2 className="text-xl font-extrabold text-white">MindCheck</h2>
+                  <span className="text-xs font-semibold text-green-400">Mental Wellness Platform</span>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="w-1 h-1 rounded-full bg-green-400 animate-pulse"/>
+                    <span className="text-xs text-white/35">Ages 10 – 65+</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="text-white/58 text-sm leading-relaxed mb-5">
+                A professional mental wellness self-assessment platform for all age groups — students, couples, working professionals, seniors, and single parents.
+              </p>
+
+              <ul className="space-y-2.5 mb-7 flex-1">
+                {[
+                  { icon: '🔒', t: 'Confidential & professionally reviewed' },
+                  { icon: '🎯', t: '6 categories tailored to every life stage' },
+                  { icon: '📊', t: 'Personalised results with clear guidance' },
+                ].map(({ icon, t }) => (
+                  <li key={t} className="flex items-center gap-3 text-sm text-white/65">
+                    <span className="text-base flex-shrink-0">{icon}</span> {t}
+                  </li>
+                ))}
+              </ul>
+
               <Link to={ctaPath}
-                    className="px-7 py-3.5 rounded-xl font-bold text-white text-sm shadow-lg transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
                     style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
                 Take Assessment →
               </Link>
-              <a href="#about"
-                 className="px-7 py-3.5 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5"
-                 style={{ background:'rgba(255,255,255,0.1)', border:'1.5px solid rgba(255,255,255,0.25)', color:'white' }}>
-                Learn More
-              </a>
             </div>
-          </div>
 
-          {/* Right — floating cards preview */}
-          <div className="hidden lg:block relative h-96">
-            {CATEGORIES.slice(0,4).map((cat, i) => (
-              <div key={cat.title}
-                   className="absolute rounded-2xl px-4 py-3 shadow-2xl float"
-                   style={{
-                     background:'rgba(255,255,255,0.08)', backdropFilter:'blur(12px)',
-                     border:`1.5px solid ${cat.color}40`,
-                     animationDelay:`${i * -1.2}s`,
-                     top:  [10, 45, 20, 55][i] + '%',
-                     left: [5, 40, 65, 25][i] + '%',
-                   }}>
-                <span className="text-2xl">{cat.icon}</span>
-                <p className="text-white text-xs font-bold mt-1">{cat.title}</p>
-                <p className="text-xs mt-0.5" style={{ color: cat.color }}>{cat.age}</p>
+            {/* Career Fit */}
+            <div className="rounded-2xl p-7 flex flex-col glow-amber"
+                 style={{ background:'rgba(255,255,255,0.055)', backdropFilter:'blur(18px)' }}>
+              <div className="flex items-start gap-4 mb-5">
+                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl"
+                     style={{ background:'rgba(251,191,36,0.18)', border:'1px solid rgba(251,191,36,0.35)' }}>
+                  🎓
+                </div>
+                <div>
+                  <h2 className="text-xl font-extrabold text-white">Student Career Fit</h2>
+                  <span className="text-xs font-semibold text-amber-400">Career Evaluation Platform</span>
+                  <div className="flex items-center gap-1.5 mt-1">
+                    <span className="w-1 h-1 rounded-full bg-amber-400 animate-pulse" style={{ animationDelay:'.5s' }}/>
+                    <span className="text-xs text-white/35">Ages 15 – 20</span>
+                  </div>
+                </div>
               </div>
-            ))}
-            {/* Center glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full"
-                 style={{ background:'radial-gradient(circle,rgba(34,197,94,0.3),transparent)' }}/>
+
+              <p className="text-white/58 text-sm leading-relaxed mb-5">
+                A gateway to personalized career counseling and support for 10th and 12th-grade students. Understand your core strengths and get connected to the right career path.
+              </p>
+
+              <ul className="space-y-2.5 mb-7 flex-1">
+                {[
+                  { icon: '📖', t: '10th & 12th grade counselling support' },
+                  { icon: '🌟', t: 'Identify strengths and career aptitude' },
+                  { icon: '🗺️', t: 'Connected to the right career path' },
+                ].map(({ icon, t }) => (
+                  <li key={t} className="flex items-center gap-3 text-sm text-white/65">
+                    <span className="text-base flex-shrink-0">{icon}</span> {t}
+                  </li>
+                ))}
+              </ul>
+
+              <Link to={careerCtaPath}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95"
+                    style={{ background:'linear-gradient(135deg,#f59e0b,#d97706)' }}>
+                Join Now →
+              </Link>
+            </div>
+
           </div>
         </div>
 
         {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1">
-          <span className="text-white/40 text-xs">Scroll to explore</span>
-          <div className="w-5 h-8 rounded-full border border-white/30 flex items-start justify-center pt-1.5">
-            <div className="w-1 h-2 rounded-full bg-white/60 animate-bounce"/>
-          </div>
-        </div>
-      </section>
-
-      {/* ── OUR SERVICES ──────────────────────────────────────────────────────── */}
-      <section className="py-20 bg-slate-50" id="services">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-12" data-reveal>
-            <span className="inline-block text-xs font-bold uppercase tracking-widest text-green-600 mb-3">Our Platforms</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900">Two Services, One Goal</h2>
-            <p className="text-slate-500 mt-3 max-w-xl mx-auto">Choose the platform that fits your needs — mental wellness support or career guidance for students.</p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-8">
-            {/* MindCheck card */}
-            <div className="rounded-2xl p-8 flex flex-col shadow-lg hover:-translate-y-1 transition-transform duration-300"
-                 style={{ background: 'linear-gradient(135deg,#0c1f3a,#0b4a52)', border: '1.5px solid rgba(34,197,94,0.3)' }}
-                 data-reveal>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                     style={{ background: 'rgba(34,197,94,0.2)' }}>🧠</div>
-                <div>
-                  <h3 className="text-lg font-extrabold text-white">MindCheck</h3>
-                  <span className="text-xs text-green-400 font-medium">Mental Wellness Platform</span>
-                </div>
-              </div>
-              <p className="text-white/65 text-sm leading-relaxed mb-3">
-                A professional mental wellness self-assessment platform for all age groups — students, couples, working professionals, seniors, and single parents.
-              </p>
-              <ul className="space-y-1.5 mb-6">
-                {['Ages 10 – 65+', '6 tailored categories', 'Counsellor-reviewed results'].map(t => (
-                  <li key={t} className="flex items-center gap-2 text-sm text-white/70">
-                    <span className="text-green-400 font-bold">✓</span> {t}
-                  </li>
-                ))}
-              </ul>
-              <Link to={ctaPath}
-                    className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
-                    style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}>
-                Take Assessment →
-              </Link>
-            </div>
-
-            {/* Career Fit card */}
-            <div className="rounded-2xl p-8 flex flex-col shadow-lg hover:-translate-y-1 transition-transform duration-300"
-                 style={{ background: 'linear-gradient(135deg,#1c1404,#3b2000)', border: '1.5px solid rgba(251,191,36,0.3)' }}
-                 data-reveal data-delay="2">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center text-2xl"
-                     style={{ background: 'rgba(251,191,36,0.2)' }}>🎓</div>
-                <div>
-                  <h3 className="text-lg font-extrabold text-white">Student Career Fit</h3>
-                  <span className="text-xs text-amber-400 font-medium">Career Evaluation Platform</span>
-                </div>
-              </div>
-              <p className="text-white/65 text-sm leading-relaxed mb-3">
-                A gateway to personalized career counseling and support for 10th and 12th-grade students. Understand your core strengths and get connected to the right career path.
-              </p>
-              <ul className="space-y-1.5 mb-6">
-                {['Ages 15 – 20', '10th & 12th grade counselling', 'Career path recommendations'].map(t => (
-                  <li key={t} className="flex items-center gap-2 text-sm text-white/70">
-                    <span className="text-amber-400 font-bold">✓</span> {t}
-                  </li>
-                ))}
-              </ul>
-              <Link to={careerCtaPath}
-                    className="mt-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
-                    style={{ background: 'linear-gradient(135deg,#f59e0b,#d97706)' }}>
-                Join Now →
-              </Link>
-            </div>
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1">
+          <span className="text-white/30 text-xs">Scroll to explore</span>
+          <div className="w-5 h-8 rounded-full border border-white/20 flex items-start justify-center pt-1.5">
+            <div className="w-1 h-2 rounded-full bg-white/50 animate-bounce"/>
           </div>
         </div>
       </section>
