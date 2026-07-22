@@ -75,9 +75,9 @@ export default function CareerRegister() {
           <p className="text-white/50 text-sm mb-8">
             You will be notified at <strong className="text-white/70">{form.email}</strong> once approved.
           </p>
-          <button onClick={() => navigate('/login')}
+          <button onClick={() => navigate('/career/login')}
             className="px-8 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
-            style={{ background: 'linear-gradient(135deg, #22c55e, #0d9488)' }}>
+            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)' }}>
             Back to Login
           </button>
         </div>
@@ -174,7 +174,7 @@ export default function CareerRegister() {
 
           <p className="text-center text-white/45 text-sm mt-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-amber-400 font-semibold hover:text-amber-300 transition-colors">Sign in</Link>
+            <Link to="/career/login" className="text-amber-400 font-semibold hover:text-amber-300 transition-colors">Sign in</Link>
           </p>
           <p className="text-center text-white/30 text-xs mt-2">
             Looking for MindCheck mental wellness?{' '}

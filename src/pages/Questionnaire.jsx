@@ -163,7 +163,8 @@ export default function Questionnaire() {
 
   useEffect(() => {
     const safeCategory = CATEGORIES.find(c => c.id === categoryId)?.id
-    if (!safeCategory) { navigate('/dashboard', { replace: true }); return }
+    const homeDash = user?.service === 'career_fit' ? '/career/dashboard' : '/dashboard'
+    if (!safeCategory) { navigate(homeDash, { replace: true }); return }
     fetch(`/api/questions/${encodeURIComponent(safeCategory)}`, { headers: authHeader() })
       .then((r) => r.json())
       .then((data) => {
@@ -322,7 +323,8 @@ export default function Questionnaire() {
       setSubmitting(false)
     }
 
-    navigate('/thankyou', { replace: true, state: { safetyFlag: result.safetyFlag } })
+    const thankyouPath = user?.service === 'career_fit' ? '/career/thankyou' : '/thankyou'
+    navigate(thankyouPath, { replace: true, state: { safetyFlag: result.safetyFlag } })
   }
 
   const currentAnswer = answers[question.id]

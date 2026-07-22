@@ -57,6 +57,22 @@ export default function App() {
           </CareerProtectedRoute>
         }
       />
+      <Route
+        path="/career/questionnaire"
+        element={
+          <CareerProtectedRoute>
+            <Questionnaire />
+          </CareerProtectedRoute>
+        }
+      />
+      <Route
+        path="/career/thankyou"
+        element={
+          <CareerProtectedRoute>
+            <ThankYou />
+          </CareerProtectedRoute>
+        }
+      />
 
       {/* Admin pages */}
       <Route

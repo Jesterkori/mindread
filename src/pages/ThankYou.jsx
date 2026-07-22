@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
@@ -6,6 +7,7 @@ import { bgStyle, glassCard } from '../styles/theme'
 
 export default function ThankYou() {
   const navigate = useNavigate()
+  const { user } = useAuth()
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col" style={bgStyle}>
@@ -76,7 +78,7 @@ export default function ThankYou() {
           </div>
 
           <button
-            onClick={() => navigate('/dashboard')}
+            onClick={() => navigate(user?.service === 'career_fit' ? '/career/dashboard' : '/dashboard')}
             className="mt-6 w-full py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
             style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}
           >
