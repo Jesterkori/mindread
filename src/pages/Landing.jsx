@@ -71,6 +71,8 @@ const FEATURES = [
   { icon: '📈', title: 'Actionable Insights',  desc: 'Admins get CSV/PDF reports sortable by institution and section.' },
   { icon: '⚡', title: 'Fast & Simple',        desc: 'The full assessment takes under 10 minutes on any device.' },
   { icon: '🤝', title: 'Professional Review',  desc: 'Every result is reviewed by a counsellor before being released.' },
+  { icon: '🗺️', title: 'Career Pathfinding',  desc: '50-question career aptitude assessments for 10th and 12th grade students.' },
+  { icon: '🎓', title: 'Stream Guidance',      desc: 'Structured career counselling helps students choose the right stream and college.' },
 ]
 
 const DEFAULT_ABOUT_CARDS = [
@@ -180,14 +182,6 @@ export default function Landing() {
             </span>
           </h1>
 
-          {/* Subtitle */}
-          <p className="hero-sub text-center mb-10 max-w-2xl leading-relaxed text-base sm:text-lg">
-            <span className="font-semibold" style={{ color:'#fbbf24' }}>Career guidance</span>
-            <span className="text-white/60"> support for students, and </span>
-            <span className="font-semibold" style={{ color:'#4ade80' }}>mental wellness</span>
-            <span className="text-white/60"> for all ages —</span>
-            <span className="text-white/75"> choose the platform that&apos;s right for you.</span>
-          </p>
 
           {/* ── Two service cards ─────────────────────────────────────────── */}
           <div className="grid md:grid-cols-2 gap-5 w-full">
@@ -280,7 +274,7 @@ export default function Landing() {
               <Link to={careerCtaPath}
                     className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 hover:-translate-y-0.5 active:scale-95 shadow-lg"
                     style={{ background:'linear-gradient(135deg,#f59e0b,#d97706)', boxShadow:'0 4px 24px rgba(251,191,36,0.3)' }}>
-                Join Now →
+                Take Assessment →
               </Link>
             </div>
 

@@ -17,11 +17,8 @@ export default function Login() {
 
   const registered = location.state?.registered
 
-  if (user) {
-    let dest = '/dashboard'
-    if (user.role === 'admin') dest = '/admin'
-    else if (user.service === 'career_fit') dest = '/career/dashboard'
-    return <Navigate to={dest} replace />
+  if (user && user.service !== 'career_fit') {
+    return <Navigate to={user.role === 'admin' ? '/admin' : '/dashboard'} replace />
   }
 
   function handleChange(e) {
@@ -35,10 +32,11 @@ export default function Login() {
     const result = await login(form.email.trim(), form.password)
     setLoading(false)
     if (result.ok) {
-      let dest = '/dashboard'
-      if (result.role === 'admin') dest = '/admin'
-      else if (result.service === 'career_fit') dest = '/career/dashboard'
-      navigate(dest, { replace: true })
+      if (result.service === 'career_fit') {
+        setError('This account belongs to Career Fit. Please use the Career Fit login page.')
+        return
+      }
+      navigate(result.role === 'admin' ? '/admin' : '/dashboard', { replace: true })
     } else {
       setError(result.error)
     }

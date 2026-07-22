@@ -47,6 +47,7 @@ export default function CareerRegister() {
           password: form.password,
           service:  'career_fit',
           grade:    form.grade,
+          category: form.grade === '10th' ? 'counselling-10th' : 'counselling-12th',
         }),
       })
       const data = await res.json()

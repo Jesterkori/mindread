@@ -201,7 +201,7 @@ export default function Register() {
                 className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none"
                 style={{ background: 'rgb(10,30,60)', border: '1.5px solid rgba(255,255,255,0.15)', colorScheme: 'dark' }}>
                 <option value="">— Select a category —</option>
-                {CATEGORIES.map(cat => {
+                {CATEGORIES.filter(cat => cat.id !== 'counselling-10th' && cat.id !== 'counselling-12th').map(cat => {
                   const meta = CARD_COLORS[cat.id] ?? { icon: cat.icon }
                   return (
                     <option key={cat.id} value={cat.id}>{meta.icon} {cat.label}</option>
