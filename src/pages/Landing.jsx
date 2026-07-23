@@ -338,6 +338,47 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* ── ABOUT CAREER FIT ──────────────────────────────────────────────────── */}
+      <section className="py-24" style={{ background:'linear-gradient(135deg,#fefce8,#fffbeb)' }}>
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+          <div className="grid grid-cols-2 gap-4 order-2 md:order-1" data-reveal>
+            {[
+              { icon:'📖', label:'10th Grade',       sub:'Stream Selection & Aptitude' },
+              { icon:'🏫', label:'12th Grade',       sub:'College & Career Readiness' },
+              { icon:'🎯', label:'Strength Mapping',  sub:'Know Your Core Abilities' },
+              { icon:'🗺️', label:'Career Clarity',   sub:'Right Path, Right Future' },
+            ].map(({ icon, label, sub }) => (
+              <div key={label} className="rounded-2xl p-5 text-center border-2 hover:border-amber-300 hover:shadow-md transition-all"
+                   style={{ borderColor:'rgba(251,191,36,0.3)', background:'rgba(251,191,36,0.06)' }}>
+                <span className="text-3xl">{icon}</span>
+                <p className="font-bold text-slate-800 text-sm mt-2">{label}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
+              </div>
+            ))}
+          </div>
+          <div data-reveal data-delay="2" className="order-1 md:order-2">
+            <span className="text-xs font-bold uppercase tracking-widest mb-3 block" style={{ color:'#d97706' }}>About Career Fit</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 leading-tight mb-5">
+              Helping Students Find the Right Path
+            </h2>
+            <p className="text-slate-500 leading-relaxed mb-4">
+              Student Career Fit is a dedicated career evaluation platform by Preflex Solutions, built for 10th and 12th grade students. Through a structured 50-question assessment, students uncover their strengths, aptitude, and interests to make confident decisions about streams and careers.
+            </p>
+            <p className="text-slate-500 leading-relaxed mb-6">
+              Every result is reviewed by a career counsellor who provides personalised guidance — helping students and parents navigate the critical turning points of education.
+            </p>
+            <Link to={careerCtaPath}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+                  style={{ background:'linear-gradient(135deg,#f59e0b,#d97706)' }}>
+              Start Career Assessment
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+              </svg>
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* ── FEATURES ──────────────────────────────────────────────────────────── */}
       <section id="features" className="py-24" style={{ background:'linear-gradient(135deg,#f0fdf4,#f0fdfa)' }}>
         <div className="max-w-6xl mx-auto px-6">
@@ -376,6 +417,82 @@ export default function Landing() {
                 <p className="text-xs text-slate-500 leading-snug">{cat.desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CAREER FIT GRADE LEVELS ───────────────────────────────────────────── */}
+      <section className="py-24" style={{ background:'linear-gradient(135deg,#1c1404,#2d1a00,#0c1f3a)' }}>
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-14" data-reveal>
+            <span className="text-xs font-bold uppercase tracking-widest text-amber-400 mb-3 block">Career Fit Assessment</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white">Career Counselling for Students</h2>
+            <p className="text-white/50 text-sm mt-3 max-w-lg mx-auto">
+              Tailored assessments for two critical stages of a student&apos;s academic journey.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* 10th Grade */}
+            <div data-reveal data-delay="1"
+                 className="rounded-2xl p-8 flex flex-col hover:-translate-y-1 transition-all"
+                 style={{ background:'rgba(251,191,36,0.08)', border:'1.5px solid rgba(251,191,36,0.25)', backdropFilter:'blur(12px)' }}>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-5"
+                   style={{ background:'rgba(251,191,36,0.15)', border:'1px solid rgba(251,191,36,0.4)' }}>
+                📖
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-4 w-fit text-xs font-semibold text-amber-300"
+                   style={{ background:'rgba(251,191,36,0.12)', border:'1px solid rgba(251,191,36,0.3)' }}>
+                Ages 15–16 • Class 10
+              </div>
+              <h3 className="text-xl font-extrabold text-white mb-3">10th Grade Counselling</h3>
+              <p className="text-white/60 text-sm leading-relaxed mb-5 flex-1">
+                Students at the crossroads of stream selection get a 50-question aptitude assessment covering technical interests, academic strengths, people skills, and career clarity — so they choose Science, Commerce, or Arts with confidence.
+              </p>
+              <ul className="space-y-2 mb-7">
+                {['Identify core strengths and learning style', 'Stream selection — Science / Commerce / Arts', 'Early career path clarity'].map(t => (
+                  <li key={t} className="flex items-center gap-2.5 text-sm text-white/70">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background:'#fbbf24', boxShadow:'0 0 6px #fbbf24' }}/>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <Link to={careerCtaPath}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
+                    style={{ background:'linear-gradient(135deg,#f59e0b,#d97706)' }}>
+                Take 10th Grade Assessment →
+              </Link>
+            </div>
+
+            {/* 12th Grade */}
+            <div data-reveal data-delay="2"
+                 className="rounded-2xl p-8 flex flex-col hover:-translate-y-1 transition-all"
+                 style={{ background:'rgba(251,191,36,0.08)', border:'1.5px solid rgba(251,191,36,0.25)', backdropFilter:'blur(12px)' }}>
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-5"
+                   style={{ background:'rgba(251,191,36,0.15)', border:'1px solid rgba(251,191,36,0.4)' }}>
+                🏫
+              </div>
+              <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-4 w-fit text-xs font-semibold text-amber-300"
+                   style={{ background:'rgba(251,191,36,0.12)', border:'1px solid rgba(251,191,36,0.3)' }}>
+                Ages 17–18 • Class 12
+              </div>
+              <h3 className="text-xl font-extrabold text-white mb-3">12th Grade Counselling</h3>
+              <p className="text-white/60 text-sm leading-relaxed mb-5 flex-1">
+                For students choosing colleges and careers after board exams. The 50-question assessment covers subject depth, planning readiness, stress management, and decision-making — delivering a counsellor-reviewed career report.
+              </p>
+              <ul className="space-y-2 mb-7">
+                {['College & entrance exam readiness', 'Career alignment — Engineering / Medical / Commerce / Arts', 'Personalised counsellor guidance'].map(t => (
+                  <li key={t} className="flex items-center gap-2.5 text-sm text-white/70">
+                    <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background:'#fbbf24', boxShadow:'0 0 6px #fbbf24' }}/>
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <Link to={careerCtaPath}
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
+                    style={{ background:'linear-gradient(135deg,#f59e0b,#d97706)' }}>
+                Take 12th Grade Assessment →
+              </Link>
+            </div>
           </div>
         </div>
       </section>
