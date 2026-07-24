@@ -51,10 +51,12 @@ function Counter({ to, suffix = '' }) {
 const CATEGORIES = [
   { icon: '👧🏽', title: 'Children & Students',  age: 'Ages 10–16',  color: '#22c55e', desc: 'Self-reflection and mental clarity for school-going students.' },
   { icon: '👩🏾', title: 'Youngsters & Gen Z',   age: 'Ages 17–25',  color: '#0d9488', desc: 'Future readiness and stress management for college students.' },
-  { icon: '💍',   title: 'Adult & Couples',   age: 'All Ages',   color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
-  { icon: '💼',   title: 'Working Professionals', age: 'All Ages',   color: '#e879f9', desc: 'Managing professional stress and work-life balance.' },
-  { icon: '👴🏾', title: 'Senior Citizens',   age: '55+ Years',  color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
-  { icon: '🤝',   title: 'Single Parents',    age: 'All Ages',   color: '#ec4899', desc: 'Support for the unique challenges of solo parenting.' },
+  { icon: '💍',   title: 'Adult & Couples',      age: 'All Ages',    color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
+  { icon: '💼',   title: 'Working Professionals',age: 'All Ages',    color: '#e879f9', desc: 'Managing professional stress and work-life balance.' },
+  { icon: '👴🏾', title: 'Senior Citizens',       age: '55+ Years',  color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
+  { icon: '🤝',   title: 'Single Parents',        age: 'All Ages',   color: '#ec4899', desc: 'Support for the unique challenges of solo parenting.' },
+  { icon: '📖',   title: '10th Grade Career',     age: 'Ages 15–16', color: '#f59e0b', desc: 'Career aptitude and stream selection counselling for Class 10 students.' },
+  { icon: '🏫',   title: '12th Grade Career',     age: 'Ages 17–18', color: '#d97706', desc: 'College readiness and career path counselling for Class 12 students.' },
 ]
 
 const STEPS = [
@@ -172,10 +174,9 @@ export default function Landing() {
         <div className="relative z-10 max-w-6xl mx-auto px-6 w-full flex flex-col items-center">
 
           {/* Headline */}
-          <h1 className="hero-title text-4xl sm:text-5xl lg:text-[3.75rem] font-extrabold text-white text-center leading-tight mb-5"
+          <h1 className="hero-title text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white text-center leading-tight mb-5 whitespace-nowrap"
               style={{ textShadow:'0 2px 40px rgba(34,197,94,0.18)' }}>
-            Two Platforms.
-            <br/>
+            Two Platforms.{' '}
             <span className="grad-animate"
                   style={{ background:'linear-gradient(90deg,#22c55e,#0d9488,#f59e0b,#22c55e)', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent', backgroundClip:'text' }}>
               One Mission.
@@ -307,37 +308,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* ── ABOUT ─────────────────────────────────────────────────────────────── */}
-      <section id="about" className="py-24 bg-white">
-        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
-          <div data-reveal>
-            <span className="text-xs font-bold uppercase tracking-widest text-green-500 mb-3 block">About MindCheck</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 leading-tight mb-5">
-              {cfg.about_title}
-            </h2>
-            <p className="text-slate-500 leading-relaxed mb-4">{cfg.about_p1}</p>
-            <p className="text-slate-500 leading-relaxed mb-6">{cfg.about_p2}</p>
-            <Link to={ctaPath}
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
-                  style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
-              Start Your Assessment
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
-              </svg>
-            </Link>
-          </div>
-          <div className="grid grid-cols-2 gap-4" data-reveal data-delay="2">
-            {aboutCards.map(({ icon, label, sub }) => (
-              <div key={label} className="rounded-2xl p-5 text-center border border-slate-100 hover:border-green-200 hover:shadow-md transition-all">
-                <span className="text-3xl">{icon}</span>
-                <p className="font-bold text-slate-800 text-sm mt-2">{label}</p>
-                <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── ABOUT CAREER FIT ──────────────────────────────────────────────────── */}
       <section className="py-24" style={{ background:'linear-gradient(135deg,#fefce8,#fffbeb)' }}>
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
@@ -375,6 +345,37 @@ export default function Landing() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
               </svg>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT ─────────────────────────────────────────────────────────────── */}
+      <section id="about" className="py-24 bg-white">
+        <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
+          <div data-reveal>
+            <span className="text-xs font-bold uppercase tracking-widest text-green-500 mb-3 block">About MindCheck</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-800 leading-tight mb-5">
+              {cfg.about_title}
+            </h2>
+            <p className="text-slate-500 leading-relaxed mb-4">{cfg.about_p1}</p>
+            <p className="text-slate-500 leading-relaxed mb-6">{cfg.about_p2}</p>
+            <Link to={ctaPath}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110"
+                  style={{ background:'linear-gradient(135deg,#22c55e,#0d9488)' }}>
+              Start Your Assessment
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7"/>
+              </svg>
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-4" data-reveal data-delay="2">
+            {aboutCards.map(({ icon, label, sub }) => (
+              <div key={label} className="rounded-2xl p-5 text-center border border-slate-100 hover:border-green-200 hover:shadow-md transition-all">
+                <span className="text-3xl">{icon}</span>
+                <p className="font-bold text-slate-800 text-sm mt-2">{label}</p>
+                <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
