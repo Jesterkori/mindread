@@ -5,6 +5,97 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
 
+// Maps aptitude label keywords → visual profile card data (from PDF scoring guide)
+const PROFILES_10TH = [
+  {
+    keys: ['analytical', 'scientific', 'part 1'],
+    icon: '🔬', color: '#22c55e',
+    title: 'The Analytical / Scientific Mind',
+    stream: 'Science (PCM / PCB)',
+    careers: 'Engineering, Data Science, Medicine, Research, Architecture',
+  },
+  {
+    keys: ['creative', 'expressive', 'part 2'],
+    icon: '🎨', color: '#e879f9',
+    title: 'The Creative / Expressive Mind',
+    stream: 'Arts & Humanities',
+    careers: 'Design, Journalism, Literature, Fine Arts, Media, Law',
+  },
+  {
+    keys: ['enterprising', 'leadership', 'part 3'],
+    icon: '💼', color: '#f59e0b',
+    title: 'The Enterprising / Leadership Mind',
+    stream: 'Commerce / Business',
+    careers: 'Management, Finance, Entrepreneurship, Marketing, Corporate Law',
+  },
+  {
+    keys: ['empathetic', 'social', 'part 4'],
+    icon: '🤝', color: '#0d9488',
+    title: 'The Empathetic / Social Mind',
+    stream: 'Humanities or Science (PCB)',
+    careers: 'Psychology, Healthcare, Teaching, Social Work, Public Policy',
+  },
+  {
+    keys: ['practical', 'technical', 'part 5'],
+    icon: '⚙️', color: '#3b82f6',
+    title: 'The Practical / Technical Mind',
+    stream: 'Science (Computer Science) or Vocational / Diploma',
+    careers: 'IT/Software, Robotics, Applied Engineering, Digital Media, Skilled Trades',
+  },
+  {
+    keys: ['multipotentialite', 'diverse', 'mix'],
+    icon: '🌐', color: '#a855f7',
+    title: 'The Multipotentialite',
+    stream: 'Interdisciplinary combinations',
+    careers: 'Commerce with Math, Arts with Economics — shadow professionals to narrow interests',
+  },
+]
+
+const PROFILES_12TH = [
+  {
+    keys: ['deep tech', 'analytical', 'part 1'],
+    icon: '💻', color: '#22c55e',
+    title: 'The Deep Tech / Analytical Mind',
+    stream: 'B.Tech / B.E. or B.Sc. (Physics, Mathematics, Data Science)',
+    careers: 'Engineering, Data Science, AI, Research, Architecture',
+  },
+  {
+    keys: ['creative', 'design', 'part 2'],
+    icon: '🎬', color: '#e879f9',
+    title: 'The Creative / Design Mind',
+    stream: 'B.Arch, B.Des (UI/UX), B.A. (Journalism, Mass Comm, Fine Arts)',
+    careers: 'UI/UX, Film, Architecture, Graphic Design, Journalism, Digital Arts',
+  },
+  {
+    keys: ['enterprise', 'strategic', 'part 3'],
+    icon: '📊', color: '#f59e0b',
+    title: 'The Enterprise / Strategic Mind',
+    stream: 'BBA, B.Com (Hons), CA/CS/CFA, Integrated Law (BBA LLB)',
+    careers: 'Finance, Investment Banking, Entrepreneurship, Corporate Law, CA',
+  },
+  {
+    keys: ['health', 'society', 'part 4'],
+    icon: '🏥', color: '#0d9488',
+    title: 'The Health / Society Mind',
+    stream: 'MBBS, BDS, B.Sc. (Psychology, Nursing), BA LLB, B.A. (Pol. Science)',
+    careers: 'Medicine, Psychology, Law, Civil Services, Social Work, Diplomacy',
+  },
+  {
+    keys: ['applied', 'operational', 'part 5'],
+    icon: '✈️', color: '#3b82f6',
+    title: 'The Applied / Operational Mind',
+    stream: 'B.Sc. Hospitality, Commercial Pilot Training, Culinary Arts, Supply Chain',
+    careers: 'Aviation, Hotel Management, Culinary Arts, Logistics, Tourism',
+  },
+]
+
+function matchProfile(label, grade) {
+  if (!label) return null
+  const lower = label.toLowerCase()
+  const profiles = grade === '12th' ? PROFILES_12TH : PROFILES_10TH
+  return profiles.find(p => p.keys.some(k => lower.includes(k))) || null
+}
+
 export default function CareerDashboard() {
   const { user, logout, authHeader } = useAuth()
   const navigate = useNavigate()
@@ -43,9 +134,31 @@ export default function CareerDashboard() {
         <div className="rounded-2xl p-10 text-center" style={cardStyle}>
           <div className="text-6xl mb-5">🧭</div>
           <h2 className="text-xl font-bold text-white mb-2">Start Your Career Assessment</h2>
-          <p className="text-white/50 text-sm leading-relaxed mb-8 max-w-sm mx-auto">
-            Answer 50 thoughtfully crafted questions to discover the career path that best matches your strengths and interests.
+          <p className="text-white/50 text-sm leading-relaxed mb-4 max-w-sm mx-auto">
+            Answer 50 thoughtfully crafted questions across 5 aptitude areas to discover the career path
+            that best matches your strengths and interests.
           </p>
+          <div className="grid grid-cols-1 gap-2 max-w-xs mx-auto mb-8 text-left">
+            {(user?.grade === '12th' ? [
+              'Part 1: Research, Analytics & Deep Tech',
+              'Part 2: Creativity, Design & Media',
+              'Part 3: Enterprise, Finance & Strategy',
+              'Part 4: Human Health, Society & Law',
+              'Part 5: Execution, Operations & Applied Skills',
+            ] : [
+              'Part 1: Analytical, Logical & Scientific Thinking',
+              'Part 2: Creativity, Expression & Humanities',
+              'Part 3: Leadership, Business & Communication',
+              'Part 4: Empathy, Society & Healthcare',
+              'Part 5: Technology, Practical & Hands-On',
+            ]).map((p, i) => (
+              <div key={p} className="flex items-center gap-2 text-xs text-white/55">
+                <span className="w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
+                      style={{ background: 'rgba(251,191,36,0.2)', color: '#fbbf24' }}>{i + 1}</span>
+                {p}
+              </div>
+            ))}
+          </div>
           <button
             onClick={() => navigate('/career/questionnaire')}
             className="px-10 py-3.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
@@ -67,10 +180,10 @@ export default function CareerDashboard() {
               {new Date(latest.submitted_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
             </span>.
           </p>
-          <p className="text-white/40 text-xs max-w-xs mx-auto">
-            Our team is reviewing your responses. Your personalised career report will appear here once released.
+          <p className="text-white/40 text-xs max-w-xs mx-auto mb-8">
+            Our career counsellor is reviewing your responses. Your personalised career report will appear here once released.
           </p>
-          <div className="mt-8 flex items-center justify-center gap-3">
+          <div className="flex items-center justify-center gap-3">
             <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#f59e0b' }} />
             <span className="text-amber-300 text-sm font-medium">Results pending expert review</span>
           </div>
@@ -78,42 +191,59 @@ export default function CareerDashboard() {
       )
     }
 
+    // Results released — match a profile from the label
+    const profile = matchProfile(latest.label, user?.grade)
+
     return (
       <div className="space-y-4">
-        <div className="rounded-2xl p-8" style={cardStyle}>
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-full flex items-center justify-center text-xl"
-                 style={{ background: 'rgba(251,191,36,0.2)', border: '1.5px solid rgba(251,191,36,0.4)' }}>
-              🎯
+        {/* Profile card */}
+        {profile && (
+          <div className="rounded-2xl p-8" style={{ background: `${profile.color}12`, border: `1.5px solid ${profile.color}35` }}>
+            <div className="flex items-center gap-4 mb-5">
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0"
+                   style={{ background: `${profile.color}20`, border: `1.5px solid ${profile.color}50` }}>
+                {profile.icon}
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-widest mb-1" style={{ color: profile.color }}>Your Aptitude Profile</p>
+                <h2 className="text-lg font-extrabold text-white">{profile.title}</h2>
+              </div>
             </div>
-            <div>
-              <p className="text-white/50 text-xs uppercase tracking-widest">Your Career Result</p>
-              <h2 className="text-lg font-bold text-white">{latest.label || 'Assessment Complete'}</h2>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: profile.color }}>Recommended Stream</p>
+                <p className="text-white/80 text-sm leading-relaxed">{profile.stream}</p>
+              </div>
+              <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <p className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: profile.color }}>Explore Careers In</p>
+                <p className="text-white/80 text-sm leading-relaxed">{profile.careers}</p>
+              </div>
             </div>
           </div>
+        )}
 
-          {latest.ai_analysis && (
-            <div className="rounded-xl p-5 mb-4"
-                 style={{ background: 'rgba(251,191,36,0.07)', border: '1px solid rgba(251,191,36,0.2)' }}>
-              <p className="text-xs text-amber-300 font-semibold uppercase tracking-wider mb-2">Career Guidance</p>
-              <p className="text-white/75 text-sm leading-relaxed whitespace-pre-line">{latest.ai_analysis}</p>
-            </div>
-          )}
+        {/* Counsellor's analysis */}
+        {latest.ai_analysis && (
+          <div className="rounded-2xl p-6" style={{ background: 'rgba(251,191,36,0.07)', border: '1px solid rgba(251,191,36,0.2)' }}>
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3 text-amber-300">Counsellor's Career Guidance</p>
+            <p className="text-white/75 text-sm leading-relaxed whitespace-pre-line">{latest.ai_analysis}</p>
+          </div>
+        )}
 
-          {latest.admin_notes && (
-            <div className="rounded-xl p-5"
-                 style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.2)' }}>
-              <p className="text-xs text-blue-300 font-semibold uppercase tracking-wider mb-2">Counsellor Notes</p>
-              <p className="text-white/70 text-sm leading-relaxed">{latest.admin_notes}</p>
-            </div>
-          )}
+        {/* Admin notes */}
+        {latest.admin_notes && (
+          <div className="rounded-2xl p-6" style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.2)' }}>
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3 text-blue-300">Additional Notes</p>
+            <p className="text-white/70 text-sm leading-relaxed">{latest.admin_notes}</p>
+          </div>
+        )}
 
-          {latest.released_at && (
-            <p className="text-white/30 text-xs mt-5 text-right">
-              Released on {new Date(latest.released_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
-            </p>
-          )}
-        </div>
+        {latest.released_at && (
+          <p className="text-white/25 text-xs text-right">
+            Released on {new Date(latest.released_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
+          </p>
+        )}
       </div>
     )
   }
@@ -138,10 +268,8 @@ export default function CareerDashboard() {
           </p>
         </div>
 
-        {/* Status card */}
         {renderStatusCard()}
 
-        {/* Sign out */}
         <div className="mt-10 text-center">
           <button onClick={handleLogout}
             className="px-6 py-2.5 rounded-xl font-semibold text-sm text-white/60 transition-all hover:text-white hover:brightness-110 active:scale-95"
