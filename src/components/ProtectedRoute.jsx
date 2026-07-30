@@ -10,7 +10,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (user.service === 'career_fit') {
-    return <Navigate to="/career/login" state={{ from: location }} replace />
+    return <Navigate to="/career/dashboard" replace />
   }
 
   return children

@@ -4,8 +4,6 @@ import AdminRoute from './components/AdminRoute'
 import Landing from './pages/Landing'
 import Login from './pages/Login'
 import Register from './pages/Register'
-import CareerRegister from './pages/CareerRegister'
-import CareerLogin from './pages/CareerLogin'
 import CareerDashboard from './pages/CareerDashboard'
 import CareerProtectedRoute from './components/CareerProtectedRoute'
 import UserDashboard from './pages/UserDashboard'
@@ -47,8 +45,8 @@ export default function App() {
       />
 
       {/* Career Fit pages */}
-      <Route path="/career/register" element={<CareerRegister />} />
-      <Route path="/career/login" element={<CareerLogin />} />
+      <Route path="/career/register" element={<Navigate to="/register?service=career_fit" replace />} />
+      <Route path="/career/login" element={<Navigate to="/login" replace />} />
       <Route
         path="/career/dashboard"
         element={

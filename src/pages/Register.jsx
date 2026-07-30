@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useNavigate, Link, Navigate } from 'react-router-dom'
+import { useNavigate, useSearchParams, Link, Navigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
@@ -22,7 +22,14 @@ const CARD_COLORS = {
 export default function Register() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', category: '', institution: 'none' })
+  const [searchParams] = useSearchParams()
+  const initialService = searchParams.get('service') === 'career_fit' ? 'career_fit' : 'mindcheck'
+  const [service, setServiceState] = useState(initialService)
+  function setService(next) {
+    setServiceState(next)
+    setForm(f => ({ ...f, category: '', institution: 'none', grade: '' }))
+  }
+  const [form, setForm] = useState({ name: '', email: '', password: '', confirm: '', category: '', institution: 'none', grade: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [done, setDone] = useState(false)
@@ -51,23 +58,35 @@ export default function Register() {
     setError('')
     if (!form.name.trim())              return setError('Please enter your full name.')
     if (!form.email.trim())             return setError('Please enter your email address.')
-    if (!form.category)                 return setError('Please select your category.')
-    if (form.institution !== 'none' && !form.institution) return setError('Please select an institution from the dropdown.')
+    if (service === 'mindcheck' && !form.category) return setError('Please select your category.')
+    if (service === 'mindcheck' && form.institution !== 'none' && !form.institution) return setError('Please select an institution from the dropdown.')
+    if (service === 'career_fit' && !form.grade) return setError('Please select your counselling level (10th or 12th).')
     if (form.password.length < 6)       return setError('Password must be at least 6 characters.')
     if (form.password !== form.confirm) return setError('Passwords do not match.')
+
+    const payload = service === 'career_fit'
+      ? {
+          name:     form.name.trim(),
+          email:    form.email.trim().toLowerCase(),
+          password: form.password,
+          service:  'career_fit',
+          grade:    form.grade,
+          category: form.grade === '10th' ? 'counselling-10th' : 'counselling-12th',
+        }
+      : {
+          name:        form.name.trim(),
+          email:       form.email.trim().toLowerCase(),
+          password:    form.password,
+          category:    form.category,
+          institution: form.institution === 'none' ? null : form.institution,
+        }
 
     setLoading(true)
     try {
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name:        form.name.trim(),
-          email:       form.email.trim().toLowerCase(),
-          password:    form.password,
-          category:    form.category,
-          institution: form.institution === 'none' ? null : form.institution,
-        }),
+        body: JSON.stringify(payload),
       })
       const data = await res.json()
       if (!res.ok) return setError(data.detail || data.error || 'Registration failed.')
@@ -124,8 +143,31 @@ export default function Register() {
         <div className="rounded-2xl p-8 shadow-2xl" style={glassCard}>
           <h2 className="text-lg font-bold text-white mb-1">Register</h2>
           <p className="text-white/45 text-sm mb-6">
-            Fill in your details to create your account.
+            Choose a service, then fill in your details to create your account.
           </p>
+
+          {/* Service picker */}
+          <div className="grid grid-cols-2 gap-2 mb-5">
+            {[
+              { val: 'mindcheck',  icon: '🧠', label: 'MindCheck',  sub: 'Mental wellness' },
+              { val: 'career_fit', icon: '🎓', label: 'Career Fit', sub: 'Student counselling' },
+            ].map(({ val, icon, label, sub }) => {
+              const sel = service === val
+              return (
+                <button key={val} type="button" onClick={() => setService(val)}
+                  className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+                  style={{
+                    border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
+                    background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
+                  }}>
+                  <span className="text-2xl">{icon}</span>
+                  <span className="text-sm font-semibold text-white/90">{label}</span>
+                  <span className="text-xs text-white/45">{sub}</span>
+                  {sel && <span className="text-xs font-bold text-green-400">✓</span>}
+                </button>
+              )
+            })}
+          </div>
 
           {error && (
             <div className="mb-5 rounded-xl px-4 py-3 text-sm font-medium"
@@ -152,63 +194,95 @@ export default function Register() {
               </div>
             ))}
 
-            {/* Institution */}
-            <div>
-              <p className="text-sm font-medium text-white/70 mb-2">Are you part of an institution?</p>
-              <div className="grid grid-cols-2 gap-2">
-                {[
-                  { val: 'none', icon: '👤', label: 'None',        sub: 'Individual / Independent' },
-                  { val: 'join', icon: '🏫', label: 'Institution', sub: 'College or School' },
-                ].map(({ val, icon, label, sub }) => {
-                  const sel = val === 'none' ? form.institution === 'none' : form.institution !== 'none'
-                  return (
-                    <button key={val} type="button"
-                      onClick={() => setForm(f => ({ ...f, institution: val === 'none' ? 'none' : '' }))}
-                      className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
-                      style={{
-                        border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
-                        background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
-                      }}>
-                      <span className="text-2xl">{icon}</span>
-                      <span className="text-sm font-semibold text-white/90">{label}</span>
-                      <span className="text-xs text-white/45">{sub}</span>
-                      {sel && <span className="text-xs font-bold text-green-400">✓</span>}
-                    </button>
-                  )
-                })}
-              </div>
-              {form.institution !== 'none' && (
-                <div className="mt-2">
+            {service === 'mindcheck' && (
+              <>
+                {/* Institution */}
+                <div>
+                  <p className="text-sm font-medium text-white/70 mb-2">Are you part of an institution?</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {[
+                      { val: 'none', icon: '👤', label: 'None',        sub: 'Individual / Independent' },
+                      { val: 'join', icon: '🏫', label: 'Institution', sub: 'College or School' },
+                    ].map(({ val, icon, label, sub }) => {
+                      const sel = val === 'none' ? form.institution === 'none' : form.institution !== 'none'
+                      return (
+                        <button key={val} type="button"
+                          onClick={() => setForm(f => ({ ...f, institution: val === 'none' ? 'none' : '' }))}
+                          className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+                          style={{
+                            border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
+                            background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
+                          }}>
+                          <span className="text-2xl">{icon}</span>
+                          <span className="text-sm font-semibold text-white/90">{label}</span>
+                          <span className="text-xs text-white/45">{sub}</span>
+                          {sel && <span className="text-xs font-bold text-green-400">✓</span>}
+                        </button>
+                      )
+                    })}
+                  </div>
+                  {form.institution !== 'none' && (
+                    <div className="mt-2">
+                      <select
+                        value={form.institution}
+                        onChange={e => setForm(f => ({ ...f, institution: e.target.value }))}
+                        className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none"
+                        style={{ background: 'rgb(10,30,60)', border: '1.5px solid rgba(255,255,255,0.15)', colorScheme: 'dark' }}>
+                        <option value="">— Select your institution —</option>
+                        {institutions.map(i => <option key={i.id ?? i.name} value={i.name}>{i.name}</option>)}
+                      </select>
+                    </div>
+                  )}
+                </div>
+
+                {/* Category */}
+                <div>
+                  <p className="text-sm font-medium text-white/70 mb-2">Select your category</p>
                   <select
-                    value={form.institution}
-                    onChange={e => setForm(f => ({ ...f, institution: e.target.value }))}
+                    name="category"
+                    value={form.category}
+                    onChange={handleChange}
                     className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none"
                     style={{ background: 'rgb(10,30,60)', border: '1.5px solid rgba(255,255,255,0.15)', colorScheme: 'dark' }}>
-                    <option value="">— Select your institution —</option>
-                    {institutions.map(i => <option key={i.id ?? i.name} value={i.name}>{i.name}</option>)}
+                    <option value="">— Select a category —</option>
+                    {CATEGORIES.filter(cat => cat.id !== 'counselling-10th' && cat.id !== 'counselling-12th').map(cat => {
+                      const meta = CARD_COLORS[cat.id] ?? { icon: cat.icon }
+                      return (
+                        <option key={cat.id} value={cat.id}>{meta.icon} {cat.label}</option>
+                      )
+                    })}
                   </select>
                 </div>
-              )}
-            </div>
+              </>
+            )}
 
-            {/* Category */}
-            <div>
-              <p className="text-sm font-medium text-white/70 mb-2">Select your category</p>
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-                className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none"
-                style={{ background: 'rgb(10,30,60)', border: '1.5px solid rgba(255,255,255,0.15)', colorScheme: 'dark' }}>
-                <option value="">— Select a category —</option>
-                {CATEGORIES.filter(cat => cat.id !== 'counselling-10th' && cat.id !== 'counselling-12th').map(cat => {
-                  const meta = CARD_COLORS[cat.id] ?? { icon: cat.icon }
-                  return (
-                    <option key={cat.id} value={cat.id}>{meta.icon} {cat.label}</option>
-                  )
-                })}
-              </select>
-            </div>
+            {service === 'career_fit' && (
+              <div>
+                <p className="text-sm font-medium text-white/70 mb-2">Counselling for</p>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { val: '10th', icon: '📖', label: '10th Grade', sub: 'Ages 15–16' },
+                    { val: '12th', icon: '🏫', label: '12th Grade', sub: 'Ages 17–18' },
+                  ].map(({ val, icon, label, sub }) => {
+                    const sel = form.grade === val
+                    return (
+                      <button key={val} type="button"
+                        onClick={() => setForm(f => ({ ...f, grade: val }))}
+                        className="flex flex-col items-center gap-1 p-3 rounded-xl transition-all"
+                        style={{
+                          border: `2px solid ${sel ? 'rgba(251,191,36,0.7)' : 'rgba(255,255,255,0.12)'}`,
+                          background: sel ? 'rgba(251,191,36,0.12)' : 'rgba(255,255,255,0.04)',
+                        }}>
+                        <span className="text-2xl">{icon}</span>
+                        <span className="text-sm font-semibold text-white/90">{label}</span>
+                        <span className="text-xs text-white/45">{sub}</span>
+                        {sel && <span className="text-xs font-bold text-amber-400">✓</span>}
+                      </button>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
 
             <button type="submit" disabled={loading}
               className="w-full py-3 rounded-xl font-bold text-sm text-white tracking-wide transition-all hover:brightness-110 active:scale-95 disabled:opacity-50 mt-2"

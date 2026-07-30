@@ -5,8 +5,12 @@ export default function CareerProtectedRoute({ children }) {
   const { user } = useAuth()
   const location = useLocation()
 
-  if (!user || user.service !== 'career_fit') {
-    return <Navigate to="/career/login" state={{ from: location }} replace />
+  if (!user) {
+    return <Navigate to="/login" state={{ from: location }} replace />
+  }
+
+  if (user.service !== 'career_fit') {
+    return <Navigate to="/dashboard" replace />
   }
 
   return children

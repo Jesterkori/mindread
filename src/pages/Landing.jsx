@@ -105,10 +105,10 @@ export default function Landing() {
   useReveal()
   const { user } = useAuth()
   let ctaPath = '/register'
-  let careerCtaPath = '/career/register'
+  let careerCtaPath = '/register?service=career_fit'
   if (user) {
     ctaPath      = user.service === 'career_fit' ? '/career/dashboard' : '/dashboard'
-    careerCtaPath = user.service === 'career_fit' ? '/career/dashboard' : '/career/register'
+    careerCtaPath = user.service === 'career_fit' ? '/career/dashboard' : '/register?service=career_fit'
   }
   const [cfg, setCfg] = useState(DEFAULT_CONFIG)
 
