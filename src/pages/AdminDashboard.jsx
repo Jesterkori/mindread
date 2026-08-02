@@ -410,11 +410,11 @@ export default function AdminDashboard() {
     const params = new URLSearchParams()
     if (filterInstitution) params.set('institution', filterInstitution)
     if (filterSection)     params.set('section', filterSection)
-    const token = localStorage.getItem('token') || ''
-    fetch(`/api/admin/export/csv?${params}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((r) => r.blob())
+    fetch(`/api/admin/export/csv?${params}`, { headers: authHeader() })
+      .then((r) => {
+        if (!r.ok) throw new Error('Export failed')
+        return r.blob()
+      })
       .then((blob) => {
         const url = URL.createObjectURL(blob)
         const a   = document.createElement('a')
@@ -423,6 +423,7 @@ export default function AdminDashboard() {
         a.click()
         URL.revokeObjectURL(url)
       })
+      .catch(() => alert('CSV export failed. Please try again.'))
   }
 
   // ── PDF print window — full individual reports ────────────────────────────
