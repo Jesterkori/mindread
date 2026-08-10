@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
@@ -8,10 +9,51 @@ import { bgStyle, glassCard } from '../styles/theme'
 export default function ThankYou() {
   const navigate = useNavigate()
   const { user } = useAuth()
+  const [paymentQr, setPaymentQr] = useState('')
+  const [paymentNote, setPaymentNote] = useState('')
+  const [showPayment, setShowPayment] = useState(false)
+
+  useEffect(() => {
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(d => {
+        if (d.ok && d.config.payment_qr_base64) {
+          setPaymentQr(d.config.payment_qr_base64)
+          setPaymentNote(d.config.payment_instructions || '')
+          setShowPayment(true)
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   return (
     <div className="min-h-screen relative overflow-hidden flex flex-col" style={bgStyle}>
       <CircuitBackground opacity={0.05} />
+
+      {showPayment && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center px-4"
+          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}>
+          <div className="w-full max-w-sm rounded-2xl p-6 text-center" style={glassCard}>
+            <h2 className="text-lg font-extrabold text-white mb-1">Scan to Pay</h2>
+            <p className="text-white/50 text-xs mb-5">
+              Payment is optional to close this window, but required before your results can be released.
+            </p>
+            <div className="mx-auto mb-5 rounded-xl p-3 inline-block" style={{ background: 'white' }}>
+              <img src={paymentQr} alt="Payment QR code" style={{ width: 200, height: 200, objectFit: 'contain' }} />
+            </div>
+            {paymentNote && (
+              <p className="text-white/65 text-sm leading-relaxed mb-5 whitespace-pre-line text-left">{paymentNote}</p>
+            )}
+            <button
+              type="button"
+              onClick={() => setShowPayment(false)}
+              className="w-full py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
+              style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
 
       <Navbar />
 

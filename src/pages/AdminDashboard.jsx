@@ -240,6 +240,14 @@ export default function AdminDashboard() {
     reader.readAsDataURL(file)
   }
 
+  function handleQrUpload(e) {
+    const file = e.target.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = () => setConfigDraft(d => ({ ...d, payment_qr_base64: reader.result }))
+    reader.readAsDataURL(file)
+  }
+
   async function addInstitution() {
     const name = newInstName.trim()
     if (!name) return
@@ -319,6 +327,16 @@ export default function AdminDashboard() {
     })
     setBusy((b) => ({ ...b, [`edit-${id}`]: false }))
     setEditingReleased(null)
+    load()
+  }
+
+  async function togglePayment(id, confirmed) {
+    setBusy((b) => ({ ...b, [`payment-${id}`]: true }))
+    await fetch(`/api/admin/submissions/${id}/payment`, {
+      method: 'POST', headers,
+      body: JSON.stringify({ confirmed }),
+    })
+    setBusy((b) => ({ ...b, [`payment-${id}`]: false }))
     load()
   }
 
@@ -575,6 +593,7 @@ export default function AdminDashboard() {
                 </span>
               )}
               {s.result_released && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>Released</span>}
+              {s.payment_confirmed && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(96,165,250,0.15)', color: '#60a5fa' }}>Paid</span>}
             </div>
             <p className="text-sm text-white/50">{s.user_email}</p>
             <p className="text-xs text-white/35 mt-0.5">
@@ -602,6 +621,21 @@ export default function AdminDashboard() {
 
         {isOpen && (
           <div className="mt-4 pt-4 space-y-5" style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+
+            {/* Payment status */}
+            <div className="flex items-center justify-between rounded-xl px-3 py-2.5"
+              style={{ background: s.payment_confirmed ? 'rgba(96,165,250,0.1)' : 'rgba(255,255,255,0.05)', border: `1px solid ${s.payment_confirmed ? 'rgba(96,165,250,0.3)' : 'rgba(255,255,255,0.08)'}` }}>
+              <span className="text-sm text-white/70">
+                Payment {s.payment_confirmed ? <span className="text-blue-400 font-semibold">received</span> : <span className="text-white/40">not yet confirmed</span>}
+              </span>
+              <button
+                onClick={() => togglePayment(s.id, !s.payment_confirmed)}
+                disabled={busy[`payment-${s.id}`]}
+                className="text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
+                style={{ background: s.payment_confirmed ? 'rgba(255,255,255,0.08)' : 'rgba(96,165,250,0.15)', color: s.payment_confirmed ? 'rgba(255,255,255,0.6)' : '#60a5fa' }}>
+                {busy[`payment-${s.id}`] ? 'Saving…' : s.payment_confirmed ? 'Mark Unpaid' : 'Mark Paid'}
+              </button>
+            </div>
 
             {/* Answers */}
             <div>
@@ -1418,6 +1452,34 @@ export default function AdminDashboard() {
                 <input type="file" accept="image/*" onChange={handleLogoUpload}
                   className="text-white/60 text-sm file:mr-3 file:px-4 file:py-1.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:text-white file:cursor-pointer" />
                 <p className="text-xs text-white/30">Stored as base64 in the database — persists across deploys. Keep under 500 KB. Leave empty to use the default Preflex logo.</p>
+              </div>
+            </div>
+
+            {/* Payment QR */}
+            <div className="rounded-2xl p-5 space-y-4" style={glass}>
+              <p className="text-xs font-bold text-white/60 uppercase tracking-widest">Payment QR Code</p>
+              <p className="text-xs text-white/35">Shown to users right after they submit an assessment. There's no automated payment — you confirm payment yourself (e.g. with your accountant) and mark it in the Assessments tab before releasing results.</p>
+              {configDraft.payment_qr_base64 && (
+                <div className="flex items-center gap-4">
+                  <img src={configDraft.payment_qr_base64} alt="Current payment QR"
+                    style={{ height: 120, width: 120, objectFit: 'contain', background: 'white', borderRadius: 8, padding: 6 }} />
+                  <button onClick={() => setConfigDraft(d => ({ ...d, payment_qr_base64: '' }))}
+                    className="text-xs px-3 py-1.5 rounded-lg transition-colors"
+                    style={{ background: 'rgba(248,113,113,0.12)', color: '#f87171', border: '1px solid rgba(248,113,113,0.25)' }}>
+                    Remove QR Code
+                  </button>
+                </div>
+              )}
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Upload QR Code (JPG / PNG)</p>
+                <input type="file" accept="image/*" onChange={handleQrUpload}
+                  className="text-white/60 text-sm file:mr-3 file:px-4 file:py-1.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:text-white file:cursor-pointer" />
+                <p className="text-xs text-white/30">Leave empty to hide the payment popup entirely.</p>
+              </div>
+              <div className="space-y-1.5">
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Payment Instructions (amount, UPI ID, notes)</p>
+                <GlassTextarea rows={3} value={configDraft.payment_instructions ?? ''}
+                  onChange={e => setConfigDraft(d => ({ ...d, payment_instructions: e.target.value }))} />
               </div>
             </div>
 

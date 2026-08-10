@@ -271,6 +271,9 @@ class SeedBody(BaseModel):
 class SiteConfigBody(BaseModel):
     configs: dict
 
+class PaymentBody(BaseModel):
+    confirmed: bool
+
 class InstitutionBody(BaseModel):
     name: str
 
@@ -441,7 +444,7 @@ def admin_submissions(request: Request):
         cur.execute(
             'SELECT s.id, s.user_id, s.user_name, s.user_email, s.category, s.answers, s.score, s.total, '
             's.level, s.label, s.action, s.admin_action, s.safety_flag, s.ai_analysis, s.result_released, '
-            's.admin_notes, s.released_at, s.submitted_at, s.section, u.institution '
+            's.admin_notes, s.released_at, s.submitted_at, s.section, s.payment_confirmed, u.institution '
             'FROM submissions s LEFT JOIN users u ON s.user_id = u.id '
             'ORDER BY s.safety_flag DESC, s.submitted_at DESC'
         )
@@ -531,7 +534,7 @@ def _export_query(institution: Optional[str], section: Optional[str]):
     sql = (
         'SELECT s.id, s.user_name, s.user_email, u.institution, s.section, s.category, '
         's.score, s.total, s.level, s.label, s.action, s.admin_action, s.ai_analysis, '
-        's.admin_notes, s.safety_flag, s.result_released, s.released_at, s.submitted_at '
+        's.admin_notes, s.safety_flag, s.result_released, s.released_at, s.submitted_at, s.payment_confirmed '
         'FROM submissions s LEFT JOIN users u ON s.user_id = u.id WHERE 1=1'
     )
     params: list = []
@@ -561,6 +564,7 @@ def _csv_row(r: dict) -> list:
         'Yes' if r['safety_flag'] else 'No',
         'Yes' if r['result_released'] else 'No',
         r.get('released_at') or '', r['submitted_at'] or '',
+        'Yes' if r.get('payment_confirmed') else 'No',
     ]
 
 
@@ -579,7 +583,7 @@ def export_csv(request: Request, institution: Optional[str] = None, section: Opt
         'ID', 'Name', 'Email', 'Institution', 'Section', 'Category',
         'Score', 'Max Score', 'Level', 'Result Label',
         'PDF Analysis', 'Admin Answer', 'AI Assessment', 'Team Notes',
-        'Safety Flag', 'Released', 'Released Date', 'Submitted Date',
+        'Safety Flag', 'Released', 'Released Date', 'Submitted Date', 'Payment Received',
     ])
     for r in rows:
         writer.writerow(_csv_row(r))
@@ -667,6 +671,14 @@ def edit_result(sub_id: int, body: ReleaseBody, request: Request):
             'WHERE id = %s',
             (body.adminNotes or None, body.aiAnalysis, body.adminAction or None, sub_id)
         )
+    return {'ok': True}
+
+
+@app.post('/api/admin/submissions/{sub_id}/payment', responses=_RAUTH)
+def mark_payment(sub_id: int, body: PaymentBody, request: Request):
+    get_admin(request)
+    with db() as cur:
+        cur.execute('UPDATE submissions SET payment_confirmed = %s WHERE id = %s', (body.confirmed, sub_id))
     return {'ok': True}
 
 

@@ -60,6 +60,7 @@ with db() as cur:
         ALTER TABLE submissions ADD COLUMN IF NOT EXISTS section VARCHAR(100);
         ALTER TABLE users ADD COLUMN IF NOT EXISTS service VARCHAR(20) DEFAULT 'mindcheck';
         ALTER TABLE users ADD COLUMN IF NOT EXISTS grade VARCHAR(10);
+        ALTER TABLE submissions ADD COLUMN IF NOT EXISTS payment_confirmed BOOLEAN NOT NULL DEFAULT FALSE;
 
         CREATE TABLE IF NOT EXISTS institutions (
             id         SERIAL PRIMARY KEY,
@@ -111,6 +112,8 @@ with db() as cur:
             ('institution_title',  'Built for Colleges & Schools'),
             ('institution_desc',   'MindCheck offers dedicated institution support — from student enrolment and section-wise assessments to bulk reporting for counsellors and administrators.'),
             ('logo_base64',        ''),
+            ('payment_qr_base64',  ''),
+            ('payment_instructions', 'Scan the QR code and pay the assessment fee. Once payment is confirmed, our team will release your results within 24 hours.'),
         ]
     )
 
