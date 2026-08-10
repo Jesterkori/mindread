@@ -5,6 +5,7 @@ import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
+import Icon from '../components/Icon'
 import { bgStyle, glassCard } from '../styles/theme'
 
 const LEVEL_STYLES = {
@@ -91,7 +92,7 @@ export default function UserDashboard() {
 
           {!loading && results.length === 0 && (
             <div className="rounded-2xl p-10 text-center" style={glassCard}>
-              <p className="text-4xl mb-3">📋</p>
+              <Icon name="clipboard-list" className="w-9 h-9 mx-auto mb-3 text-white/40" />
               <p className="text-white/70 font-medium">No assessments yet</p>
               <p className="text-white/40 text-sm mt-1">Complete an assessment above to get started.</p>
             </div>

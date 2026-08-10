@@ -5,6 +5,7 @@ import { CATEGORIES, QUESTIONS } from '../data/questions'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
+import Icon from '../components/Icon'
 import { bgStyle, glassCard } from '../styles/theme'
 
 function categoryLabel(id) {
@@ -128,6 +129,7 @@ export default function AdminDashboard() {
   const [addForm, setAddForm]         = useState({ ...EMPTY_Q })
   const [showAdd, setShowAdd]         = useState(false)
   const [qBusy, setQBusy]             = useState({})
+  const [recomputing, setRecomputing] = useState(false)
 
   const headers = { ...authHeader(), 'Content-Type': 'application/json' }
 
@@ -405,6 +407,21 @@ export default function AdminDashboard() {
     loadQuestions(qCategory)
   }
 
+  // ── Recompute career-fit results (one-time fix for old Healthy/Distress labels) ─
+  async function recomputeCareerFit() {
+    setRecomputing(true)
+    try {
+      const res  = await fetch('/api/admin/backfill-career-fit', { method: 'POST', headers: authHeader() })
+      const data = await res.json()
+      if (data.ok) { await load(); alert(`Updated ${data.updated} career-fit result${data.updated === 1 ? '' : 's'}.`) }
+      else alert('Recompute failed. Please try again.')
+    } catch {
+      alert('Recompute failed. Please try again.')
+    } finally {
+      setRecomputing(false)
+    }
+  }
+
   // ── CSV download ──────────────────────────────────────────────────────────
   function downloadCSV() {
     const params = new URLSearchParams()
@@ -436,7 +453,7 @@ export default function AdminDashboard() {
     }
 
     const cards = filtered.map((s, idx) => {
-      const levelColor = s.level === 'healthy' ? '#16a34a' : s.level === 'high' ? '#dc2626' : '#d97706'
+      const levelColor = s.level === 'healthy' ? '#16a34a' : s.level === 'high' ? '#dc2626' : s.level === 'career' ? '#7c3aed' : '#d97706'
       const answers = Object.entries(s.answers ?? {}).map(([qId, ans]) => {
         const ansLabel = { A:'Rarely/Never', B:'Sometimes', C:'Often', D:'Almost Always' }
         return `<span class="ans-chip">${esc(qId)}: <b>${esc(ans)}</b> — ${ansLabel[ans] || ans}</span>`
@@ -449,7 +466,7 @@ export default function AdminDashboard() {
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
               <span style="font-size:16px;font-weight:700;color:#0f172a">${idx + 1}. ${esc(s.user_name)}</span>
               <span style="background:${levelColor};color:white;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">${esc(s.label)}</span>
-              ${s.safety_flag ? '<span style="background:#dc2626;color:white;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">⚠️ Safety Flag</span>' : ''}
+              ${s.safety_flag ? '<span style="background:#dc2626;color:white;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:4px"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Safety Flag</span>' : ''}
               ${s.result_released ? '<span style="background:#15803d;color:white;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px">Released</span>' : '<span style="background:#1d4ed8;color:white;font-size:11px;padding:2px 10px;border-radius:20px">Under Review</span>'}
             </div>
             <p style="color:#475569;font-size:12px;margin:4px 0 0">${esc(s.user_email)}</p>
@@ -552,7 +569,11 @@ export default function AdminDashboard() {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <p className="font-semibold text-white">{s.user_name}</p>
-              {isSafe && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(248,113,113,0.2)', color: '#f87171' }}>⚠️ Safety Flag</span>}
+              {isSafe && (
+                <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(248,113,113,0.2)', color: '#f87171' }}>
+                  <Icon name="alert-triangle" className="w-3 h-3" /> Safety Flag
+                </span>
+              )}
               {s.result_released && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>Released</span>}
             </div>
             <p className="text-sm text-white/50">{s.user_email}</p>
@@ -593,8 +614,8 @@ export default function AdminDashboard() {
                     <div key={qId} className="rounded-xl p-2.5 text-xs"
                       style={{ background: isRisk ? 'rgba(248,113,113,0.1)' : 'rgba(255,255,255,0.05)', border: `1px solid ${isRisk ? 'rgba(248,113,113,0.3)' : 'rgba(255,255,255,0.08)'}` }}>
                       <p className="text-white/45 mb-1 leading-snug">{q ? q.text : `Question ${qId}`}</p>
-                      <p className={`font-semibold ${isRisk ? 'text-red-400' : 'text-white/80'}`}>
-                        {answer} — {answerLabel[answer]}{isRisk && ' ⚠️'}
+                      <p className={`font-semibold flex items-center gap-1 ${isRisk ? 'text-red-400' : 'text-white/80'}`}>
+                        {answer} — {answerLabel[answer]}{isRisk && <Icon name="alert-triangle" className="w-3 h-3" />}
                       </p>
                     </div>
                   )
@@ -607,8 +628,8 @@ export default function AdminDashboard() {
               <div className="flex items-center gap-2 flex-wrap">
                 <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">PDF Result</p>
                 <span className="text-xs font-bold px-2 py-0.5 rounded-full"
-                  style={{ background: s.level === 'healthy' ? 'rgba(74,222,128,0.2)' : s.level === 'high' ? 'rgba(248,113,113,0.2)' : 'rgba(251,191,36,0.2)',
-                           color:      s.level === 'healthy' ? '#4ade80' : s.level === 'high' ? '#f87171' : '#fbbf24' }}>
+                  style={{ background: s.level === 'healthy' ? 'rgba(74,222,128,0.2)' : s.level === 'high' ? 'rgba(248,113,113,0.2)' : s.level === 'career' ? 'rgba(167,139,250,0.2)' : 'rgba(251,191,36,0.2)',
+                           color:      s.level === 'healthy' ? '#4ade80' : s.level === 'high' ? '#f87171' : s.level === 'career' ? '#a78bfa' : '#fbbf24' }}>
                   {s.label}
                 </span>
                 <span className="text-xs text-white/35">{s.score}/{s.total * 4}</span>
@@ -759,13 +780,16 @@ export default function AdminDashboard() {
             {[
               { value: stats.pendingUsers,          label: 'Pending Approvals',      color: '#60a5fa' },
               { value: stats.totalSubmissions,       label: 'Total Assessments',      color: '#4ade80' },
-              { value: stats.unreviewedSafetyFlags,  label: stats.unreviewedSafetyFlags > 0 ? '⚠️ Urgent Safety Flags' : 'Safety Flags (unreviewed)',
+              { value: stats.unreviewedSafetyFlags,  label: stats.unreviewedSafetyFlags > 0 ? 'Urgent Safety Flags' : 'Safety Flags (unreviewed)',
                 color: stats.unreviewedSafetyFlags > 0 ? '#f87171' : 'rgba(255,255,255,0.5)',
                 urgent: stats.unreviewedSafetyFlags > 0 },
             ].map((s) => (
               <div key={s.label} className="rounded-2xl p-5 text-center" style={{ ...glass, borderColor: s.urgent ? 'rgba(248,113,113,0.4)' : 'rgba(255,255,255,0.12)' }}>
                 <p className="text-3xl font-extrabold" style={{ color: s.color }}>{s.value}</p>
-                <p className="text-xs text-white/45 mt-1">{s.label}</p>
+                <p className="text-xs text-white/45 mt-1 flex items-center justify-center gap-1">
+                  {s.urgent && <Icon name="alert-triangle" className="w-3 h-3" style={{ color: s.color }} />}
+                  {s.label}
+                </p>
               </div>
             ))}
           </div>
@@ -805,7 +829,7 @@ export default function AdminDashboard() {
           <>
             {pendingUsers.length === 0 ? (
               <div className="rounded-2xl p-10 text-center" style={glass}>
-                <p className="text-3xl mb-2">✅</p>
+                <Icon name="check-circle" className="w-8 h-8 mx-auto mb-2 text-green-400" />
                 <p className="text-white/60 font-medium">No pending registrations</p>
               </div>
             ) : (
@@ -823,9 +847,9 @@ export default function AdminDashboard() {
                             </span>
                           )}
                           {u.institution && (
-                            <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                            <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium"
                               style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>
-                              🏫 {u.institution}
+                              <Icon name="building" className="w-3 h-3" /> {u.institution}
                             </span>
                           )}
                         </div>
@@ -911,6 +935,14 @@ export default function AdminDashboard() {
                     </svg>
                     PDF
                   </button>
+                  <button onClick={recomputeCareerFit} disabled={recomputing}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all hover:brightness-110 disabled:opacity-50"
+                    style={{ background: 'rgba(167,139,250,0.2)', color: '#c4b5fd', border: '1px solid rgba(167,139,250,0.35)' }}>
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    {recomputing ? 'Recomputing…' : 'Fix Career Results'}
+                  </button>
                 </div>
               </div>
               {(filterInstitution || filterSection) && (
@@ -924,7 +956,7 @@ export default function AdminDashboard() {
 
             {submissions.length === 0 ? (
               <div className="rounded-2xl p-10 text-center" style={glass}>
-                <p className="text-3xl mb-2">📋</p>
+                <Icon name="clipboard-list" className="w-8 h-8 mx-auto mb-2 text-white/40" />
                 <p className="text-white/60 font-medium">No submissions yet</p>
               </div>
             ) : (
@@ -997,7 +1029,7 @@ export default function AdminDashboard() {
               </div>
             ) : instList.length === 0 ? (
               <div className="rounded-2xl p-10 text-center" style={glass}>
-                <p className="text-3xl mb-2">🏫</p>
+                <Icon name="building" className="w-8 h-8 mx-auto mb-2 text-white/40" />
                 <p className="text-white/60 font-medium">No institutions yet</p>
                 <p className="text-white/35 text-sm mt-1">Add one above to get started.</p>
               </div>
@@ -1011,7 +1043,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-3 px-5 py-4">
                         <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
                           style={{ background: 'rgba(74,222,128,0.15)', border: '1px solid rgba(74,222,128,0.3)' }}>
-                          <span className="text-lg">🏫</span>
+                          <Icon name="building" className="w-4 h-4 text-green-400" />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-semibold text-white">{inst.name}</p>
@@ -1188,7 +1220,7 @@ export default function AdminDashboard() {
                           <p className="text-xs text-white/35 mt-1 leading-snug">{q.indicator}</p>
                           <div className="flex gap-2 mt-1.5 flex-wrap">
                             {q.reversed        && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(96,165,250,0.15)', color: '#93c5fd' }}>Reversed</span>}
-                            {q.safety_question && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(248,113,113,0.15)', color: '#f87171' }}>⚠️ Safety</span>}
+                            {q.safety_question && <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(248,113,113,0.15)', color: '#f87171' }}><Icon name="alert-triangle" className="w-3 h-3" /> Safety</span>}
                             {!q.active         && <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.4)' }}>Inactive</span>}
                           </div>
                         </div>

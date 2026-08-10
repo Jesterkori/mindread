@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
-import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult } from '../data/questions'
+import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult, calculateCareerFitResult } from '../data/questions'
+
+const CAREER_FIT_CATEGORIES = ['counselling-10th', 'counselling-12th']
 import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
@@ -297,7 +299,9 @@ export default function Questionnaire() {
     setSubmitAttempted(true)
     if (answeredCount < totalQuestions) return
 
-    const result = calculateResult(answers, categoryId, questions)
+    const result = CAREER_FIT_CATEGORIES.includes(categoryId)
+      ? calculateCareerFitResult(answers, categoryId, questions)
+      : calculateResult(answers, categoryId, questions)
     setSubmitting(true)
     try {
       await fetch('/api/questionnaire/submit', {

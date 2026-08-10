@@ -1713,3 +1713,78 @@ export function calculateResult(answers, categoryId, questions = QUESTIONS[categ
 
   return { score, total, safetyFlag, level, label, action, color }
 }
+
+// ─── Career-fit scoring (10th/12th counselling) ───────────────────────────────
+// Follows the PDF's "Scoring & Assessment Guide": the Part with the highest
+// concentration of C/D answers indicates the student's dominant aptitude profile.
+const CAREER_PROFILES_10TH = {
+  1: { title: 'The Analytical / Scientific Mind', color: '#22c55e',
+       action: 'Recommended Stream: Science (PCM/PCB). Explore Careers In: Engineering, Data Science, Medicine, Research, Architecture.' },
+  2: { title: 'The Creative / Expressive Mind', color: '#e879f9',
+       action: 'Recommended Stream: Arts & Humanities. Explore Careers In: Design, Journalism, Literature, Fine Arts, Media, Law.' },
+  3: { title: 'The Enterprising / Leadership Mind', color: '#f59e0b',
+       action: 'Recommended Stream: Commerce / Business. Explore Careers In: Management, Finance, Entrepreneurship, Marketing, Corporate Law.' },
+  4: { title: 'The Empathetic / Social Mind', color: '#0d9488',
+       action: 'Recommended Stream: Humanities or Science (PCB). Explore Careers In: Psychology, Healthcare, Teaching, Social Work, Public Policy.' },
+  5: { title: 'The Practical / Technical Mind', color: '#3b82f6',
+       action: 'Recommended Stream: Science (Computer Science) or Vocational/Diploma Tracks. Explore Careers In: IT/Software, Robotics, Applied Engineering, Digital Media, Skilled Trades.' },
+  multipotentialite: { title: 'The Multipotentialite', color: '#a855f7',
+       action: 'Recommended Action: Focus on interdisciplinary combinations (e.g., Commerce with Math, Arts with Economics). Encourage shadowing professionals to narrow down practical interests.' },
+}
+
+const CAREER_PROFILES_12TH = {
+  1: { title: 'The Deep Tech / Analytical Mind', color: '#22c55e',
+       action: 'Target Degrees: B.Tech / B.E. (Computer Science, Mechanical, AI), B.Sc. (Physics, Mathematics, Data Science). Action: Focus on entrance exams (JEE, etc.) and build a portfolio of coding or hardware projects.' },
+  2: { title: 'The Creative / Design Mind', color: '#e879f9',
+       action: 'Target Degrees: B.Arch, B.Des (UI/UX, Product Design), B.A. (Journalism, Mass Comm, Fine Arts). Action: Begin compiling a strong visual portfolio or writing samples. Look into design entrance exams (NID, NIFT, NATA).' },
+  3: { title: 'The Enterprise / Strategic Mind', color: '#f59e0b',
+       action: 'Target Degrees: BBA, B.Com (Hons), CA / CS / CFA tracks, Integrated Law (BBA LLB). Action: Participate in business case competitions. Research management entrance exams (IPMAT, CUET) or CA foundational courses.' },
+  4: { title: 'The Health / Society Mind', color: '#0d9488',
+       action: 'Target Degrees: MBBS, BDS, B.Sc. (Psychology, Nursing), B.A. (Political Science, Sociology), BA LLB. Action: Prepare for medical entrances (NEET) or law entrances (CLAT). Consider volunteering with NGOs to build a social work profile.' },
+  5: { title: 'The Applied / Operational Mind', color: '#3b82f6',
+       action: 'Target Degrees/Certifications: B.Sc. (Hospitality / Hotel Management), Commercial Pilot Training, Culinary Arts, Supply Chain Diplomas. Action: Research specialized training academies rather than traditional universities. Look for immediate internships in the hospitality or operations sector.' },
+}
+
+/**
+ * Scores the 10th/12th career counselling assessments using the PDF's dominant-part
+ * rubric, instead of the mental-health "Healthy Coping / Distress" scale used by calculateResult.
+ * @param {Record<number, string>} answers - { questionId: 'A' | 'B' | 'C' | 'D' }
+ * @param {string} categoryId - 'counselling-10th' | 'counselling-12th'
+ * @returns {{ score: number, total: number, safetyFlag: boolean, level: string, label: string, action: string, color: string }}
+ */
+export function calculateCareerFitResult(answers, categoryId, questions = QUESTIONS[categoryId]) {
+  const optionScore = { A: 1, B: 2, C: 3, D: 4 }
+  const partHits = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
+  let score = 0
+
+  questions.forEach((q) => {
+    const answer = answers[q.id]
+    if (!answer) return
+
+    score += optionScore[answer]
+
+    const partNum = Number(q.part.match(/Part (\d)/)?.[1])
+    if (partNum && (answer === 'C' || answer === 'D')) partHits[partNum]++
+  })
+
+  const total = questions.length
+  const profiles = categoryId === 'counselling-12th' ? CAREER_PROFILES_12TH : CAREER_PROFILES_10TH
+
+  const maxHits = Math.max(...Object.values(partHits))
+  const topParts = Object.keys(partHits).filter((n) => partHits[n] === maxHits)
+
+  // Only the 10th-grade guide defines a "Multipotentialite" fallback for an even spread.
+  const profile = categoryId !== 'counselling-12th' && topParts.length > 1
+    ? profiles.multipotentialite
+    : profiles[topParts[0]]
+
+  return {
+    score,
+    total,
+    safetyFlag: false,
+    level: 'career',
+    label: profile.title,
+    action: profile.action,
+    color: profile.color,
+  }
+}

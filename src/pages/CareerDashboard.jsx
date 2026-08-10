@@ -4,47 +4,48 @@ import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
+import Icon from '../components/Icon'
 
 // Maps aptitude label keywords → visual profile card data (from PDF scoring guide)
 const PROFILES_10TH = [
   {
     keys: ['analytical', 'scientific', 'part 1'],
-    icon: '🔬', color: '#22c55e',
+    icon: 'flask', color: '#22c55e',
     title: 'The Analytical / Scientific Mind',
     stream: 'Science (PCM / PCB)',
     careers: 'Engineering, Data Science, Medicine, Research, Architecture',
   },
   {
     keys: ['creative', 'expressive', 'part 2'],
-    icon: '🎨', color: '#e879f9',
+    icon: 'palette', color: '#e879f9',
     title: 'The Creative / Expressive Mind',
     stream: 'Arts & Humanities',
     careers: 'Design, Journalism, Literature, Fine Arts, Media, Law',
   },
   {
     keys: ['enterprising', 'leadership', 'part 3'],
-    icon: '💼', color: '#f59e0b',
+    icon: 'briefcase', color: '#f59e0b',
     title: 'The Enterprising / Leadership Mind',
     stream: 'Commerce / Business',
     careers: 'Management, Finance, Entrepreneurship, Marketing, Corporate Law',
   },
   {
     keys: ['empathetic', 'social', 'part 4'],
-    icon: '🤝', color: '#0d9488',
+    icon: 'users', color: '#0d9488',
     title: 'The Empathetic / Social Mind',
     stream: 'Humanities or Science (PCB)',
     careers: 'Psychology, Healthcare, Teaching, Social Work, Public Policy',
   },
   {
     keys: ['practical', 'technical', 'part 5'],
-    icon: '⚙️', color: '#3b82f6',
+    icon: 'settings', color: '#3b82f6',
     title: 'The Practical / Technical Mind',
     stream: 'Science (Computer Science) or Vocational / Diploma',
     careers: 'IT/Software, Robotics, Applied Engineering, Digital Media, Skilled Trades',
   },
   {
     keys: ['multipotentialite', 'diverse', 'mix'],
-    icon: '🌐', color: '#a855f7',
+    icon: 'globe', color: '#a855f7',
     title: 'The Multipotentialite',
     stream: 'Interdisciplinary combinations',
     careers: 'Commerce with Math, Arts with Economics — shadow professionals to narrow interests',
@@ -54,35 +55,35 @@ const PROFILES_10TH = [
 const PROFILES_12TH = [
   {
     keys: ['deep tech', 'analytical', 'part 1'],
-    icon: '💻', color: '#22c55e',
+    icon: 'code', color: '#22c55e',
     title: 'The Deep Tech / Analytical Mind',
     stream: 'B.Tech / B.E. or B.Sc. (Physics, Mathematics, Data Science)',
     careers: 'Engineering, Data Science, AI, Research, Architecture',
   },
   {
     keys: ['creative', 'design', 'part 2'],
-    icon: '🎬', color: '#e879f9',
+    icon: 'film', color: '#e879f9',
     title: 'The Creative / Design Mind',
     stream: 'B.Arch, B.Des (UI/UX), B.A. (Journalism, Mass Comm, Fine Arts)',
     careers: 'UI/UX, Film, Architecture, Graphic Design, Journalism, Digital Arts',
   },
   {
     keys: ['enterprise', 'strategic', 'part 3'],
-    icon: '📊', color: '#f59e0b',
+    icon: 'bar-chart', color: '#f59e0b',
     title: 'The Enterprise / Strategic Mind',
     stream: 'BBA, B.Com (Hons), CA/CS/CFA, Integrated Law (BBA LLB)',
     careers: 'Finance, Investment Banking, Entrepreneurship, Corporate Law, CA',
   },
   {
     keys: ['health', 'society', 'part 4'],
-    icon: '🏥', color: '#0d9488',
+    icon: 'health', color: '#0d9488',
     title: 'The Health / Society Mind',
     stream: 'MBBS, BDS, B.Sc. (Psychology, Nursing), BA LLB, B.A. (Pol. Science)',
     careers: 'Medicine, Psychology, Law, Civil Services, Social Work, Diplomacy',
   },
   {
     keys: ['applied', 'operational', 'part 5'],
-    icon: '✈️', color: '#3b82f6',
+    icon: 'send', color: '#3b82f6',
     title: 'The Applied / Operational Mind',
     stream: 'B.Sc. Hospitality, Commercial Pilot Training, Culinary Arts, Supply Chain',
     careers: 'Aviation, Hotel Management, Culinary Arts, Logistics, Tourism',
@@ -97,7 +98,7 @@ function matchProfile(label, grade) {
 }
 
 export default function CareerDashboard() {
-  const { user, logout, authHeader } = useAuth()
+  const { user, authHeader } = useAuth()
   const navigate = useNavigate()
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -109,11 +110,6 @@ export default function CareerDashboard() {
       .catch(() => setResults([]))
       .finally(() => setLoading(false))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  function handleLogout() {
-    logout()
-    navigate('/')
-  }
 
   const bgStyle = { background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }
   const cardStyle = { background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)', backdropFilter: 'blur(12px)' }
@@ -132,7 +128,10 @@ export default function CareerDashboard() {
     if (!latest) {
       return (
         <div className="rounded-2xl p-10 text-center" style={cardStyle}>
-          <div className="text-6xl mb-5">🧭</div>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
+               style={{ background: 'rgba(251,191,36,0.15)', border: '1.5px solid rgba(251,191,36,0.35)' }}>
+            <Icon name="compass" className="w-8 h-8" style={{ color: '#fbbf24' }} />
+          </div>
           <h2 className="text-xl font-bold text-white mb-2">Start Your Career Assessment</h2>
           <p className="text-white/50 text-sm leading-relaxed mb-4 max-w-sm mx-auto">
             Answer 50 thoughtfully crafted questions across 5 aptitude areas to discover the career path
@@ -172,7 +171,10 @@ export default function CareerDashboard() {
     if (!latest.result_released) {
       return (
         <div className="rounded-2xl p-10 text-center" style={cardStyle}>
-          <div className="text-6xl mb-5">⏳</div>
+          <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5"
+               style={{ background: 'rgba(251,191,36,0.15)', border: '1.5px solid rgba(251,191,36,0.35)' }}>
+            <Icon name="clock" className="w-8 h-8" style={{ color: '#fbbf24' }} />
+          </div>
           <h2 className="text-xl font-bold text-white mb-2">Assessment Under Review</h2>
           <p className="text-white/50 text-sm leading-relaxed mb-2 max-w-sm mx-auto">
             You completed the assessment on{' '}
@@ -200,9 +202,9 @@ export default function CareerDashboard() {
         {profile && (
           <div className="rounded-2xl p-8" style={{ background: `${profile.color}12`, border: `1.5px solid ${profile.color}35` }}>
             <div className="flex items-center gap-4 mb-5">
-              <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl flex-shrink-0"
+              <div className="w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0"
                    style={{ background: `${profile.color}20`, border: `1.5px solid ${profile.color}50` }}>
-                {profile.icon}
+                <Icon name={profile.icon} className="w-7 h-7" style={{ color: profile.color }} />
               </div>
               <div>
                 <p className="text-xs uppercase tracking-widest mb-1" style={{ color: profile.color }}>Your Aptitude Profile</p>
@@ -256,9 +258,10 @@ export default function CareerDashboard() {
       <div className="relative z-10 flex-1 px-4 py-16 max-w-2xl mx-auto w-full">
         {/* Header */}
         <div className="mb-10">
-          <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-4 text-xs font-semibold text-amber-300"
+          <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 mb-4 text-xs font-semibold text-amber-300"
                style={{ background: 'rgba(251,191,36,0.15)', border: '1px solid rgba(251,191,36,0.3)' }}>
-            🎓 Student Career Fit Evaluation Platform
+            <Icon name="graduation-cap" className="w-3.5 h-3.5" />
+            Student Career Fit Evaluation Platform
           </div>
           <h1 className="text-3xl font-extrabold text-white">
             Welcome, {user?.name?.split(' ')[0]}!
@@ -269,14 +272,6 @@ export default function CareerDashboard() {
         </div>
 
         {renderStatusCard()}
-
-        <div className="mt-10 text-center">
-          <button onClick={handleLogout}
-            className="px-6 py-2.5 rounded-xl font-semibold text-sm text-white/60 transition-all hover:text-white hover:brightness-110 active:scale-95"
-            style={{ background: 'rgba(255,255,255,0.06)', border: '1.5px solid rgba(255,255,255,0.12)' }}>
-            Sign out
-          </button>
-        </div>
       </div>
 
       <Footer />

@@ -449,6 +449,84 @@ def admin_submissions(request: Request):
     return {'ok': True, 'submissions': rows}
 
 
+# ── Career-fit re-scoring (10th/12th counselling) ──────────────────────────────
+# Mirrors src/data/questions.js:calculateCareerFitResult — the dominant-part rubric
+# from the counselling PDF, as opposed to the mental-health Healthy/Distress scale.
+_CAREER_PROFILES = {
+    'counselling-10th': {
+        1: ('The Analytical / Scientific Mind', '#22c55e',
+            'Recommended Stream: Science (PCM/PCB). Explore Careers In: Engineering, Data Science, Medicine, Research, Architecture.'),
+        2: ('The Creative / Expressive Mind', '#e879f9',
+            'Recommended Stream: Arts & Humanities. Explore Careers In: Design, Journalism, Literature, Fine Arts, Media, Law.'),
+        3: ('The Enterprising / Leadership Mind', '#f59e0b',
+            'Recommended Stream: Commerce / Business. Explore Careers In: Management, Finance, Entrepreneurship, Marketing, Corporate Law.'),
+        4: ('The Empathetic / Social Mind', '#0d9488',
+            'Recommended Stream: Humanities or Science (PCB). Explore Careers In: Psychology, Healthcare, Teaching, Social Work, Public Policy.'),
+        5: ('The Practical / Technical Mind', '#3b82f6',
+            'Recommended Stream: Science (Computer Science) or Vocational/Diploma Tracks. Explore Careers In: IT/Software, Robotics, Applied Engineering, Digital Media, Skilled Trades.'),
+        'multi': ('The Multipotentialite', '#a855f7',
+            'Recommended Action: Focus on interdisciplinary combinations (e.g., Commerce with Math, Arts with Economics). Encourage shadowing professionals to narrow down practical interests.'),
+    },
+    'counselling-12th': {
+        1: ('The Deep Tech / Analytical Mind', '#22c55e',
+            'Target Degrees: B.Tech / B.E. (Computer Science, Mechanical, AI), B.Sc. (Physics, Mathematics, Data Science). Action: Focus on entrance exams (JEE, etc.) and build a portfolio of coding or hardware projects.'),
+        2: ('The Creative / Design Mind', '#e879f9',
+            'Target Degrees: B.Arch, B.Des (UI/UX, Product Design), B.A. (Journalism, Mass Comm, Fine Arts). Action: Begin compiling a strong visual portfolio or writing samples. Look into design entrance exams (NID, NIFT, NATA).'),
+        3: ('The Enterprise / Strategic Mind', '#f59e0b',
+            'Target Degrees: BBA, B.Com (Hons), CA / CS / CFA tracks, Integrated Law (BBA LLB). Action: Participate in business case competitions. Research management entrance exams (IPMAT, CUET) or CA foundational courses.'),
+        4: ('The Health / Society Mind', '#0d9488',
+            'Target Degrees: MBBS, BDS, B.Sc. (Psychology, Nursing), B.A. (Political Science, Sociology), BA LLB. Action: Prepare for medical entrances (NEET) or law entrances (CLAT). Consider volunteering with NGOs to build a social work profile.'),
+        5: ('The Applied / Operational Mind', '#3b82f6',
+            'Target Degrees/Certifications: B.Sc. (Hospitality / Hotel Management), Commercial Pilot Training, Culinary Arts, Supply Chain Diplomas. Action: Research specialized training academies rather than traditional universities. Look for immediate internships in the hospitality or operations sector.'),
+    },
+}
+_OPTION_SCORE = {'A': 1, 'B': 2, 'C': 3, 'D': 4}
+
+
+def _score_career_fit(category: str, answers: dict) -> dict:
+    part_hits = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
+    score = 0
+    total = 0
+    for qid, answer in answers.items():
+        if answer not in _OPTION_SCORE:
+            continue
+        total += 1
+        score += _OPTION_SCORE[answer]
+        part = ((int(qid) - 1) // 10) + 1
+        if part in part_hits and answer in ('C', 'D'):
+            part_hits[part] += 1
+
+    profiles = _CAREER_PROFILES[category]
+    max_hits = max(part_hits.values())
+    top_parts = [p for p, hits in part_hits.items() if hits == max_hits]
+
+    if category == 'counselling-10th' and len(top_parts) > 1:
+        title, color, action = profiles['multi']
+    else:
+        title, color, action = profiles[top_parts[0]]
+
+    return {'score': score, 'total': total, 'level': 'career', 'label': title, 'action': action, 'color': color}
+
+
+@app.post('/api/admin/backfill-career-fit', responses=_RAUTH)
+def backfill_career_fit(request: Request):
+    get_admin(request)
+    updated = 0
+    with db() as cur:
+        cur.execute(
+            "SELECT id, category, answers FROM submissions WHERE category IN ('counselling-10th', 'counselling-12th')"
+        )
+        rows = _rows(cur)
+        for r in rows:
+            result = _score_career_fit(r['category'], r['answers'])
+            cur.execute(
+                'UPDATE submissions SET score = %s, total = %s, level = %s, label = %s, action = %s WHERE id = %s',
+                (result['score'], result['total'], result['level'], result['label'], result['action'], r['id'])
+            )
+            updated += 1
+    return {'ok': True, 'updated': updated}
+
+
 def _export_query(institution: Optional[str], section: Optional[str]):
     sql = (
         'SELECT s.id, s.user_name, s.user_email, u.institution, s.section, s.category, '

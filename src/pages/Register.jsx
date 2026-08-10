@@ -5,19 +5,8 @@ import { CATEGORIES } from '../data/questions'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
+import Icon from '../components/Icon'
 import { glassCard } from '../styles/theme'
-
-const CARD_COLORS = {
-  student:              { border: '#22c55e', bg: 'rgba(34,197,94,0.12)',   icon: '📚' },
-  'young-adult':        { border: '#0d9488', bg: 'rgba(13,148,136,0.12)',  icon: '🎓' },
-  married:              { border: '#f97316', bg: 'rgba(249,115,22,0.12)',  icon: '💍' },
-  divorced:             { border: '#e879f9', bg: 'rgba(232,121,249,0.12)', icon: '💼' },
-  older:                { border: '#a855f7', bg: 'rgba(168,85,247,0.12)',  icon: '🌟' },
-  'single-mother':      { border: '#ec4899', bg: 'rgba(236,72,153,0.12)', icon: '🤝' },
-  'single-father':      { border: '#0ea5e9', bg: 'rgba(14,165,233,0.12)', icon: '🤝' },
-  'counselling-10th':   { border: '#f97316', bg: 'rgba(249,115,22,0.12)', icon: '📖' },
-  'counselling-12th':   { border: '#06b6d4', bg: 'rgba(6,182,212,0.12)',  icon: '🏫' },
-}
 
 export default function Register() {
   const { user } = useAuth()
@@ -104,7 +93,7 @@ export default function Register() {
         <div className="text-center max-w-md">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full mb-6"
                style={{ background: 'rgba(74,222,128,0.2)', border: '2px solid rgba(74,222,128,0.5)' }}>
-            <span className="text-4xl">✅</span>
+            <Icon name="check-circle" className="w-9 h-9" style={{ color: '#4ade80' }} />
           </div>
           <h2 className="text-2xl font-extrabold text-white mb-3">Registration Submitted!</h2>
           <p className="text-white/70 mb-2">
@@ -149,8 +138,8 @@ export default function Register() {
           {/* Service picker */}
           <div className="grid grid-cols-2 gap-2 mb-5">
             {[
-              { val: 'mindcheck',  icon: '🧠', label: 'MindCheck',  sub: 'Mental wellness' },
-              { val: 'career_fit', icon: '🎓', label: 'Career Fit', sub: 'Student counselling' },
+              { val: 'mindcheck',  icon: 'activity',       label: 'MindCheck',  sub: 'Mental wellness' },
+              { val: 'career_fit', icon: 'graduation-cap', label: 'Career Fit', sub: 'Student counselling' },
             ].map(({ val, icon, label, sub }) => {
               const sel = service === val
               return (
@@ -160,10 +149,10 @@ export default function Register() {
                     border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
                     background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
                   }}>
-                  <span className="text-2xl">{icon}</span>
+                  <Icon name={icon} className="w-6 h-6 text-white/80" />
                   <span className="text-sm font-semibold text-white/90">{label}</span>
                   <span className="text-xs text-white/45">{sub}</span>
-                  {sel && <span className="text-xs font-bold text-green-400">✓</span>}
+                  {sel && <Icon name="check-circle" className="w-3.5 h-3.5 text-green-400" />}
                 </button>
               )
             })}
@@ -201,8 +190,8 @@ export default function Register() {
                   <p className="text-sm font-medium text-white/70 mb-2">Are you part of an institution?</p>
                   <div className="grid grid-cols-2 gap-2">
                     {[
-                      { val: 'none', icon: '👤', label: 'None',        sub: 'Individual / Independent' },
-                      { val: 'join', icon: '🏫', label: 'Institution', sub: 'College or School' },
+                      { val: 'none', icon: 'user',     label: 'None',        sub: 'Individual / Independent' },
+                      { val: 'join', icon: 'building', label: 'Institution', sub: 'College or School' },
                     ].map(({ val, icon, label, sub }) => {
                       const sel = val === 'none' ? form.institution === 'none' : form.institution !== 'none'
                       return (
@@ -213,10 +202,10 @@ export default function Register() {
                             border: `2px solid ${sel ? 'rgba(74,222,128,0.7)' : 'rgba(255,255,255,0.12)'}`,
                             background: sel ? 'rgba(74,222,128,0.12)' : 'rgba(255,255,255,0.04)',
                           }}>
-                          <span className="text-2xl">{icon}</span>
+                          <Icon name={icon} className="w-6 h-6 text-white/80" />
                           <span className="text-sm font-semibold text-white/90">{label}</span>
                           <span className="text-xs text-white/45">{sub}</span>
-                          {sel && <span className="text-xs font-bold text-green-400">✓</span>}
+                          {sel && <Icon name="check-circle" className="w-3.5 h-3.5 text-green-400" />}
                         </button>
                       )
                     })}
@@ -245,12 +234,9 @@ export default function Register() {
                     className="w-full rounded-xl px-4 py-3 text-sm text-white outline-none"
                     style={{ background: 'rgb(10,30,60)', border: '1.5px solid rgba(255,255,255,0.15)', colorScheme: 'dark' }}>
                     <option value="">— Select a category —</option>
-                    {CATEGORIES.filter(cat => cat.id !== 'counselling-10th' && cat.id !== 'counselling-12th').map(cat => {
-                      const meta = CARD_COLORS[cat.id] ?? { icon: cat.icon }
-                      return (
-                        <option key={cat.id} value={cat.id}>{meta.icon} {cat.label}</option>
-                      )
-                    })}
+                    {CATEGORIES.filter(cat => cat.id !== 'counselling-10th' && cat.id !== 'counselling-12th').map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.label}</option>
+                    ))}
                   </select>
                 </div>
               </>
@@ -261,8 +247,8 @@ export default function Register() {
                 <p className="text-sm font-medium text-white/70 mb-2">Counselling for</p>
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { val: '10th', icon: '📖', label: '10th Grade', sub: 'Ages 15–16' },
-                    { val: '12th', icon: '🏫', label: '12th Grade', sub: 'Ages 17–18' },
+                    { val: '10th', icon: 'book-open', label: '10th Grade', sub: 'Ages 15–16' },
+                    { val: '12th', icon: 'building',  label: '12th Grade', sub: 'Ages 17–18' },
                   ].map(({ val, icon, label, sub }) => {
                     const sel = form.grade === val
                     return (
@@ -273,10 +259,10 @@ export default function Register() {
                           border: `2px solid ${sel ? 'rgba(251,191,36,0.7)' : 'rgba(255,255,255,0.12)'}`,
                           background: sel ? 'rgba(251,191,36,0.12)' : 'rgba(255,255,255,0.04)',
                         }}>
-                        <span className="text-2xl">{icon}</span>
+                        <Icon name={icon} className="w-6 h-6 text-white/80" />
                         <span className="text-sm font-semibold text-white/90">{label}</span>
                         <span className="text-xs text-white/45">{sub}</span>
-                        {sel && <span className="text-xs font-bold text-amber-400">✓</span>}
+                        {sel && <Icon name="check-circle" className="w-3.5 h-3.5 text-amber-400" />}
                       </button>
                     )
                   })}

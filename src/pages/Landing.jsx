@@ -4,6 +4,7 @@ import { useAuth } from '../context/AuthContext'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
+import Icon from '../components/Icon'
 
 /* ── Scroll-reveal hook ─────────────────────────────────────────────────────── */
 function useReveal() {
@@ -49,21 +50,21 @@ function Counter({ to, suffix = '' }) {
 }
 
 const CATEGORIES = [
-  { icon: '👧🏽', title: 'Children & Students',  age: 'Ages 10–16',  color: '#22c55e', desc: 'Self-reflection and mental clarity for school-going students.' },
-  { icon: '👩🏾', title: 'Youngsters & Gen Z',   age: 'Ages 17–25',  color: '#0d9488', desc: 'Future readiness and stress management for college students.' },
-  { icon: '💍',   title: 'Adult & Couples',      age: 'All Ages',    color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
-  { icon: '💼',   title: 'Working Professionals',age: 'All Ages',    color: '#e879f9', desc: 'Managing professional stress and work-life balance.' },
-  { icon: '👴🏾', title: 'Senior Citizens',       age: '55+ Years',  color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
-  { icon: '🤝',   title: 'Single Parents',        age: 'All Ages',   color: '#ec4899', desc: 'Support for the unique challenges of solo parenting.' },
-  { icon: '📖',   title: '10th Grade Career',     age: 'Ages 15–16', color: '#f59e0b', desc: 'Career aptitude and stream selection counselling for Class 10 students.' },
-  { icon: '🏫',   title: '12th Grade Career',     age: 'Ages 17–18', color: '#d97706', desc: 'College readiness and career path counselling for Class 12 students.' },
+  { icon: 'book-open',       title: 'Children & Students',  age: 'Ages 10–16',  color: '#22c55e', desc: 'Self-reflection and mental clarity for school-going students.' },
+  { icon: 'graduation-cap',  title: 'Youngsters & Gen Z',   age: 'Ages 17–25',  color: '#0d9488', desc: 'Future readiness and stress management for college students.' },
+  { icon: 'heart',           title: 'Adult & Couples',      age: 'All Ages',    color: '#f97316', desc: 'Relationship wellness and balanced life for partners.' },
+  { icon: 'briefcase',       title: 'Working Professionals',age: 'All Ages',    color: '#e879f9', desc: 'Managing professional stress and work-life balance.' },
+  { icon: 'star',            title: 'Senior Citizens',       age: '55+ Years',  color: '#a855f7', desc: 'Contentment and healthy mind for older adults.' },
+  { icon: 'users',           title: 'Single Parents',        age: 'All Ages',   color: '#ec4899', desc: 'Support for the unique challenges of solo parenting.' },
+  { icon: 'book-open',       title: '10th Grade Career',     age: 'Ages 15–16', color: '#f59e0b', desc: 'Career aptitude and stream selection counselling for Class 10 students.' },
+  { icon: 'building',        title: '12th Grade Career',     age: 'Ages 17–18', color: '#d97706', desc: 'College readiness and career path counselling for Class 12 students.' },
 ]
 
 const STEPS = [
-  { n: '01', icon: '📝', title: 'Register',            desc: 'Create your account and select the category that fits your life stage.' },
-  { n: '02', icon: '✅', title: 'Admin Approval',       desc: 'Our team reviews and approves your account within 24 hours.' },
-  { n: '03', icon: '🧠', title: 'Take the Assessment', desc: 'Answer 10–20 tailored questions about your mental wellness.' },
-  { n: '04', icon: '📊', title: 'Get Your Results',    desc: 'Receive a personalised report with guidance and next steps.' },
+  { n: '01', icon: 'edit',           title: 'Register',            desc: 'Create your account and select the category that fits your life stage.' },
+  { n: '02', icon: 'check-circle',   title: 'Admin Approval',       desc: 'Our team reviews and approves your account within 24 hours.' },
+  { n: '03', icon: 'activity',       title: 'Take the Assessment', desc: 'Answer 10–20 tailored questions about your mental wellness.' },
+  { n: '04', icon: 'bar-chart',      title: 'Get Your Results',    desc: 'Receive a personalised report with guidance and next steps.' },
 ]
 
 const FEATURES = [
@@ -195,9 +196,9 @@ export default function Landing() {
                    borderTop:'1px solid rgba(74,222,128,0.2)',
                  }}>
               <div className="flex items-start gap-4 mb-5">
-                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl shadow-lg"
+                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-lg"
                      style={{ background:'linear-gradient(135deg,rgba(34,197,94,0.3),rgba(13,148,136,0.2))', border:'1px solid rgba(34,197,94,0.45)' }}>
-                  🧠
+                  <Icon name="activity" className="w-7 h-7 text-white" />
                 </div>
                 <div>
                   <h2 className="text-xl font-extrabold text-white" style={{ textShadow:'0 1px 12px rgba(34,197,94,0.3)' }}>MindCheck</h2>
@@ -241,9 +242,9 @@ export default function Landing() {
                    borderTop:'1px solid rgba(251,191,36,0.2)',
                  }}>
               <div className="flex items-start gap-4 mb-5">
-                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center text-3xl shadow-lg"
+                <div className="w-14 h-14 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-lg"
                      style={{ background:'linear-gradient(135deg,rgba(251,191,36,0.3),rgba(217,119,6,0.2))', border:'1px solid rgba(251,191,36,0.45)' }}>
-                  🎓
+                  <Icon name="graduation-cap" className="w-7 h-7 text-white" />
                 </div>
                 <div>
                   <h2 className="text-xl font-extrabold text-white" style={{ textShadow:'0 1px 12px rgba(251,191,36,0.3)' }}>Student Career Fit</h2>
@@ -323,9 +324,9 @@ export default function Landing() {
             <div data-reveal data-delay="1"
                  className="rounded-2xl p-8 flex flex-col hover:-translate-y-1 transition-all"
                  style={{ background:'rgba(251,191,36,0.08)', border:'1.5px solid rgba(251,191,36,0.25)', backdropFilter:'blur(12px)' }}>
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-5"
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
                    style={{ background:'rgba(251,191,36,0.15)', border:'1px solid rgba(251,191,36,0.4)' }}>
-                📖
+                <Icon name="book-open" className="w-8 h-8" style={{ color: '#fbbf24' }} />
               </div>
               <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-4 w-fit text-xs font-semibold text-amber-300"
                    style={{ background:'rgba(251,191,36,0.12)', border:'1px solid rgba(251,191,36,0.3)' }}>
@@ -354,9 +355,9 @@ export default function Landing() {
             <div data-reveal data-delay="2"
                  className="rounded-2xl p-8 flex flex-col hover:-translate-y-1 transition-all"
                  style={{ background:'rgba(251,191,36,0.08)', border:'1.5px solid rgba(251,191,36,0.25)', backdropFilter:'blur(12px)' }}>
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center text-4xl mb-5"
+              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5"
                    style={{ background:'rgba(251,191,36,0.15)', border:'1px solid rgba(251,191,36,0.4)' }}>
-                🏫
+                <Icon name="building" className="w-8 h-8" style={{ color: '#fbbf24' }} />
               </div>
               <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-4 w-fit text-xs font-semibold text-amber-300"
                    style={{ background:'rgba(251,191,36,0.12)', border:'1px solid rgba(251,191,36,0.3)' }}>
@@ -389,14 +390,17 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
           <div className="grid grid-cols-2 gap-4 order-2 md:order-1" data-reveal>
             {[
-              { icon:'📖', label:'10th Grade',       sub:'Stream Selection & Aptitude' },
-              { icon:'🏫', label:'12th Grade',       sub:'College & Career Readiness' },
-              { icon:'🎯', label:'Strength Mapping',  sub:'Know Your Core Abilities' },
-              { icon:'🗺️', label:'Career Clarity',   sub:'Right Path, Right Future' },
+              { icon:'book-open',      label:'10th Grade',       sub:'Stream Selection & Aptitude' },
+              { icon:'building',       label:'12th Grade',       sub:'College & Career Readiness' },
+              { icon:'target',         label:'Strength Mapping',  sub:'Know Your Core Abilities' },
+              { icon:'map',            label:'Career Clarity',   sub:'Right Path, Right Future' },
             ].map(({ icon, label, sub }) => (
               <div key={label} className="rounded-2xl p-5 text-center border-2 hover:border-amber-300 hover:shadow-md transition-all"
                    style={{ borderColor:'rgba(251,191,36,0.3)', background:'rgba(251,191,36,0.06)' }}>
-                <span className="text-3xl">{icon}</span>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mx-auto"
+                     style={{ background: 'rgba(251,191,36,0.15)' }}>
+                  <Icon name={icon} className="w-5 h-5" style={{ color: '#d97706' }} />
+                </div>
                 <p className="font-bold text-slate-800 text-sm mt-2">{label}</p>
                 <p className="text-xs text-slate-400 mt-0.5">{sub}</p>
               </div>
@@ -488,7 +492,10 @@ export default function Landing() {
               <div key={cat.title} data-reveal data-delay={String(i + 1)}
                    className="rounded-2xl p-5 border-2 hover:-translate-y-1 hover:shadow-lg transition-all cursor-pointer"
                    style={{ borderColor: cat.color + '50', background: cat.color + '0d' }}>
-                <span className="text-4xl">{cat.icon}</span>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                     style={{ background: cat.color + '1a' }}>
+                  <Icon name={cat.icon} className="w-5 h-5" style={{ color: cat.color }} />
+                </div>
                 <p className="font-bold text-slate-800 text-sm mt-3">{cat.title}</p>
                 <p className="text-xs font-semibold mt-0.5 mb-2" style={{ color: cat.color }}>{cat.age}</p>
                 <p className="text-xs text-slate-500 leading-snug">{cat.desc}</p>
@@ -510,8 +517,11 @@ export default function Landing() {
               <div key={s.n} data-reveal data-delay={String(i + 1)}
                    className="rounded-2xl p-6 relative"
                    style={{ background:'rgba(255,255,255,0.07)', border:'1.5px solid rgba(255,255,255,0.12)' }}>
-                <span className="absolute top-4 right-4 text-xs font-black opacity-20 text-white text-2xl">{s.n}</span>
-                <span className="text-3xl">{s.icon}</span>
+                <span className="absolute top-4 right-4 font-black opacity-20 text-white text-2xl">{s.n}</span>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                     style={{ background: 'rgba(74,222,128,0.15)', border: '1px solid rgba(74,222,128,0.3)' }}>
+                  <Icon name={s.icon} className="w-5 h-5 text-green-400" />
+                </div>
                 <h3 className="font-bold text-white mt-3 mb-1 text-sm">{s.title}</h3>
                 <p className="text-white/55 text-xs leading-relaxed">{s.desc}</p>
               </div>
@@ -525,11 +535,14 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-14 items-center">
           <div className="space-y-4" data-reveal>
             {[
-              { icon:'🏫', title:'Enrol Your Institution', desc:'Colleges and schools can register their students under a verified institution.' },
-              { icon:'📋', title:'Section-wise Tracking',  desc:'Students select their section before taking the assessment.' },
+              { icon:'building',        title:'Enrol Your Institution', desc:'Colleges and schools can register their students under a verified institution.' },
+              { icon:'clipboard-list',  title:'Section-wise Tracking',  desc:'Students select their section before taking the assessment.' },
             ].map(item => (
               <div key={item.title} className="flex gap-4 p-5 rounded-2xl border border-slate-100 hover:border-green-200 hover:shadow-sm transition-all">
-                <span className="text-2xl flex-shrink-0">{item.icon}</span>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
+                     style={{ background: 'rgba(34,197,94,0.1)' }}>
+                  <Icon name={item.icon} className="w-5 h-5 text-green-600" />
+                </div>
                 <div>
                   <p className="font-bold text-slate-800 text-sm">{item.title}</p>
                   <p className="text-slate-500 text-sm mt-0.5">{item.desc}</p>
@@ -553,11 +566,11 @@ export default function Landing() {
               <p className="text-xs font-bold uppercase tracking-widest text-teal-600 mb-1">Contact Preflex Support</p>
               <a href={`mailto:${cfg.contact_email}`}
                  className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-teal-600 transition-colors">
-                <span>✉</span> {cfg.contact_email}
+                <Icon name="mail" className="w-4 h-4" /> {cfg.contact_email}
               </a>
               <a href={`tel:${cfg.contact_phone.replace(/\s/g, '')}`}
                  className="flex items-center gap-2 text-sm font-medium text-slate-700 hover:text-teal-600 transition-colors">
-                <span>📞</span> {cfg.contact_phone}
+                <Icon name="phone" className="w-4 h-4" /> {cfg.contact_phone}
               </a>
             </div>
           </div>
