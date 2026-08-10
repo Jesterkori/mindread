@@ -246,6 +246,15 @@ export default function CareerDashboard() {
             Released on {new Date(latest.released_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
           </p>
         )}
+
+        <div className="text-center pt-2">
+          <button
+            onClick={() => navigate('/career/questionnaire')}
+            className="px-8 py-3 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 active:scale-95"
+            style={{ background: 'linear-gradient(135deg, #f59e0b, #d97706)', boxShadow: '0 0 20px rgba(251,191,36,0.3)' }}>
+            Take Assessment Again →
+          </button>
+        </div>
       </div>
     )
   }
@@ -255,7 +264,7 @@ export default function CareerDashboard() {
       <CircuitBackground opacity={0.04} />
       <Navbar />
 
-      <div className="relative z-10 flex-1 px-4 py-16 max-w-2xl mx-auto w-full">
+      <div className="relative z-10 flex-1 px-4 pt-28 pb-16 max-w-2xl mx-auto w-full">
         {/* Header */}
         <div className="mb-10">
           <div className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 mb-4 text-xs font-semibold text-amber-300"
