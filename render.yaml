@@ -13,6 +13,8 @@ services:
         generateValue: true
       - key: GEMINI_API_KEY
         sync: false
+      - key: GROQ_API_KEY
+        sync: false
       - key: RECAPTCHA_SECRET
         sync: false
       - key: SMTP_HOST

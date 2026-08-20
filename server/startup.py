@@ -61,6 +61,7 @@ with db() as cur:
         ALTER TABLE users ADD COLUMN IF NOT EXISTS service VARCHAR(20) DEFAULT 'mindcheck';
         ALTER TABLE users ADD COLUMN IF NOT EXISTS grade VARCHAR(10);
         ALTER TABLE submissions ADD COLUMN IF NOT EXISTS payment_confirmed BOOLEAN NOT NULL DEFAULT FALSE;
+        ALTER TABLE submissions ADD COLUMN IF NOT EXISTS score_check TEXT;
 
         CREATE TABLE IF NOT EXISTS institutions (
             id         SERIAL PRIMARY KEY,

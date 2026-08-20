@@ -169,8 +169,13 @@ ADMIN_PASSWORD=yourStrongPassword123
 BREVO_API_KEY=your_brevo_api_key
 BREVO_SENDER=noreply@yourdomain.com
 
-# Optional — Google Gemini (for AI assessment generation)
+# Optional — Google Gemini (free tier; primary AI for the assessment write-up).
+# Get a key at aistudio.google.com/apikey — NEVER commit this key to git.
 GEMINI_API_KEY=your_gemini_api_key
+
+# Optional — Groq (free tier; falls back to this if Gemini errors/is unset, and
+# always powers the admin-panel score sanity-check). Get a key at console.groq.com/keys
+GROQ_API_KEY=your_groq_api_key
 
 # Optional — frontend URL for CORS (defaults to http://localhost:5173)
 FRONTEND_URL=http://localhost:5173
@@ -227,7 +232,8 @@ Open **http://localhost:5173** — the Vite dev server proxies all `/api` reques
 | `ADMIN_PASSWORD` | Yes      | Admin account password — **required or startup fails**   |
 | `BREVO_API_KEY`  | No       | Brevo API key for sending OTP verification emails        |
 | `BREVO_SENDER`   | No       | Sender email address for Brevo                           |
-| `GEMINI_API_KEY` | No       | Google Gemini API key for AI assessment generation       |
+| `GEMINI_API_KEY` | No       | Google Gemini key — primary AI for the assessment write-up |
+| `GROQ_API_KEY`   | No       | Groq key — fallback write-up AI + admin score sanity-check |
 | `FRONTEND_URL`   | No       | Allowed CORS origin (default: http://localhost:5173)     |
 
 *Either `DATABASE_URL` **or** the individual `DB_*` vars must be set.
@@ -256,6 +262,7 @@ Open **http://localhost:5173** — the Vite dev server proxies all `/api` reques
    ADMIN_PASSWORD      = <strong password>
    FRONTEND_URL        = https://your-app-name.onrender.com
    GEMINI_API_KEY      = <optional>
+   GROQ_API_KEY        = <optional>
    BREVO_API_KEY       = <optional>
    BREVO_SENDER        = <optional>
    ```

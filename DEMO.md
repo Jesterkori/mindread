@@ -1,7 +1,7 @@
 # MindCheck — Demo Guide
 
 ## What is MindCheck?
-A mental health screening web app. Users register, take a category-specific MCQ assessment, and receive a **real-time AI-generated personal analysis** (via Google Gemini). An admin reviews submissions, manages questions, and releases results to users.
+A mental health screening web app. Users register, take a category-specific MCQ assessment, and receive a **real-time AI-generated personal analysis** (via Groq's free-tier open-weight models). An admin reviews submissions, manages questions, and releases results to users.
 
 ---
 
@@ -71,7 +71,8 @@ git push -u origin main
 In your Render service → **Environment**, add:
 | Key | Value |
 |---|---|
-| `GEMINI_API_KEY` | `AIzaSyA6np7DOQPsxKnteoloI2za5kCXJO3xHec` |
+| `GEMINI_API_KEY` | *(your Gemini key from aistudio.google.com/apikey — never commit this)* |
+| `GROQ_API_KEY` | *(your Groq key from console.groq.com/keys — fallback + score check, never commit this)* |
 | `RECAPTCHA_SECRET` | *(your Google key, or leave blank to skip)* |
 | `SMTP_USER` | *(your Gmail, or leave blank to skip email)* |
 | `SMTP_PASS` | *(your Gmail app password)* |
@@ -111,7 +112,7 @@ Log into the live admin dashboard → **Questions** tab → seed each category.
 ### Step 4 — Admin reviews and releases
 - Admin dashboard → **Assessments** tab
 - Find the submission, click **View & Release**
-- See: all answers, the **PDF-scored result** (label + editable recommendation), and the **AI assessment** (editable Gemini text)
+- See: all answers, the **PDF-scored result** (label + editable recommendation), and the **AI assessment** (editable AI-generated text)
 - Edit either text if needed, add an optional personal note → **Release Result to User**
 
 ### Step 5 — User sees their result
@@ -129,7 +130,7 @@ Log into the live admin dashboard → **Questions** tab → seed each category.
 | Feature | What to say |
 |---|---|
 | Python backend | "The backend is FastAPI (Python) — production-grade, async, deployed on Render with PostgreSQL." |
-| AI analysis | "Gemini reads every single answer and writes a personalised 3–4 paragraph assessment — no generic buckets." |
+| AI analysis | "AI reads every single answer and writes a personalised 3–4 paragraph assessment — no generic buckets." |
 | Admin gate | "Results are held until a human admin reviews and edits them before release — important for a clinical tool." |
 | Editable results | "Admin can rewrite both the PDF recommendation and the AI analysis before the user sees anything." |
 | Question editor | "Questions live in the database — the admin can change them without touching code." |

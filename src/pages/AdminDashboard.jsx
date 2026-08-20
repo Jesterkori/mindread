@@ -594,13 +594,18 @@ export default function AdminDashboard() {
               )}
               {s.result_released && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(74,222,128,0.15)', color: '#4ade80' }}>Released</span>}
               {s.payment_confirmed && <span className="text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(96,165,250,0.15)', color: '#60a5fa' }}>Paid</span>}
+              {s.score_check && s.score_check !== 'OK' && (
+                <span title={s.score_check} className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium" style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24' }}>
+                  <Icon name="alert-triangle" className="w-3 h-3" /> AI Score Check
+                </span>
+              )}
             </div>
             <p className="text-sm text-white/50">{s.user_email}</p>
             <p className="text-xs text-white/35 mt-0.5">
               {categoryLabel(s.category)}
               {s.section && <> &middot; <span className="text-blue-300">{s.section}</span></>}
               {s.institution && <> &middot; <span className="text-green-300/70">{s.institution}</span></>}
-              &nbsp;&middot; {s.label} ({s.score}/{s.total}) &middot; {fmt(s.submitted_at)}
+              &nbsp;&middot; {s.label} ({s.score}/{s.total * 4}) &middot; {fmt(s.submitted_at)}
             </p>
           </div>
           <button
@@ -672,6 +677,13 @@ export default function AdminDashboard() {
                 style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
                 {s.action || <span className="text-white/30 italic">No PDF result generated.</span>}
               </div>
+              {s.score_check && s.score_check !== 'OK' && (
+                <div className="rounded-xl px-3 py-2.5 text-sm leading-relaxed flex items-start gap-2"
+                  style={{ background: 'rgba(251,191,36,0.08)', border: '1px solid rgba(251,191,36,0.3)', color: '#fbbf24' }}>
+                  <Icon name="alert-triangle" className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span><b>AI score check:</b> {s.score_check} — please double-check before releasing.</span>
+                </div>
+              )}
             </div>
 
             {/* Admin Answer */}

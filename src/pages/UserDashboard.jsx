@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
 import Icon from '../components/Icon'
+import PaymentReminder from '../components/PaymentReminder'
 import { bgStyle, glassCard } from '../styles/theme'
 
 const LEVEL_STYLES = {
@@ -33,6 +34,8 @@ export default function UserDashboard() {
   const [results, setResults]   = useState([])
   const [loading, setLoading]   = useState(true)
   const [expanded, setExpanded] = useState(null)
+  const [paymentQr, setPaymentQr]     = useState('')
+  const [paymentNote, setPaymentNote] = useState('')
 
   useEffect(() => {
     fetch('/api/user/results', { headers: authHeader() })
@@ -40,6 +43,16 @@ export default function UserDashboard() {
       .then((d) => { if (d.ok) setResults(d.results) })
       .catch(() => {})
       .finally(() => setLoading(false))
+
+    fetch('/api/config')
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.ok && d.config.payment_qr_base64) {
+          setPaymentQr(d.config.payment_qr_base64)
+          setPaymentNote(d.config.payment_instructions || '')
+        }
+      })
+      .catch(() => {})
   // authHeader is stable (reads localStorage directly)
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -123,6 +136,7 @@ export default function UserDashboard() {
                       <p className="text-xs text-white/35 mt-3 ml-6">
                         Our team is reviewing your responses. You will see your result here once released.
                       </p>
+                      {!r.payment_confirmed && <PaymentReminder qr={paymentQr} note={paymentNote} />}
                     </div>
                   )
                 }

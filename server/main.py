@@ -120,7 +120,75 @@ def send_otp(email: str, otp: str):
         print(f'[mailer] FAILED to send OTP to {email}: {exc}', flush=True)
 
 
-# ── Gemini analysis ───────────────────────────────────────────────────────────
+# ── AI-generated write-up (Gemini primary, Groq fallback) ────────────────────
+# Writes the empathetic paragraph shown as "AI Assessment" in the admin panel.
+# This is supplementary color on top of the deterministic PDF-rubric score/label/
+# action (src/data/questions.js) — it never changes the score itself.
+#
+# Gemini is tried first (GEMINI_API_KEY); if it's unset, errors, or comes back
+# empty, we fall back to Groq (GROQ_API_KEY) so the write-up never silently goes
+# missing the way it did when the old Gemini key got revoked (it was committed
+# in plaintext in DEMO.md — Google's public-repo leak scanner killed it; that had
+# nothing to do with running out of a quota/credit balance).
+
+async def _call_gemini_analysis(system_prompt: str, user_prompt: str) -> str:
+    api_key = os.environ.get('GEMINI_API_KEY', '')
+    if not api_key:
+        raise ValueError('GEMINI_API_KEY not set')
+
+    # 'gemini-flash-lite-latest' is a rolling alias Google repoints at whatever their
+    # current lite-flash model is — pinned versions (e.g. gemini-2.5-flash) get retired
+    # every few months and start 404ing, which is what happened to the very first key.
+    model = os.environ.get('GEMINI_MODEL', 'gemini-flash-lite-latest')
+    async with httpx.AsyncClient(timeout=30) as client:
+        resp = await client.post(
+            f'https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent'
+            f'?key={api_key}',
+            json={
+                'system_instruction': {'parts': [{'text': system_prompt}]},
+                'contents': [{'role': 'user', 'parts': [{'text': user_prompt}]}],
+                'generationConfig': {'maxOutputTokens': 900, 'temperature': 0.7},
+            },
+        )
+        resp.raise_for_status()
+
+    text = (resp.json()
+            .get('candidates', [{}])[0]
+            .get('content', {})
+            .get('parts', [{}])[0]
+            .get('text', ''))
+    if not text:
+        raise ValueError('Empty response from Gemini')
+    return text
+
+
+async def _call_groq_analysis(system_prompt: str, user_prompt: str) -> str:
+    api_key = os.environ.get('GROQ_API_KEY', '')
+    if not api_key:
+        raise ValueError('GROQ_API_KEY not set')
+
+    async with httpx.AsyncClient(timeout=30) as client:
+        resp = await client.post(
+            'https://api.groq.com/openai/v1/chat/completions',
+            headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+            json={
+                'model': os.environ.get('GROQ_ANALYSIS_MODEL', 'openai/gpt-oss-120b'),
+                'messages': [
+                    {'role': 'system', 'content': system_prompt},
+                    {'role': 'user', 'content': user_prompt},
+                ],
+                'max_tokens': 1600,
+                'temperature': 0.7,
+                'reasoning_effort': 'medium',
+            },
+        )
+        resp.raise_for_status()
+
+    text = resp.json()['choices'][0]['message']['content'].strip()
+    if not text:
+        raise ValueError('Empty response from Groq')
+    return text
+
 
 async def generate_analysis(category_label: str, answers: dict, questions: list) -> str:
     label_map = {'A': 'Rarely or Never', 'B': 'Sometimes', 'C': 'Often', 'D': 'Almost Always'}
@@ -176,25 +244,11 @@ async def generate_analysis(category_label: str, answers: dict, questions: list)
         f'Do NOT use bullet points. Write in flowing paragraphs. Keep the tone warm, non-judgmental, and empowering.'
     )
 
-    async with httpx.AsyncClient(timeout=30) as client:
-        resp = await client.post(
-            f'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
-            f'?key={os.environ.get("GEMINI_API_KEY", "")}',
-            json={
-                'system_instruction': {'parts': [{'text': system_prompt}]},
-                'contents': [{'role': 'user', 'parts': [{'text': user_prompt}]}],
-                'generationConfig': {'maxOutputTokens': 900, 'temperature': 0.7},
-            }
-        )
-
-    text = (resp.json()
-            .get('candidates', [{}])[0]
-            .get('content', {})
-            .get('parts', [{}])[0]
-            .get('text', ''))
-    if not text:
-        raise ValueError('Empty response from Gemini')
-    return text
+    try:
+        return await _call_gemini_analysis(system_prompt, user_prompt)
+    except Exception as exc:
+        print(f'Gemini analysis failed, falling back to Groq: {exc}', flush=True)
+        return await _call_groq_analysis(system_prompt, user_prompt)
 
 
 async def _store_analysis(submission_id: int, category_label: str, answers: dict, questions: list):
@@ -203,7 +257,91 @@ async def _store_analysis(submission_id: int, category_label: str, answers: dict
         with db() as cur:
             cur.execute('UPDATE submissions SET ai_analysis = %s WHERE id = %s', (analysis, submission_id))
     except Exception as exc:
-        print(f'Gemini background error: {exc}', flush=True)
+        print(f'AI analysis background error: {exc}', flush=True)
+
+
+# ── AI sanity-check (Groq free tier) ─────────────────────────────────────────
+# This does NOT re-grade or override the deterministic point-rubric score computed
+# on the frontend (src/data/questions.js) — it's a second pair of eyes that flags
+# anything arithmetically or logically inconsistent (e.g. a score outside the valid
+# range, or a Healthy/Distress label that doesn't match the answer pattern) so an
+# admin can double-check before releasing a result. Requires GROQ_API_KEY (free at
+# console.groq.com); silently skipped if unset. Default model is an open-weight
+# reasoning model Groq currently hosts on its free tier — override with GROQ_MODEL
+# if Groq's free-tier lineup changes (check `GET /openai/v1/models` for your key).
+
+_GROQ_MODEL = os.environ.get('GROQ_MODEL', 'openai/gpt-oss-20b')
+_CAREER_FIT_CATEGORIES = ('counselling-10th', 'counselling-12th')
+
+
+async def check_score_sanity(category: str, category_label: str, answers: dict,
+                              score: int, total: int, level: str, label: str) -> str:
+    api_key = os.environ.get('GROQ_API_KEY', '')
+    if not api_key:
+        return ''
+
+    counts = {'A': 0, 'B': 0, 'C': 0, 'D': 0}
+    for a in answers.values():
+        if a in counts:
+            counts[a] += 1
+    min_score, max_score = total * 1, total * 4
+    is_career_fit = category in _CAREER_FIT_CATEGORIES
+
+    system_prompt = (
+        'You are a strict QA checker for a scored questionnaire. You do not grade — a separate '
+        'scoring engine already computed the result deterministically. You only verify it looks '
+        'internally consistent.\n\n'
+        'Rubric: each answered question is worth 1 (A) to 4 (D) points. total = number of '
+        'questions answered. A valid score always falls within [total*1, total*4] inclusive.\n\n'
+        + ('This is a career-fit assessment — it uses a different "dominant interest area" rubric, '
+           'not a Healthy/Distress scale. Only flag it if the score is outside the valid range. '
+           'Never flag it based on the label text.\n\n'
+           if is_career_fit else
+           'This is a mental-health assessment. Label should be "Healthy Coping" when at least 60% '
+           'of answers are A/B, "High Distress" when at least 60% are C/D, otherwise "Moderate '
+           'Stress". Flag it if the score is outside the valid range, OR if the label clearly '
+           'contradicts the answer counts.\n\n')
+        + 'Reply with exactly the word OK if everything is consistent. Otherwise reply with one '
+          'short sentence (under 20 words) describing what looks wrong. Never say anything else.'
+    )
+    user_prompt = (
+        f'Category: {category_label}\n'
+        f'Answer counts: A={counts["A"]} B={counts["B"]} C={counts["C"]} D={counts["D"]}\n'
+        f'Computed score: {score} (valid range {min_score}-{max_score})\n'
+        f'Computed label: {label} (level={level})'
+    )
+
+    try:
+        async with httpx.AsyncClient(timeout=20) as client:
+            resp = await client.post(
+                'https://api.groq.com/openai/v1/chat/completions',
+                headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+                json={
+                    'model': _GROQ_MODEL,
+                    'messages': [
+                        {'role': 'system', 'content': system_prompt},
+                        {'role': 'user', 'content': user_prompt},
+                    ],
+                    'max_tokens': 300,
+                    'temperature': 0,
+                    'reasoning_effort': 'low',
+                },
+            )
+        resp.raise_for_status()
+        text = resp.json()['choices'][0]['message']['content'].strip()
+        return text or 'OK'
+    except Exception as exc:
+        print(f'Groq sanity-check error: {exc}', flush=True)
+        return ''
+
+
+async def _store_score_check(submission_id: int, category: str, category_label: str, answers: dict,
+                              score: int, total: int, level: str, label: str):
+    check = await check_score_sanity(category, category_label, answers, score, total, level, label)
+    if not check:
+        return
+    with db() as cur:
+        cur.execute('UPDATE submissions SET score_check = %s WHERE id = %s', (check, submission_id))
 
 
 # ── Pydantic request models ───────────────────────────────────────────────────
@@ -405,6 +543,12 @@ async def submit(body: SubmitBody, request: Request, background_tasks: Backgroun
             _store_analysis, submission_id, body.categoryLabel, body.answers, body.questions
         )
 
+    if body.categoryLabel:
+        background_tasks.add_task(
+            _store_score_check, submission_id, body.category, body.categoryLabel, body.answers,
+            body.score, body.total, body.level, body.label
+        )
+
     return {'ok': True}
 
 
@@ -414,7 +558,7 @@ def user_results(request: Request):
     with db() as cur:
         cur.execute(
             'SELECT id, category, score, total, level, label, admin_action, ai_analysis, '
-            'safety_flag, admin_notes, result_released, released_at, submitted_at '
+            'safety_flag, admin_notes, result_released, released_at, submitted_at, payment_confirmed '
             'FROM submissions WHERE user_id = %s '
             'ORDER BY submitted_at DESC',
             (user['id'],)
@@ -443,8 +587,9 @@ def admin_submissions(request: Request):
     with db() as cur:
         cur.execute(
             'SELECT s.id, s.user_id, s.user_name, s.user_email, s.category, s.answers, s.score, s.total, '
-            's.level, s.label, s.action, s.admin_action, s.safety_flag, s.ai_analysis, s.result_released, '
-            's.admin_notes, s.released_at, s.submitted_at, s.section, s.payment_confirmed, u.institution '
+            's.level, s.label, s.action, s.admin_action, s.safety_flag, s.ai_analysis, s.score_check, '
+            's.result_released, s.admin_notes, s.released_at, s.submitted_at, s.section, '
+            's.payment_confirmed, u.institution '
             'FROM submissions s LEFT JOIN users u ON s.user_id = u.id '
             'ORDER BY s.safety_flag DESC, s.submitted_at DESC'
         )

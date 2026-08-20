@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import CircuitBackground from '../components/CircuitBackground'
 import Icon from '../components/Icon'
+import PaymentReminder from '../components/PaymentReminder'
 
 // Maps aptitude label keywords → visual profile card data (from PDF scoring guide)
 const PROFILES_10TH = [
@@ -102,6 +103,8 @@ export default function CareerDashboard() {
   const navigate = useNavigate()
   const [results, setResults] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [paymentQr, setPaymentQr] = useState('')
+  const [paymentNote, setPaymentNote] = useState('')
 
   useEffect(() => {
     fetch('/api/user/results', { headers: authHeader() })
@@ -109,6 +112,16 @@ export default function CareerDashboard() {
       .then(d => setResults(d.ok ? d.results : []))
       .catch(() => setResults([]))
       .finally(() => setLoading(false))
+
+    fetch('/api/config')
+      .then(r => r.json())
+      .then(d => {
+        if (d.ok && d.config.payment_qr_base64) {
+          setPaymentQr(d.config.payment_qr_base64)
+          setPaymentNote(d.config.payment_instructions || '')
+        }
+      })
+      .catch(() => {})
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const bgStyle = { background: 'linear-gradient(135deg, #0c1f3a 0%, #0d3556 40%, #0b4a52 70%, #0a5c5c 100%)' }
@@ -189,6 +202,11 @@ export default function CareerDashboard() {
             <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#f59e0b' }} />
             <span className="text-amber-300 text-sm font-medium">Results pending expert review</span>
           </div>
+          {!latest.payment_confirmed && (
+            <div className="text-left max-w-xs mx-auto">
+              <PaymentReminder qr={paymentQr} note={paymentNote} />
+            </div>
+          )}
         </div>
       )
     }
