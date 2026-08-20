@@ -121,15 +121,26 @@ def send_otp(email: str, otp: str):
 
 
 # ── AI-generated write-up (Gemini primary, Groq fallback) ────────────────────
-# Writes the empathetic paragraph shown as "AI Assessment" in the admin panel.
-# This is supplementary color on top of the deterministic PDF-rubric score/label/
-# action (src/data/questions.js) — it never changes the score itself.
+# Writes the short note shown as "AI Assessment" in the admin panel, meant to be
+# pasted straight into what the admin sends the user alongside the PDF-rubric
+# result — so it must be short, direct, and never contradict the label/action
+# that was already computed deterministically (src/data/questions.js). It only
+# explains *why* that already-decided result fits this student's specific
+# answers; it never re-derives or second-guesses the classification itself.
+#
+# Career-fit categories (counselling-10th/12th) use a completely different
+# rubric — "dominant interest area", not Healthy/Moderate/High distress — so
+# they get their own prompt. Using the mental-health prompt for a career-fit
+# submission previously made the AI invent its own competing classification
+# that contradicted the PDF's actual stream/degree recommendation.
 #
 # Gemini is tried first (GEMINI_API_KEY); if it's unset, errors, or comes back
 # empty, we fall back to Groq (GROQ_API_KEY) so the write-up never silently goes
 # missing the way it did when the old Gemini key got revoked (it was committed
 # in plaintext in DEMO.md — Google's public-repo leak scanner killed it; that had
 # nothing to do with running out of a quota/credit balance).
+
+_CAREER_FIT_CATEGORIES = ('counselling-10th', 'counselling-12th')
 
 async def _call_gemini_analysis(system_prompt: str, user_prompt: str) -> str:
     api_key = os.environ.get('GEMINI_API_KEY', '')
@@ -147,7 +158,7 @@ async def _call_gemini_analysis(system_prompt: str, user_prompt: str) -> str:
             json={
                 'system_instruction': {'parts': [{'text': system_prompt}]},
                 'contents': [{'role': 'user', 'parts': [{'text': user_prompt}]}],
-                'generationConfig': {'maxOutputTokens': 900, 'temperature': 0.7},
+                'generationConfig': {'maxOutputTokens': 400, 'temperature': 0.6},
             },
         )
         resp.raise_for_status()
@@ -177,9 +188,9 @@ async def _call_groq_analysis(system_prompt: str, user_prompt: str) -> str:
                     {'role': 'system', 'content': system_prompt},
                     {'role': 'user', 'content': user_prompt},
                 ],
-                'max_tokens': 1600,
-                'temperature': 0.7,
-                'reasoning_effort': 'medium',
+                'max_tokens': 600,
+                'temperature': 0.6,
+                'reasoning_effort': 'low',
             },
         )
         resp.raise_for_status()
@@ -190,59 +201,73 @@ async def _call_groq_analysis(system_prompt: str, user_prompt: str) -> str:
     return text
 
 
-async def generate_analysis(category_label: str, answers: dict, questions: list) -> str:
+def _build_answers_text(answers: dict, questions: list) -> str:
     label_map = {'A': 'Rarely or Never', 'B': 'Sometimes', 'C': 'Often', 'D': 'Almost Always'}
 
     def get_answer(q):
         return answers.get(str(q['id']), answers.get(q['id'], '?'))
 
-    answers_text = '\n\n'.join(
-        f'Q{q["id"]} [{q["part"]}]: "{q["text"]}"\n'
-        f'  Answer: {get_answer(q)} — {label_map.get(get_answer(q), "?")}\n'
-        f'  Indicator: {q["indicator"]}'
+    return '\n'.join(
+        f'Q{q["id"]} [{q["part"]}]: "{q["text"]}" -> {get_answer(q)} ({label_map.get(get_answer(q), "?")})'
         for q in questions
     )
 
-    safety_flag = any(
-        (q.get('safetyQuestion') or q.get('safety_question'))
-        and get_answer(q) in ('C', 'D')
-        for q in questions
-    )
 
-    system_prompt = (
-        'You are a compassionate, professional mental health screening assistant. '
-        'You interpret questionnaire results following this scoring framework:\n'
-        '- Mostly A\'s & B\'s: Healthy coping — normal ups and downs, good coping skills.\n'
-        '- Mix of B\'s & C\'s: Moderate stress — struggling in certain areas, may need support.\n'
-        '- Mostly C\'s & D\'s: High distress / clinical concern — significant challenges, '
-        'professional help recommended.\n'
-        '- Safety override: If a safety question is answered C or D, address this FIRST and PROMINENTLY.\n\n'
-        'Write warmly and in second person ("you"). Be honest but compassionate. '
-        'Reference specific patterns from the actual answers rather than giving generic advice.'
-    )
+async def generate_analysis(category: str, category_label: str, label: str, action: str,
+                             answers: dict, questions: list) -> str:
+    answers_text = _build_answers_text(answers, questions)
 
-    safety_prefix = (
-        '⚠️ SAFETY FLAG ACTIVE: The user answered C or D to a critical safety question. '
-        'Address this urgently and prominently as the FIRST thing in your response.\n\n'
-        if safety_flag else ''
-    )
-
-    first_point = (
-        'FIRST: Urgently and clearly addresses the safety concern and recommends immediate professional help.'
-        if safety_flag else
-        'Opens by acknowledging the overall pattern you see in their responses.'
-    )
-
-    user_prompt = (
-        f'Category: {category_label}\n\n'
-        f'{safety_prefix}User\'s responses:\n{answers_text}\n\n'
-        f'Write a 3–4 paragraph personalized mental health assessment that:\n'
-        f'1. {first_point}\n'
-        f'2. Highlights the 2–3 most significant areas of concern based on their specific answers.\n'
-        f'3. States the assessment level (Healthy Coping / Moderate Stress / High Distress) and explains why.\n'
-        f'4. Gives specific, actionable next steps tailored to their situation.\n\n'
-        f'Do NOT use bullet points. Write in flowing paragraphs. Keep the tone warm, non-judgmental, and empowering.'
-    )
+    if category in _CAREER_FIT_CATEGORIES:
+        system_prompt = (
+            'You write a short internal note for a career counsellor to paste directly to a student, '
+            'right below their already-decided result — so it must be brief and ready to send as-is, '
+            'not something the counsellor has to edit down first.\n\n'
+            'A separate rubric has ALREADY assigned this student a career-interest profile. Do not '
+            're-derive it, question it, or suggest a different stream/profile — your only job is to '
+            'point to 2-3 concrete answers that explain why it fits.\n\n'
+            'Rules: one paragraph, 40-60 words, plain direct sentences, second person, no preamble '
+            '("Looking at your answers..." / "Thank you for..."), no bullet points, no restating the '
+            'profile name in full (the counsellor already has that).'
+        )
+        user_prompt = (
+            f'Category: {category_label}\n'
+            f'Assigned profile (fixed, do not change): {label}\n'
+            f'Official recommendation already given: {action}\n\n'
+            f'Answers:\n{answers_text}\n\n'
+            f'Write the 40-60 word note now.'
+        )
+    else:
+        safety_flag = any(
+            (q.get('safetyQuestion') or q.get('safety_question'))
+            and str(answers.get(str(q['id']), answers.get(q['id'], ''))) in ('C', 'D')
+            for q in questions
+        )
+        system_prompt = (
+            'You write a short internal note for a counsellor to paste directly to a student, right '
+            'below their already-decided result — so it must be brief and ready to send as-is, not '
+            'something the counsellor has to edit down first.\n\n'
+            'A separate rubric has ALREADY classified this student\'s result. Do not re-derive, '
+            'question, or restate that classification — your only job is to point out 2-3 concrete '
+            'patterns from their specific answers and give ONE specific next step.\n\n'
+            'Rules: max 2 short sentences per idea, 70-100 words total, plain direct language, second '
+            'person, no preamble ("Thank you for sharing..." / "Looking over your responses..."), no '
+            'bullet points, no generic filler like "seek help if needed" — be concrete. The next step '
+            'must be something the student can act on themselves (e.g. "talk to your school counsellor", '
+            '"tell a trusted adult today", "call a crisis line") — never invent a specific resource, '
+            'booking link, appointment, or offer ("schedule with me", "the link below") that does not '
+            'actually exist.'
+            + (
+                '\n\nSAFETY: a safety question was answered C or D. Open with one direct, urgent '
+                'sentence naming that and recommending immediate professional contact, before anything else.'
+                if safety_flag else ''
+            )
+        )
+        user_prompt = (
+            f'Category: {category_label}\n'
+            f'Classification (fixed, do not change): {label}\n\n'
+            f'Answers:\n{answers_text}\n\n'
+            f'Write the note now (70-100 words).'
+        )
 
     try:
         return await _call_gemini_analysis(system_prompt, user_prompt)
@@ -251,9 +276,10 @@ async def generate_analysis(category_label: str, answers: dict, questions: list)
         return await _call_groq_analysis(system_prompt, user_prompt)
 
 
-async def _store_analysis(submission_id: int, category_label: str, answers: dict, questions: list):
+async def _store_analysis(submission_id: int, category: str, category_label: str, label: str,
+                           action: str, answers: dict, questions: list):
     try:
-        analysis = await generate_analysis(category_label, answers, questions)
+        analysis = await generate_analysis(category, category_label, label, action, answers, questions)
         with db() as cur:
             cur.execute('UPDATE submissions SET ai_analysis = %s WHERE id = %s', (analysis, submission_id))
     except Exception as exc:
@@ -271,7 +297,6 @@ async def _store_analysis(submission_id: int, category_label: str, answers: dict
 # if Groq's free-tier lineup changes (check `GET /openai/v1/models` for your key).
 
 _GROQ_MODEL = os.environ.get('GROQ_MODEL', 'openai/gpt-oss-20b')
-_CAREER_FIT_CATEGORIES = ('counselling-10th', 'counselling-12th')
 
 
 async def check_score_sanity(category: str, category_label: str, answers: dict,
@@ -540,7 +565,8 @@ async def submit(body: SubmitBody, request: Request, background_tasks: Backgroun
 
     if body.questions and body.categoryLabel:
         background_tasks.add_task(
-            _store_analysis, submission_id, body.categoryLabel, body.answers, body.questions
+            _store_analysis, submission_id, body.category, body.categoryLabel, body.label,
+            body.action, body.answers, body.questions
         )
 
     if body.categoryLabel:
