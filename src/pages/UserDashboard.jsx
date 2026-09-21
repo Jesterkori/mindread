@@ -181,7 +181,7 @@ export default function UserDashboard() {
 
                         {r.admin_action && (
                           <div>
-                            <p className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-1">Result</p>
+                            <p className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-1">Counselling Result</p>
                             <p className="text-sm text-white/80 leading-relaxed">{r.admin_action}</p>
                           </div>
                         )}
