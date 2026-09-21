@@ -407,7 +407,6 @@ class SubmitBody(BaseModel):
 
 class ReleaseBody(BaseModel):
     adminNotes: Optional[str] = None
-    aiAnalysis: Optional[str] = None
     action: Optional[str] = None
     adminAction: Optional[str] = None
 
@@ -583,7 +582,7 @@ def user_results(request: Request):
     user = get_current_user(request)
     with db() as cur:
         cur.execute(
-            'SELECT id, category, score, total, level, label, admin_action, ai_analysis, '
+            'SELECT id, category, score, total, level, label, admin_action, '
             'safety_flag, admin_notes, result_released, released_at, submitted_at, payment_confirmed '
             'FROM submissions WHERE user_id = %s '
             'ORDER BY submitted_at DESC',
@@ -826,9 +825,9 @@ def release_result(sub_id: int, body: ReleaseBody, request: Request):
     with db() as cur:
         cur.execute(
             'UPDATE submissions SET result_released = TRUE, admin_notes = %s, '
-            'ai_analysis = %s, admin_action = %s, released_at = NOW() '
+            'admin_action = %s, released_at = NOW() '
             'WHERE id = %s',
-            (body.adminNotes or None, body.aiAnalysis, body.adminAction or None, sub_id)
+            (body.adminNotes or None, body.adminAction or None, sub_id)
         )
     return {'ok': True}
 
@@ -838,9 +837,9 @@ def edit_result(sub_id: int, body: ReleaseBody, request: Request):
     get_admin(request)
     with db() as cur:
         cur.execute(
-            'UPDATE submissions SET admin_notes = %s, ai_analysis = %s, admin_action = %s '
+            'UPDATE submissions SET admin_notes = %s, admin_action = %s '
             'WHERE id = %s',
-            (body.adminNotes or None, body.aiAnalysis, body.adminAction or None, sub_id)
+            (body.adminNotes or None, body.adminAction or None, sub_id)
         )
     return {'ok': True}
 

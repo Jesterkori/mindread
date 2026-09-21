@@ -58,12 +58,12 @@ export default function UserDashboard() {
   }, [])
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={bgStyle}>
       <CircuitBackground opacity={0.05} />
 
       <Navbar />
 
-      <main className="relative z-10 max-w-3xl mx-auto px-4 pt-24 pb-12 space-y-6">
+      <main className="relative z-10 w-full max-w-3xl mx-auto px-4 pt-24 pb-12 space-y-6">
 
         {/* Welcome strip */}
         <div className="rounded-2xl p-6" style={glassCard}>
@@ -183,19 +183,6 @@ export default function UserDashboard() {
                           <div>
                             <p className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-1">Result</p>
                             <p className="text-sm text-white/80 leading-relaxed">{r.admin_action}</p>
-                          </div>
-                        )}
-
-                        {r.ai_analysis && (
-                          <div>
-                            <p className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-2">
-                              Personalised Assessment
-                            </p>
-                            <div className="space-y-3">
-                              {r.ai_analysis.split('\n\n').filter(Boolean).map((para) => (
-                                <p key={para.slice(0, 40)} className="text-sm text-white/70 leading-relaxed">{para}</p>
-                              ))}
-                            </div>
                           </div>
                         )}
 

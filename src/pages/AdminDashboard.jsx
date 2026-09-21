@@ -85,7 +85,7 @@ export default function AdminDashboard() {
   const [stats, setStats]               = useState(null)
   const [expanded, setExpanded]         = useState(null)
   const [notes, setNotes]               = useState({})
-  const [editedAnalysis, setEditedAnalysis]       = useState({})
+  const [copiedAnalysis, setCopiedAnalysis]       = useState(null)
   const [editedAdminAction, setEditedAdminAction] = useState({})
   const [declineReason, setDeclineReason]         = useState({})
   const [busy, setBusy]                 = useState({})
@@ -307,7 +307,6 @@ export default function AdminDashboard() {
       method: 'POST', headers,
       body: JSON.stringify({
         adminNotes:  notes[id] || '',
-        aiAnalysis:  editedAnalysis[id] ?? null,
         adminAction: editedAdminAction[id] ?? null,
       }),
     })
@@ -321,7 +320,6 @@ export default function AdminDashboard() {
       method: 'PUT', headers,
       body: JSON.stringify({
         adminNotes:  notes[id] ?? null,
-        aiAnalysis:  editedAnalysis[id] ?? null,
         adminAction: editedAdminAction[id] ?? null,
       }),
     })
@@ -612,7 +610,6 @@ export default function AdminDashboard() {
             onClick={() => {
               setExpanded(isOpen ? null : s.id)
               if (!isOpen) {
-                if (editedAnalysis[s.id]    === undefined) setEditedAnalysis((a) => ({ ...a, [s.id]: s.ai_analysis ?? '' }))
                 if (editedAdminAction[s.id] === undefined) setEditedAdminAction((a) => ({ ...a, [s.id]: s.admin_action ?? '' }))
                 if (notes[s.id]             === undefined) setNotes((n) => ({ ...n, [s.id]: s.admin_notes ?? '' }))
                 loadCategoryQs(s.category)
@@ -722,26 +719,41 @@ export default function AdminDashboard() {
             {/* AI Assessment */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">AI Assessment</p>
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">
+                  AI Assessment <span className="text-white/30 font-normal normal-case">(only you can see this — not shown to the user)</span>
+                </p>
                 {!s.ai_analysis && !s.result_released && (
                   <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24' }}>Still generating…</span>
                 )}
+                {s.ai_analysis && (
+                  <button type="button"
+                    onClick={() => {
+                      navigator.clipboard?.writeText(s.ai_analysis).then(() => {
+                        setCopiedAnalysis(s.id)
+                        setTimeout(() => setCopiedAnalysis((c) => (c === s.id ? null : c)), 1500)
+                      }).catch(() => {})
+                    }}
+                    className="text-xs px-2.5 py-1 rounded-lg transition-colors"
+                    style={{ background: 'rgba(255,255,255,0.08)', color: copiedAnalysis === s.id ? '#4ade80' : 'rgba(255,255,255,0.6)' }}>
+                    {copiedAnalysis === s.id ? 'Copied ✓' : 'Copy'}
+                  </button>
+                )}
               </div>
-              <GlassTextarea rows={6}
-                value={editedAnalysis[s.id] ?? s.ai_analysis ?? ''}
-                onChange={(e) => setEditedAnalysis((a) => ({ ...a, [s.id]: e.target.value }))}
-                placeholder="AI analysis will appear here once generated. You can also write or edit it manually."
-                disabled={s.result_released && editingReleased !== s.id}
-                style={{ opacity: s.result_released && editingReleased !== s.id ? 0.5 : 1 }} />
+              <GlassTextarea rows={6} readOnly
+                value={s.ai_analysis ?? ''}
+                placeholder="AI analysis will appear here once generated."
+                style={{ opacity: 0.85 }} />
             </div>
 
             {/* Release / Edit actions */}
             {!s.result_released ? (
               <div className="space-y-2 pt-1" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">Personal note to user (optional)</p>
-                <GlassTextarea rows={2} value={notes[s.id] || ''}
+                <p className="text-xs font-semibold text-white/50 uppercase tracking-wide">
+                  Personal note to user <span className="text-white/30 font-normal normal-case">(shown to user — paste the AI assessment here if you want to share it)</span>
+                </p>
+                <GlassTextarea rows={5} value={notes[s.id] || ''}
                   onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))}
-                  placeholder="e.g. We recommend speaking with a counsellor…" style={{ resize: 'none' }} />
+                  placeholder="e.g. We recommend speaking with a counsellor…" />
                 <button onClick={() => releaseResult(s.id)} disabled={busy[`release-${s.id}`]}
                   className="w-full py-2.5 rounded-xl font-bold text-sm text-white transition-all hover:brightness-110 disabled:opacity-50"
                   style={{ background: 'linear-gradient(135deg,#22c55e,#0d9488)' }}>
@@ -758,8 +770,8 @@ export default function AdminDashboard() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-xs text-white/45">Personal note to user</p>
-                  <GlassTextarea rows={2} value={notes[s.id] || ''}
-                    onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))} style={{ resize: 'none' }} />
+                  <GlassTextarea rows={5} value={notes[s.id] || ''}
+                    onChange={(e) => setNotes((n) => ({ ...n, [s.id]: e.target.value }))} />
                 </div>
                 <div className="flex gap-2">
                   <button onClick={() => editResult(s.id)} disabled={busy[`edit-${s.id}`]}
@@ -795,7 +807,7 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={bgStyle}>
       <CircuitBackground opacity={0.05} />
 
       <Navbar />
@@ -818,7 +830,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      <main className="relative z-10 max-w-5xl mx-auto px-4 pt-24 pb-12 space-y-6">
+      <main className="relative z-10 w-full max-w-5xl mx-auto px-4 pt-24 pb-12 space-y-6">
 
         {/* Stats */}
         {stats && (

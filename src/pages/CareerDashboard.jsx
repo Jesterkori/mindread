@@ -243,14 +243,6 @@ export default function CareerDashboard() {
           </div>
         )}
 
-        {/* Counsellor's analysis */}
-        {latest.ai_analysis && (
-          <div className="rounded-2xl p-6" style={{ background: 'rgba(251,191,36,0.07)', border: '1px solid rgba(251,191,36,0.2)' }}>
-            <p className="text-xs font-semibold uppercase tracking-wider mb-3 text-amber-300">Counsellor's Career Guidance</p>
-            <p className="text-white/75 text-sm leading-relaxed whitespace-pre-line">{latest.ai_analysis}</p>
-          </div>
-        )}
-
         {/* Admin notes */}
         {latest.admin_notes && (
           <div className="rounded-2xl p-6" style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.2)' }}>

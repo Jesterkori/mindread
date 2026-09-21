@@ -217,10 +217,10 @@ export default function Questionnaire() {
   // ── Section picker screen ─────────────────────────────────────────────────
   if (needsSection && !sectionConfirmed && availSections?.length > 0) {
     return (
-      <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
+      <div className="min-h-screen flex flex-col relative overflow-hidden" style={bgStyle}>
         <CircuitBackground opacity={0.05} />
         <Navbar />
-        <div className="relative z-10 max-w-lg mx-auto px-4 pt-28 pb-12">
+        <div className="relative z-10 w-full max-w-lg mx-auto px-4 pt-28 pb-12">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4"
               style={{ background: 'rgba(74,222,128,0.15)', border: '1.5px solid rgba(74,222,128,0.3)' }}>
@@ -334,12 +334,12 @@ export default function Questionnaire() {
   const currentAnswer = answers[question.id]
 
   return (
-    <div className="min-h-screen relative overflow-hidden" style={bgStyle}>
+    <div className="min-h-screen flex flex-col relative overflow-hidden" style={bgStyle}>
       <CircuitBackground opacity={0.05} />
 
       <Navbar />
 
-      <div className="relative z-10 max-w-2xl mx-auto px-4 pt-24 pb-12">
+      <div className="relative z-10 w-full max-w-2xl mx-auto px-4 pt-24 pb-12">
         {/* Section / category badge */}
         <div className="flex items-center gap-2 mb-4 flex-wrap">
           <span className="text-xs font-semibold px-3 py-1 rounded-full"
