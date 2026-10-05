@@ -149,13 +149,12 @@ export default function Questionnaire() {
   const [submitAttempted, setSubmitAttempted] = useState(false)
   const [submitting, setSubmitting]           = useState(false)
 
-  // Kannada toggle — career-fit (10th/12th counselling) questions only.
+  // Kannada toggle — available on every category's question screen.
   // Translations live on the question objects themselves (textKn/partKn),
-  // seeded only for the default questions in src/data/questions.js; if an
-  // admin has replaced a category's questions via the DB, those rows won't
-  // have a textKn and we silently fall back to English for that question.
+  // seeded for every default question in src/data/questions.js; if an admin
+  // has replaced a category's questions via the DB, those rows won't have a
+  // textKn and we silently fall back to English for that question.
   const [language, setLanguage] = useState('en')
-  const isCareerFit = CAREER_FIT_CATEGORIES.includes(categoryId)
 
   // Section selection (for institution users)
   const [section, setSection]               = useState('')
@@ -340,7 +339,7 @@ export default function Questionnaire() {
   }
 
   const currentAnswer = answers[question.id]
-  const showKn      = isCareerFit && language === 'kn'
+  const showKn      = language === 'kn'
   const partText    = showKn ? (question.partKn || question.part) : question.part
   const questionText = showKn ? (question.textKn || question.text) : question.text
   const answerOptions = showKn ? ANSWER_OPTIONS_KN : ANSWER_OPTIONS
@@ -364,16 +363,14 @@ export default function Questionnaire() {
               {section}
             </span>
           )}
-          {isCareerFit && (
-            <button
-              type="button"
-              onClick={() => setLanguage((l) => (l === 'en' ? 'kn' : 'en'))}
-              className="ml-auto text-xs font-semibold px-3 py-1 rounded-full transition-colors"
-              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
-            >
-              {language === 'en' ? 'ಕನ್ನಡ' : 'English'}
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setLanguage((l) => (l === 'en' ? 'kn' : 'en'))}
+            className="ml-auto text-xs font-semibold px-3 py-1 rounded-full transition-colors"
+            style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
+          >
+            {language === 'en' ? 'ಕನ್ನಡ' : 'English'}
+          </button>
         </div>
 
         {/* Progress */}

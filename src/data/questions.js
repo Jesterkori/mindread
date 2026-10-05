@@ -107,7 +107,7 @@ const studentQuestions = [
   {
     id: 1,
     part: 'Part 1: Mood and Emotions',
-    text: 'How often do you feel sad, empty, or feel like crying for no clear reason?',
+    text: 'How often do you feel sad, empty, or feel like crying for no clear reason?', textKn: 'ಯಾವುದೇ ಸ್ಪಷ್ಟ ಕಾರಣವಿಲ್ಲದೆ ದುಃಖ, ಬರಿದಾದ ಭಾವನೆ ಅಥವಾ ಅಳಬೇಕೆನಿಸುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನೆಗಳು',
     indicator: 'Frequent sadness can be a sign of low mood or depression.',
     reversed: false,
     safetyQuestion: false,
@@ -115,7 +115,7 @@ const studentQuestions = [
   {
     id: 2,
     part: 'Part 1: Mood and Emotions',
-    text: 'How often do you feel easily annoyed, frustrated, or angry at friends or family over small things?',
+    text: 'How often do you feel easily annoyed, frustrated, or angry at friends or family over small things?', textKn: 'ಸಣ್ಣ ವಿಷಯಗಳಿಗೆ ಸ್ನೇಹಿತರು ಅಥವಾ ಕುಟುಂಬದವರ ಮೇಲೆ ಸುಲಭವಾಗಿ ಕಿರಿಕಿರಿ, ಹತಾಶೆ ಅಥವಾ ಕೋಪ ಬರುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನೆಗಳು',
     indicator: 'In teens and pre-teens, depression and anxiety often show up as irritability rather than just sadness.',
     reversed: false,
     safetyQuestion: false,
@@ -123,7 +123,7 @@ const studentQuestions = [
   {
     id: 3,
     part: 'Part 1: Mood and Emotions',
-    text: 'How often do you feel bored or completely uninterested in hobbies or activities you usually love?',
+    text: 'How often do you feel bored or completely uninterested in hobbies or activities you usually love?', textKn: 'ನಿಮಗೆ ಸಾಮಾನ್ಯವಾಗಿ ಇಷ್ಟವಾದ ಹವ್ಯಾಸಗಳು ಅಥವಾ ಚಟುವಟಿಕೆಗಳಲ್ಲಿ ಬೇಸರ ಅಥವಾ ಸಂಪೂರ್ಣ ಆಸಕ್ತಿ ಇಲ್ಲದಿರುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನೆಗಳು',
     indicator: 'A loss of interest (anhedonia) is a strong indicator of emotional fatigue or depression.',
     reversed: false,
     safetyQuestion: false,
@@ -131,7 +131,7 @@ const studentQuestions = [
   {
     id: 4,
     part: 'Part 1: Mood and Emotions',
-    text: 'How often do you feel like your emotions are like a rollercoaster and completely out of your control?',
+    text: 'How often do you feel like your emotions are like a rollercoaster and completely out of your control?', textKn: 'ನಿಮ್ಮ ಭಾವನೆಗಳು ರೋಲರ್ ಕೋಸ್ಟರ್‌ನಂತೆ ಮತ್ತು ಸಂಪೂರ್ಣವಾಗಿ ನಿಮ್ಮ ನಿಯಂತ್ರಣದಿಂದ ಹೊರಗಿದೆ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನೆಗಳು',
     indicator: 'Difficulty with emotional regulation.',
     reversed: false,
     safetyQuestion: false,
@@ -139,7 +139,7 @@ const studentQuestions = [
   {
     id: 5,
     part: 'Part 1: Mood and Emotions',
-    text: 'How often do you feel hopeful and positive about your future?',
+    text: 'How often do you feel hopeful and positive about your future?', textKn: 'ನಿಮ್ಮ ಭವಿಷ್ಯದ ಬಗ್ಗೆ ಭರವಸೆ ಮತ್ತು ಸಕಾರಾತ್ಮಕತೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನೆಗಳು',
     indicator: 'A lack of hope can indicate feelings of despair or depressive thinking. (For this question, "Rarely/Never" is the concern.)',
     reversed: true,
     safetyQuestion: false,
@@ -149,7 +149,7 @@ const studentQuestions = [
   {
     id: 6,
     part: 'Part 2: Anxiety and Stress',
-    text: 'How often do you worry about things going wrong, even when things are currently fine?',
+    text: 'How often do you worry about things going wrong, even when things are currently fine?', textKn: 'ಈಗ ಎಲ್ಲವೂ ಸರಿಯಾಗಿದ್ದರೂ, ಏನಾದರೂ ತಪ್ಪಾಗಬಹುದು ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಚಿಂತಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಆತಂಕ ಮತ್ತು ಒತ್ತಡ',
     indicator: 'Measures generalized anxiety and overthinking.',
     reversed: false,
     safetyQuestion: false,
@@ -157,7 +157,7 @@ const studentQuestions = [
   {
     id: 7,
     part: 'Part 2: Anxiety and Stress',
-    text: 'How often do you feel a sudden, racing heartbeat or panic when facing a normal daily task (like a test or talking in class)?',
+    text: 'How often do you feel a sudden, racing heartbeat or panic when facing a normal daily task (like a test or talking in class)?', textKn: 'ಸಾಮಾನ್ಯ ದೈನಂದಿನ ಕೆಲಸವನ್ನು (ಪರೀಕ್ಷೆ ಅಥವಾ ತರಗತಿಯಲ್ಲಿ ಮಾತನಾಡುವುದು) ಎದುರಿಸುವಾಗ ಹಠಾತ್ ಹೃದಯಬಡಿತ ಹೆಚ್ಚಾಗುವುದು ಅಥವಾ ಪ್ಯಾನಿಕ್ ಅನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಆತಂಕ ಮತ್ತು ಒತ್ತಡ',
     indicator: 'Physical symptoms of acute anxiety or panic.',
     reversed: false,
     safetyQuestion: false,
@@ -165,7 +165,7 @@ const studentQuestions = [
   {
     id: 8,
     part: 'Part 2: Anxiety and Stress',
-    text: 'How often do you feel like everyday life or school expectations are just "too much" to handle?',
+    text: 'How often do you feel like everyday life or school expectations are just "too much" to handle?', textKn: 'ದೈನಂದಿನ ಜೀವನ ಅಥವಾ ಶಾಲೆಯ ನಿರೀಕ್ಷೆಗಳು ನಿಭಾಯಿಸಲು "ತುಂಬಾ ಹೆಚ್ಚು" ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಆತಂಕ ಮತ್ತು ಒತ್ತಡ',
     indicator: 'General feelings of being overwhelmed or burnt out.',
     reversed: false,
     safetyQuestion: false,
@@ -173,7 +173,7 @@ const studentQuestions = [
   {
     id: 9,
     part: 'Part 2: Anxiety and Stress',
-    text: 'How often do you overthink what other people think of you?',
+    text: 'How often do you overthink what other people think of you?', textKn: 'ಇತರ ಜನರು ನಿಮ್ಮ ಬಗ್ಗೆ ಏನು ಯೋಚಿಸುತ್ತಾರೆ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅತಿಯಾಗಿ ಯೋಚಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಆತಂಕ ಮತ್ತು ಒತ್ತಡ',
     indicator: 'Measures social anxiety and peer-related stress.',
     reversed: false,
     safetyQuestion: false,
@@ -181,7 +181,7 @@ const studentQuestions = [
   {
     id: 10,
     part: 'Part 2: Anxiety and Stress',
-    text: 'When you feel overwhelmed, how often do you feel like you have to deal with it completely alone?',
+    text: 'When you feel overwhelmed, how often do you feel like you have to deal with it completely alone?', textKn: 'ನೀವು ಅತಿಯಾದ ಒತ್ತಡ ಅನುಭವಿಸಿದಾಗ, ಅದನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಒಬ್ಬಂಟಿಯಾಗಿ ನಿಭಾಯಿಸಬೇಕು ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಆತಂಕ ಮತ್ತು ಒತ್ತಡ',
     indicator: "Evaluates the student's perceived support system and isolation.",
     reversed: false,
     safetyQuestion: false,
@@ -191,7 +191,7 @@ const studentQuestions = [
   {
     id: 11,
     part: 'Part 3: Physical Well-being and Habits',
-    text: 'How often do you have trouble falling asleep, staying asleep, or waking up feeling exhausted?',
+    text: 'How often do you have trouble falling asleep, staying asleep, or waking up feeling exhausted?', textKn: 'ನಿದ್ರೆ ಬರಲು ಕಷ್ಟವಾಗುವುದು, ನಿದ್ರೆ ಮುಂದುವರಿಸಲು ಕಷ್ಟವಾಗುವುದು ಅಥವಾ ದಣಿದ ಭಾವನೆಯಿಂದ ಎಚ್ಚರಗೊಳ್ಳುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ದೈಹಿಕ ಆರೋಗ್ಯ ಮತ್ತು ಅಭ್ಯಾಸಗಳು',
     indicator: 'Sleep disruption is one of the most common early indicators of mental health struggles.',
     reversed: false,
     safetyQuestion: false,
@@ -199,7 +199,7 @@ const studentQuestions = [
   {
     id: 12,
     part: 'Part 3: Physical Well-being and Habits',
-    text: 'How often do you feel too physically tired or drained to get out of bed or do basic chores?',
+    text: 'How often do you feel too physically tired or drained to get out of bed or do basic chores?', textKn: 'ಹಾಸಿಗೆಯಿಂದ ಏಳಲು ಅಥವಾ ಮೂಲಭೂತ ಕೆಲಸಗಳನ್ನು ಮಾಡಲು ಸಾಧ್ಯವಾಗದಷ್ಟು ದೈಹಿಕವಾಗಿ ದಣಿದ ಅಥವಾ ಬಸವಳಿದ ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ದೈಹಿಕ ಆರೋಗ್ಯ ಮತ್ತು ಅಭ್ಯಾಸಗಳು',
     indicator: 'Measures energy levels, which can be depleted by stress or depression.',
     reversed: false,
     safetyQuestion: false,
@@ -207,7 +207,7 @@ const studentQuestions = [
   {
     id: 13,
     part: 'Part 3: Physical Well-being and Habits',
-    text: 'How often do you get unexplained stomachaches, headaches, or muscle tension when you are stressed?',
+    text: 'How often do you get unexplained stomachaches, headaches, or muscle tension when you are stressed?', textKn: 'ನೀವು ಒತ್ತಡದಲ್ಲಿದ್ದಾಗ ವಿವರಿಸಲಾಗದ ಹೊಟ್ಟೆನೋವು, ತಲೆನೋವು ಅಥವಾ ಸ್ನಾಯು ಬಿಗಿತವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ದೈಹಿಕ ಆರೋಗ್ಯ ಮತ್ತು ಅಭ್ಯಾಸಗಳು',
     indicator: 'Physical manifestation of anxiety (somatic symptoms).',
     reversed: false,
     safetyQuestion: false,
@@ -215,7 +215,7 @@ const studentQuestions = [
   {
     id: 14,
     part: 'Part 3: Physical Well-being and Habits',
-    text: 'How often do you notice sudden changes in your appetite (eating way more than usual or totally losing your appetite)?',
+    text: 'How often do you notice sudden changes in your appetite (eating way more than usual or totally losing your appetite)?', textKn: 'ನಿಮ್ಮ ಹಸಿವಿನಲ್ಲಿ ಹಠಾತ್ ಬದಲಾವಣೆಗಳನ್ನು (ಸಾಮಾನ್ಯಕ್ಕಿಂತ ಹೆಚ್ಚು ತಿನ್ನುವುದು ಅಥವಾ ಹಸಿವು ಸಂಪೂರ್ಣವಾಗಿ ಕಳೆದುಕೊಳ್ಳುವುದು) ನೀವು ಎಷ್ಟು ಬಾರಿ ಗಮನಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ದೈಹಿಕ ಆರೋಗ್ಯ ಮತ್ತು ಅಭ್ಯಾಸಗಳು',
     indicator: 'Changes in eating habits are a core indicator of emotional distress.',
     reversed: false,
     safetyQuestion: false,
@@ -223,7 +223,7 @@ const studentQuestions = [
   {
     id: 15,
     part: 'Part 3: Physical Well-being and Habits',
-    text: 'How often do you feel so frustrated that you have the urge to break things or hurt yourself?',
+    text: 'How often do you feel so frustrated that you have the urge to break things or hurt yourself?', textKn: 'ವಸ್ತುಗಳನ್ನು ಒಡೆಯಬೇಕು ಅಥವಾ ನಿಮಗೆ ನೀವೇ ನೋವು ಮಾಡಿಕೊಳ್ಳಬೇಕು ಎನಿಸುವಷ್ಟು ಹತಾಶೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ದೈಹಿಕ ಆರೋಗ್ಯ ಮತ್ತು ಅಭ್ಯಾಸಗಳು',
     indicator: 'A direct safety indicator — if you answered C or D, please speak with a trusted adult or counsellor immediately.',
     reversed: false,
     safetyQuestion: true,
@@ -233,7 +233,7 @@ const studentQuestions = [
   {
     id: 16,
     part: 'Part 4: Social and Academic Life',
-    text: 'How often do you find it difficult to concentrate, focus, or remember things for your schoolwork?',
+    text: 'How often do you find it difficult to concentrate, focus, or remember things for your schoolwork?', textKn: 'ನಿಮ್ಮ ಶಾಲಾ ಕೆಲಸಕ್ಕಾಗಿ ಏಕಾಗ್ರತೆ, ಗಮನ ಹರಿಸುವುದು ಅಥವಾ ವಿಷಯಗಳನ್ನು ನೆನಪಿಟ್ಟುಕೊಳ್ಳುವುದು ಕಷ್ಟಕರವೆಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಕಂಡುಕೊಳ್ಳುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಾಮಾಜಿಕ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ಜೀವನ',
     indicator: 'Cognitive impact of stress, anxiety, or attention issues.',
     reversed: false,
     safetyQuestion: false,
@@ -241,7 +241,7 @@ const studentQuestions = [
   {
     id: 17,
     part: 'Part 4: Social and Academic Life',
-    text: 'How often do you want to avoid or skip school because you feel too anxious, sad, or overwhelmed?',
+    text: 'How often do you want to avoid or skip school because you feel too anxious, sad, or overwhelmed?', textKn: 'ತುಂಬಾ ಆತಂಕ, ದುಃಖ ಅಥವಾ ಒತ್ತಡ ಅನುಭವಿಸುವ ಕಾರಣ ಶಾಲೆಯನ್ನು ತಪ್ಪಿಸಲು ಅಥವಾ ಬಿಡಲು ನೀವು ಎಷ್ಟು ಬಾರಿ ಬಯಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಾಮಾಜಿಕ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ಜೀವನ',
     indicator: 'School refusal or avoidance behaviour.',
     reversed: false,
     safetyQuestion: false,
@@ -249,7 +249,7 @@ const studentQuestions = [
   {
     id: 18,
     part: 'Part 4: Social and Academic Life',
-    text: 'How often do you prefer to isolate yourself in your room rather than hanging out with friends or family?',
+    text: 'How often do you prefer to isolate yourself in your room rather than hanging out with friends or family?', textKn: 'ಸ್ನೇಹಿತರು ಅಥವಾ ಕುಟುಂಬದೊಂದಿಗೆ ಸಮಯ ಕಳೆಯುವ ಬದಲು ನಿಮ್ಮ ಕೋಣೆಯಲ್ಲಿ ಒಬ್ಬಂಟಿಯಾಗಿರಲು ನೀವು ಎಷ್ಟು ಬಾರಿ ಬಯಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಾಮಾಜಿಕ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ಜೀವನ',
     indicator: 'Social withdrawal, a common coping mechanism for depression.',
     reversed: false,
     safetyQuestion: false,
@@ -257,7 +257,7 @@ const studentQuestions = [
   {
     id: 19,
     part: 'Part 4: Social and Academic Life',
-    text: 'How often do you feel misunderstood, judged, or left out by people your own age?',
+    text: 'How often do you feel misunderstood, judged, or left out by people your own age?', textKn: 'ನಿಮ್ಮ ವಯಸ್ಸಿನ ಜನರಿಂದ ತಪ್ಪಾಗಿ ಅರ್ಥೈಸಿಕೊಂಡಂತೆ, ನಿರ್ಣಯಿಸಲ್ಪಟ್ಟಂತೆ ಅಥವಾ ಹೊರಗಿಡಲ್ಪಟ್ಟಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಾಮಾಜಿಕ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ಜೀವನ',
     indicator: 'Measures social belonging and self-esteem.',
     reversed: false,
     safetyQuestion: false,
@@ -265,7 +265,7 @@ const studentQuestions = [
   {
     id: 20,
     part: 'Part 4: Social and Academic Life',
-    text: 'How often do you feel like you are not "good enough" or compare yourself negatively to others?',
+    text: 'How often do you feel like you are not "good enough" or compare yourself negatively to others?', textKn: 'ನೀವು "ಸಾಕಷ್ಟು ಒಳ್ಳೆಯವರಲ್ಲ" ಎಂದು ಅಥವಾ ಇತರರೊಂದಿಗೆ ನಿಮ್ಮನ್ನು ನಕಾರಾತ್ಮಕವಾಗಿ ಹೋಲಿಸಿಕೊಳ್ಳುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಾಮಾಜಿಕ ಮತ್ತು ಶೈಕ್ಷಣಿಕ ಜೀವನ',
     indicator: 'Assesses core self-esteem and self-worth.',
     reversed: false,
     safetyQuestion: false,
@@ -278,7 +278,7 @@ const youngAdultQuestions = [
   {
     id: 1,
     part: 'Part 1: Mood and Emotional Regulation',
-    text: 'How often do you feel a lingering sense of sadness, emptiness, or feeling "flat"?',
+    text: 'How often do you feel a lingering sense of sadness, emptiness, or feeling "flat"?', textKn: 'ನಿರಂತರವಾದ ದುಃಖ, ಬರಿದಾದ ಭಾವನೆ ಅಥವಾ "ಶೂನ್ಯ" ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನಾತ್ಮಕ ನಿಯಂತ್ರಣ',
     indicator: 'Pervasive low mood is a primary indicator of depression.',
     reversed: false,
     safetyQuestion: false,
@@ -286,7 +286,7 @@ const youngAdultQuestions = [
   {
     id: 2,
     part: 'Part 1: Mood and Emotional Regulation',
-    text: 'How often do you feel completely uninterested in hobbies, social events, or passions that you used to enjoy?',
+    text: 'How often do you feel completely uninterested in hobbies, social events, or passions that you used to enjoy?', textKn: 'ನೀವು ಹಿಂದೆ ಆನಂದಿಸುತ್ತಿದ್ದ ಹವ್ಯಾಸಗಳು, ಸಾಮಾಜಿಕ ಕಾರ್ಯಕ್ರಮಗಳು ಅಥವಾ ಆಸಕ್ತಿಗಳಲ್ಲಿ ಸಂಪೂರ್ಣ ಆಸಕ್ತಿ ಇಲ್ಲದಿರುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನಾತ್ಮಕ ನಿಯಂತ್ರಣ',
     indicator: 'Anhedonia (loss of pleasure), a core symptom of depressive disorders.',
     reversed: false,
     safetyQuestion: false,
@@ -294,7 +294,7 @@ const youngAdultQuestions = [
   {
     id: 3,
     part: 'Part 1: Mood and Emotional Regulation',
-    text: 'How often do you feel emotionally numb or disconnected from yourself and your surroundings?',
+    text: 'How often do you feel emotionally numb or disconnected from yourself and your surroundings?', textKn: 'ನಿಮ್ಮಿಂದ ಮತ್ತು ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನಿಂದ ಭಾವನಾತ್ಮಕವಾಗಿ ನಿಶ್ಚೇಷ್ಟಿತ ಅಥವಾ ಸಂಪರ್ಕ ಕಡಿದುಕೊಂಡಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನಾತ್ಮಕ ನಿಯಂತ್ರಣ',
     indicator: 'Emotional blunting or dissociation, often linked to severe stress, trauma, or burnout.',
     reversed: false,
     safetyQuestion: false,
@@ -302,7 +302,7 @@ const youngAdultQuestions = [
   {
     id: 4,
     part: 'Part 1: Mood and Emotional Regulation',
-    text: 'How often do you experience sudden outbursts of anger or severe irritability over minor inconveniences?',
+    text: 'How often do you experience sudden outbursts of anger or severe irritability over minor inconveniences?', textKn: 'ಸಣ್ಣ ಅನಾನುಕೂಲಗಳಿಗೆ ಹಠಾತ್ ಕೋಪದ ಸ್ಫೋಟ ಅಥವಾ ತೀವ್ರ ಕಿರಿಕಿರಿಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನಾತ್ಮಕ ನಿಯಂತ್ರಣ',
     indicator: 'Emotional dysregulation; depression and anxiety in young adults often manifest as anger rather than just sadness.',
     reversed: false,
     safetyQuestion: false,
@@ -310,7 +310,7 @@ const youngAdultQuestions = [
   {
     id: 5,
     part: 'Part 1: Mood and Emotional Regulation',
-    text: 'How often do you feel hopeless or deeply cynical about your future?',
+    text: 'How often do you feel hopeless or deeply cynical about your future?', textKn: 'ನಿಮ್ಮ ಭವಿಷ್ಯದ ಬಗ್ಗೆ ನಿರಾಶೆ ಅಥವಾ ಆಳವಾದ ಸಂಶಯವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ ಮತ್ತು ಭಾವನಾತ್ಮಕ ನಿಯಂತ್ರಣ',
     indicator: 'A lack of hope can indicate depressive thinking or existential distress.',
     reversed: false,
     safetyQuestion: false,
@@ -320,7 +320,7 @@ const youngAdultQuestions = [
   {
     id: 6,
     part: 'Part 2: Academic, Career, and Performance Stress',
-    text: 'How often do you feel like a fraud who doesn\'t belong in your academic program or job, and worry you\'ll be "found out"?',
+    text: 'How often do you feel like a fraud who doesn\'t belong in your academic program or job, and worry you\'ll be "found out"?', textKn: 'ನಿಮ್ಮ ಶೈಕ್ಷಣಿಕ ಕಾರ್ಯಕ್ರಮ ಅಥವಾ ಕೆಲಸಕ್ಕೆ ಸೇರಿದವರಲ್ಲ ಎಂಬ ಮೋಸಗಾರನಂತೆ ಮತ್ತು "ಬಯಲಾಗುತ್ತೇನೆ" ಎಂಬ ಚಿಂತೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಶೈಕ್ಷಣಿಕ, ವೃತ್ತಿಪರ ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆಯ ಒತ್ತಡ',
     indicator: 'Imposter syndrome, which severely impacts self-esteem and increases baseline anxiety.',
     reversed: false,
     safetyQuestion: false,
@@ -328,7 +328,7 @@ const youngAdultQuestions = [
   {
     id: 7,
     part: 'Part 2: Academic, Career, and Performance Stress',
-    text: 'How often do you feel completely paralyzed by the amount of work you have to do, leading you to avoid it entirely?',
+    text: 'How often do you feel completely paralyzed by the amount of work you have to do, leading you to avoid it entirely?', textKn: 'ಮಾಡಬೇಕಾದ ಕೆಲಸದ ಪ್ರಮಾಣದಿಂದ ಸಂಪೂರ್ಣವಾಗಿ ಸ್ತಬ್ಧರಾಗಿ, ಅದನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ತಪ್ಪಿಸುವಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಶೈಕ್ಷಣಿಕ, ವೃತ್ತಿಪರ ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆಯ ಒತ್ತಡ',
     indicator: 'Avoidance behavior and executive dysfunction, often caused by overwhelming anxiety or ADHD.',
     reversed: false,
     safetyQuestion: false,
@@ -336,7 +336,7 @@ const youngAdultQuestions = [
   {
     id: 8,
     part: 'Part 2: Academic, Career, and Performance Stress',
-    text: 'How often do you feel completely drained, cynical, and exhausted regarding your studies or work?',
+    text: 'How often do you feel completely drained, cynical, and exhausted regarding your studies or work?', textKn: 'ನಿಮ್ಮ ಅಧ್ಯಯನ ಅಥವಾ ಕೆಲಸದ ಬಗ್ಗೆ ಸಂಪೂರ್ಣವಾಗಿ ಬಸವಳಿದ, ಸಂಶಯಾಸ್ಪದ ಮತ್ತು ದಣಿದ ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಶೈಕ್ಷಣಿಕ, ವೃತ್ತಿಪರ ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆಯ ಒತ್ತಡ',
     indicator: 'Academic or occupational burnout.',
     reversed: false,
     safetyQuestion: false,
@@ -344,7 +344,7 @@ const youngAdultQuestions = [
   {
     id: 9,
     part: 'Part 2: Academic, Career, and Performance Stress',
-    text: 'How often do you experience a racing mind that prevents you from relaxing, even when you have free time?',
+    text: 'How often do you experience a racing mind that prevents you from relaxing, even when you have free time?', textKn: 'ನಿಮಗೆ ಬಿಡುವಿನ ಸಮಯವಿದ್ದರೂ, ವಿಶ್ರಾಂತಿ ಪಡೆಯಲು ಬಿಡದ ಓಡುವ ಮನಸ್ಸನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಶೈಕ್ಷಣಿಕ, ವೃತ್ತಿಪರ ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆಯ ಒತ್ತಡ',
     indicator: 'Generalized anxiety and an inability to down-regulate the nervous system.',
     reversed: false,
     safetyQuestion: false,
@@ -352,7 +352,7 @@ const youngAdultQuestions = [
   {
     id: 10,
     part: 'Part 2: Academic, Career, and Performance Stress',
-    text: 'How often do you have sudden episodes of intense physical panic (racing heart, shortness of breath, dizziness) in non-dangerous situations?',
+    text: 'How often do you have sudden episodes of intense physical panic (racing heart, shortness of breath, dizziness) in non-dangerous situations?', textKn: 'ಅಪಾಯಕಾರಿಯಲ್ಲದ ಸಂದರ್ಭಗಳಲ್ಲಿ ತೀವ್ರ ದೈಹಿಕ ಪ್ಯಾನಿಕ್‌ನ (ಹೃದಯಬಡಿತ ಹೆಚ್ಚಾಗುವುದು, ಉಸಿರಾಟದ ತೊಂದರೆ, ತಲೆಸುತ್ತು) ಹಠಾತ್ ಸಂಚಿಕೆಗಳನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಶೈಕ್ಷಣಿಕ, ವೃತ್ತಿಪರ ಮತ್ತು ಕಾರ್ಯಕ್ಷಮತೆಯ ಒತ್ತಡ',
     indicator: 'Panic attacks or acute panic disorder.',
     reversed: false,
     safetyQuestion: false,
@@ -362,7 +362,7 @@ const youngAdultQuestions = [
   {
     id: 11,
     part: 'Part 3: Social Dynamics and Interpersonal Health',
-    text: 'How often do you intentionally isolate yourself from friends or roommates because interacting feels too exhausting?',
+    text: 'How often do you intentionally isolate yourself from friends or roommates because interacting feels too exhausting?', textKn: 'ಸಂವಹನ ಮಾಡುವುದು ತುಂಬಾ ದಣಿವಾಗಿ ಅನಿಸುವ ಕಾರಣ ಸ್ನೇಹಿತರು ಅಥವಾ ರೂಮ್‌ಮೇಟ್‌ಗಳಿಂದ ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ನಿಮ್ಮನ್ನು ಪ್ರತ್ಯೇಕಿಸಿಕೊಳ್ಳುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಮಾಡುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಸಾಮಾಜಿಕ ಸಂಬಂಧಗಳು ಮತ್ತು ಪರಸ್ಪರ ಆರೋಗ್ಯ',
     indicator: 'Social withdrawal, a common coping mechanism for depression and sensory overload.',
     reversed: false,
     safetyQuestion: false,
@@ -370,7 +370,7 @@ const youngAdultQuestions = [
   {
     id: 12,
     part: 'Part 3: Social Dynamics and Interpersonal Health',
-    text: 'How often do you excessively worry about being judged, criticized, or rejected by your peers?',
+    text: 'How often do you excessively worry about being judged, criticized, or rejected by your peers?', textKn: 'ನಿಮ್ಮ ಗೆಳೆಯರಿಂದ ನಿರ್ಣಯಿಸಲ್ಪಡುವುದು, ಟೀಕಿಸಲ್ಪಡುವುದು ಅಥವಾ ತಿರಸ್ಕರಿಸಲ್ಪಡುವುದರ ಬಗ್ಗೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಅತಿಯಾಗಿ ಚಿಂತಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಸಾಮಾಜಿಕ ಸಂಬಂಧಗಳು ಮತ್ತು ಪರಸ್ಪರ ಆರೋಗ್ಯ',
     indicator: 'Social anxiety and fear of negative evaluation.',
     reversed: false,
     safetyQuestion: false,
@@ -378,7 +378,7 @@ const youngAdultQuestions = [
   {
     id: 13,
     part: 'Part 3: Social Dynamics and Interpersonal Health',
-    text: 'How often do you look at social media and feel intense inadequacy, jealousy, or distress about where you are in life compared to others?',
+    text: 'How often do you look at social media and feel intense inadequacy, jealousy, or distress about where you are in life compared to others?', textKn: 'ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮವನ್ನು ನೋಡಿ ಇತರರಿಗೆ ಹೋಲಿಸಿದರೆ ನಿಮ್ಮ ಜೀವನದ ಸ್ಥಿತಿಯ ಬಗ್ಗೆ ತೀವ್ರ ಕೊರತೆ, ಅಸೂಯೆ ಅಥವಾ ಸಂಕಟವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಸಾಮಾಜಿಕ ಸಂಬಂಧಗಳು ಮತ್ತು ಪರಸ್ಪರ ಆರೋಗ್ಯ',
     indicator: 'The "comparison trap," which heavily degrades self-worth in young adults.',
     reversed: false,
     safetyQuestion: false,
@@ -386,7 +386,7 @@ const youngAdultQuestions = [
   {
     id: 14,
     part: 'Part 3: Social Dynamics and Interpersonal Health',
-    text: 'When you are struggling, how often do you feel like you have to hide it because no one would understand or care?',
+    text: 'When you are struggling, how often do you feel like you have to hide it because no one would understand or care?', textKn: 'ನೀವು ಕಷ್ಟದಲ್ಲಿದ್ದಾಗ, ಯಾರೂ ಅರ್ಥಮಾಡಿಕೊಳ್ಳುವುದಿಲ್ಲ ಅಥವಾ ಕಾಳಜಿ ವಹಿಸುವುದಿಲ್ಲ ಎಂಬ ಕಾರಣಕ್ಕೆ ಅದನ್ನು ಮುಚ್ಚಿಡಬೇಕು ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಸಾಮಾಜಿಕ ಸಂಬಂಧಗಳು ಮತ್ತು ಪರಸ್ಪರ ಆರೋಗ್ಯ',
     indicator: 'Perceived isolation and a lack of a safe support system.',
     reversed: false,
     safetyQuestion: false,
@@ -396,7 +396,7 @@ const youngAdultQuestions = [
   {
     id: 15,
     part: 'Part 4: Physical Symptoms and Coping Mechanisms',
-    text: 'How often do you struggle with sleep (taking hours to fall asleep, waking up constantly, or sleeping significantly more than usual)?',
+    text: 'How often do you struggle with sleep (taking hours to fall asleep, waking up constantly, or sleeping significantly more than usual)?', textKn: 'ನಿದ್ರೆಯ ಸಮಸ್ಯೆಯನ್ನು (ನಿದ್ರೆ ಬರಲು ಗಂಟೆಗಳೇ ಬೇಕಾಗುವುದು, ಪದೇಪದೇ ಎಚ್ಚರಗೊಳ್ಳುವುದು ಅಥವಾ ಸಾಮಾನ್ಯಕ್ಕಿಂತ ಹೆಚ್ಚು ನಿದ್ರಿಸುವುದು) ನೀವು ಎಷ್ಟು ಬಾರಿ ಎದುರಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಲಕ್ಷಣಗಳು ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Sleep disturbance is a primary physiological marker of both anxiety and depression.',
     reversed: false,
     safetyQuestion: false,
@@ -404,7 +404,7 @@ const youngAdultQuestions = [
   {
     id: 16,
     part: 'Part 4: Physical Symptoms and Coping Mechanisms',
-    text: 'How often do you experience physical symptoms like tension headaches, unexplained stomach issues, or a tight chest when stressed?',
+    text: 'How often do you experience physical symptoms like tension headaches, unexplained stomach issues, or a tight chest when stressed?', textKn: 'ಒತ್ತಡದಲ್ಲಿದ್ದಾಗ ತಲೆನೋವು, ವಿವರಿಸಲಾಗದ ಹೊಟ್ಟೆಯ ಸಮಸ್ಯೆಗಳು ಅಥವಾ ಎದೆ ಬಿಗಿತದಂತಹ ದೈಹಿಕ ಲಕ್ಷಣಗಳನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಲಕ್ಷಣಗಳು ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Somatization (psychological stress manifesting as physical pain).',
     reversed: false,
     safetyQuestion: false,
@@ -412,7 +412,7 @@ const youngAdultQuestions = [
   {
     id: 17,
     part: 'Part 4: Physical Symptoms and Coping Mechanisms',
-    text: 'How often do you experience "brain fog," making it difficult to concentrate, read, or remember simple information?',
+    text: 'How often do you experience "brain fog," making it difficult to concentrate, read, or remember simple information?', textKn: 'ಏಕಾಗ್ರತೆ, ಓದುವುದು ಅಥವಾ ಸರಳ ಮಾಹಿತಿಯನ್ನು ನೆನಪಿಟ್ಟುಕೊಳ್ಳುವುದನ್ನು ಕಷ್ಟಕರಗೊಳಿಸುವ "ಮಾನಸಿಕ ಮಬ್ಬು"ವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಲಕ್ಷಣಗಳು ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Cognitive impairment caused by prolonged stress, depression, or burnout.',
     reversed: false,
     safetyQuestion: false,
@@ -420,7 +420,7 @@ const youngAdultQuestions = [
   {
     id: 18,
     part: 'Part 4: Physical Symptoms and Coping Mechanisms',
-    text: 'How often do you notice significant changes in your eating habits (restricting food, binge eating, or entirely losing your appetite)?',
+    text: 'How often do you notice significant changes in your eating habits (restricting food, binge eating, or entirely losing your appetite)?', textKn: 'ನಿಮ್ಮ ಆಹಾರ ಪದ್ಧತಿಯಲ್ಲಿ ಗಮನಾರ್ಹ ಬದಲಾವಣೆಗಳನ್ನು (ಆಹಾರ ಮಿತಿಗೊಳಿಸುವುದು, ಅತಿಯಾಗಿ ತಿನ್ನುವುದು ಅಥವಾ ಹಸಿವು ಸಂಪೂರ್ಣವಾಗಿ ಕಳೆದುಕೊಳ್ಳುವುದು) ನೀವು ಎಷ್ಟು ಬಾರಿ ಗಮನಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಲಕ್ಷಣಗಳು ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Disordered eating patterns often used to regain a sense of control, or physiological appetite loss due to stress.',
     reversed: false,
     safetyQuestion: false,
@@ -428,7 +428,7 @@ const youngAdultQuestions = [
   {
     id: 19,
     part: 'Part 4: Physical Symptoms and Coping Mechanisms',
-    text: 'How often do you use substances (alcohol, marijuana, vaping) or compulsive behaviors (doom-scrolling, gaming) specifically to numb out or escape your feelings?',
+    text: 'How often do you use substances (alcohol, marijuana, vaping) or compulsive behaviors (doom-scrolling, gaming) specifically to numb out or escape your feelings?', textKn: 'ನಿಮ್ಮ ಭಾವನೆಗಳನ್ನು ನಿಶ್ಚೇಷ್ಟಿತಗೊಳಿಸಲು ಅಥವಾ ತಪ್ಪಿಸಿಕೊಳ್ಳಲು ನಿರ್ದಿಷ್ಟವಾಗಿ ಮಾದಕ ವಸ್ತುಗಳನ್ನು (ಮದ್ಯ, ಗಾಂಜಾ, ವೇಪಿಂಗ್) ಅಥವಾ ಒತ್ತಾಯಪೂರ್ವಕ ವರ್ತನೆಗಳನ್ನು (ನಿರಂತರ ಸ್ಕ್ರೋಲಿಂಗ್, ಗೇಮಿಂಗ್) ನೀವು ಎಷ್ಟು ಬಾರಿ ಬಳಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಲಕ್ಷಣಗಳು ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Maladaptive (unhealthy) coping mechanisms and risk of substance dependency.',
     reversed: false,
     safetyQuestion: false,
@@ -436,7 +436,7 @@ const youngAdultQuestions = [
   {
     id: 20,
     part: 'Part 4: Physical Symptoms and Coping Mechanisms',
-    text: 'How often do you have thoughts that you would be better off dead, or have urges to physically harm yourself?',
+    text: 'How often do you have thoughts that you would be better off dead, or have urges to physically harm yourself?', textKn: 'ನೀವು ಸತ್ತರೆ ಉತ್ತಮ ಎಂಬ ಆಲೋಚನೆಗಳು ಅಥವಾ ದೈಹಿಕವಾಗಿ ನಿಮಗೆ ನೀವೇ ಹಾನಿ ಮಾಡಿಕೊಳ್ಳುವ ಪ್ರಚೋದನೆಗಳನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಹೊಂದಿದ್ದೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಲಕ್ಷಣಗಳು ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Severe depressive crisis, suicidality, or self-harm. This requires immediate professional intervention — please reach out to a trusted person or crisis resource now.',
     reversed: false,
     safetyQuestion: true,
@@ -449,7 +449,7 @@ const marriedQuestions = [
   {
     id: 1,
     part: 'Part 1: Individual Well-Being & Identity',
-    text: 'How often do you feel emotionally exhausted, empty, or drained, regardless of what is happening at home?',
+    text: 'How often do you feel emotionally exhausted, empty, or drained, regardless of what is happening at home?', textKn: 'ಮನೆಯಲ್ಲಿ ಏನೇ ನಡೆಯುತ್ತಿದ್ದರೂ, ಭಾವನಾತ್ಮಕವಾಗಿ ಬಸವಳಿದ, ಬರಿದಾದ ಅಥವಾ ದಣಿದ ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ವೈಯಕ್ತಿಕ ಯೋಗಕ್ಷೇಮ ಮತ್ತು ಅಸ್ಮಿತೆ',
     indicator: 'Assesses baseline individual depression or burnout, independent of the relationship.',
     reversed: false,
     safetyQuestion: false,
@@ -457,7 +457,7 @@ const marriedQuestions = [
   {
     id: 2,
     part: 'Part 1: Individual Well-Being & Identity',
-    text: 'How often do you feel like you have lost your individual identity, hobbies, or sense of self since being in this relationship?',
+    text: 'How often do you feel like you have lost your individual identity, hobbies, or sense of self since being in this relationship?', textKn: 'ಈ ಸಂಬಂಧದಲ್ಲಿದ್ದಾಗಿನಿಂದ ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಅಸ್ಮಿತೆ, ಹವ್ಯಾಸಗಳು ಅಥವಾ ಸ್ವಂತಿಕೆಯ ಪ್ರಜ್ಞೆಯನ್ನು ಕಳೆದುಕೊಂಡಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ವೈಯಕ್ತಿಕ ಯೋಗಕ್ಷೇಮ ಮತ್ತು ಅಸ್ಮಿತೆ',
     indicator: 'Enmeshment or loss of self, which can lead to resentment and low self-worth.',
     reversed: false,
     safetyQuestion: false,
@@ -465,7 +465,7 @@ const marriedQuestions = [
   {
     id: 3,
     part: 'Part 1: Individual Well-Being & Identity',
-    text: 'How often do you feel overwhelmed by your daily responsibilities (work, chores, life admin) and feel entirely alone in managing them?',
+    text: 'How often do you feel overwhelmed by your daily responsibilities (work, chores, life admin) and feel entirely alone in managing them?', textKn: 'ನಿಮ್ಮ ದೈನಂದಿನ ಜವಾಬ್ದಾರಿಗಳಿಂದ (ಕೆಲಸ, ಮನೆಗೆಲಸ, ಜೀವನದ ನಿರ್ವಹಣೆ) ಅತಿಯಾದ ಒತ್ತಡ ಮತ್ತು ಅವುಗಳನ್ನು ನಿರ್ವಹಿಸುವಲ್ಲಿ ಸಂಪೂರ್ಣ ಒಬ್ಬಂಟಿತನವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ವೈಯಕ್ತಿಕ ಯೋಗಕ್ಷೇಮ ಮತ್ತು ಅಸ್ಮಿತೆ',
     indicator: 'Mental load imbalance, a primary driver of chronic stress and anxiety in cohabiting couples.',
     reversed: false,
     safetyQuestion: false,
@@ -473,7 +473,7 @@ const marriedQuestions = [
   {
     id: 4,
     part: 'Part 1: Individual Well-Being & Identity',
-    text: 'How often do you experience physical symptoms of stress (tension headaches, stomach issues, insomnia) specifically when thinking about your home life?',
+    text: 'How often do you experience physical symptoms of stress (tension headaches, stomach issues, insomnia) specifically when thinking about your home life?', textKn: 'ನಿಮ್ಮ ಮನೆಯ ಜೀವನದ ಬಗ್ಗೆ ಯೋಚಿಸುವಾಗ ನಿರ್ದಿಷ್ಟವಾಗಿ ಒತ್ತಡದ ದೈಹಿಕ ಲಕ್ಷಣಗಳನ್ನು (ತಲೆನೋವು, ಹೊಟ್ಟೆಯ ಸಮಸ್ಯೆಗಳು, ನಿದ್ರಾಹೀನತೆ) ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ವೈಯಕ್ತಿಕ ಯೋಗಕ್ಷೇಮ ಮತ್ತು ಅಸ್ಮಿತೆ',
     indicator: 'Somatic (physical) manifestation of relational anxiety or chronic stress.',
     reversed: false,
     safetyQuestion: false,
@@ -481,7 +481,7 @@ const marriedQuestions = [
   {
     id: 5,
     part: 'Part 1: Individual Well-Being & Identity',
-    text: 'How often do you feel a general sense of hopelessness about your personal future or the future of your life together?',
+    text: 'How often do you feel a general sense of hopelessness about your personal future or the future of your life together?', textKn: 'ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಭವಿಷ್ಯ ಅಥವಾ ನಿಮ್ಮ ಜೊತೆಯ ಜೀವನದ ಭವಿಷ್ಯದ ಬಗ್ಗೆ ಸಾಮಾನ್ಯ ನಿರಾಶೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ವೈಯಕ್ತಿಕ ಯೋಗಕ್ಷೇಮ ಮತ್ತು ಅಸ್ಮಿತೆ',
     indicator: 'A lack of hope can indicate depressive thinking or deep relational despair.',
     reversed: false,
     safetyQuestion: false,
@@ -491,7 +491,7 @@ const marriedQuestions = [
   {
     id: 6,
     part: 'Part 2: Communication and Conflict',
-    text: 'How often do you feel like you are "walking on eggshells" to avoid upsetting your partner or starting a fight?',
+    text: 'How often do you feel like you are "walking on eggshells" to avoid upsetting your partner or starting a fight?', textKn: 'ನಿಮ್ಮ ಸಂಗಾತಿಯನ್ನು ಅಸಮಾಧಾನಗೊಳಿಸುವುದನ್ನು ಅಥವಾ ಜಗಳ ಪ್ರಾರಂಭಿಸುವುದನ್ನು ತಪ್ಪಿಸಲು "ಎಚ್ಚರಿಕೆಯಿಂದ ಹೆಜ್ಜೆ ಇಡುತ್ತಿದ್ದೀರಿ" ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಂವಹನ ಮತ್ತು ಸಂಘರ್ಷ',
     indicator: 'Fear-based communication and anxiety; lack of psychological safety in the home.',
     reversed: false,
     safetyQuestion: false,
@@ -499,7 +499,7 @@ const marriedQuestions = [
   {
     id: 7,
     part: 'Part 2: Communication and Conflict',
-    text: 'How often do minor disagreements escalate quickly into major arguments involving yelling, name-calling, or bringing up past mistakes?',
+    text: 'How often do minor disagreements escalate quickly into major arguments involving yelling, name-calling, or bringing up past mistakes?', textKn: 'ಸಣ್ಣ ಭಿನ್ನಾಭಿಪ್ರಾಯಗಳು ಕೂಗಾಟ, ಹೀಯಾಳಿಸುವಿಕೆ ಅಥವಾ ಹಿಂದಿನ ತಪ್ಪುಗಳನ್ನು ಪ್ರಸ್ತಾಪಿಸುವ ದೊಡ್ಡ ಜಗಳಗಳಾಗಿ ಎಷ್ಟು ಬಾರಿ ಬೇಗನೆ ಬೆಳೆಯುತ್ತವೆ?', partKn: 'ಭಾಗ 2: ಸಂವಹನ ಮತ್ತು ಸಂಘರ್ಷ',
     indicator: 'Poor conflict regulation and emotional dysregulation within the partnership.',
     reversed: false,
     safetyQuestion: false,
@@ -507,7 +507,7 @@ const marriedQuestions = [
   {
     id: 8,
     part: 'Part 2: Communication and Conflict',
-    text: 'How often do you feel completely unheard, dismissed, or invalidated when you express your feelings to your partner?',
+    text: 'How often do you feel completely unheard, dismissed, or invalidated when you express your feelings to your partner?', textKn: 'ನಿಮ್ಮ ಭಾವನೆಗಳನ್ನು ನಿಮ್ಮ ಸಂಗಾತಿಗೆ ವ್ಯಕ್ತಪಡಿಸಿದಾಗ ಸಂಪೂರ್ಣವಾಗಿ ಕೇಳಿಸಿಕೊಳ್ಳದಂತೆ, ತಳ್ಳಿಹಾಕಿದಂತೆ ಅಥವಾ ಅಮಾನ್ಯವಾದಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಂವಹನ ಮತ್ತು ಸಂಘರ್ಷ',
     indicator: 'Stonewalling or defensiveness, which severely damages emotional connection.',
     reversed: false,
     safetyQuestion: false,
@@ -515,7 +515,7 @@ const marriedQuestions = [
   {
     id: 9,
     part: 'Part 2: Communication and Conflict',
-    text: 'How often do arguments end in a cold war (silent treatment) without any real resolution, repair, or genuine apology?',
+    text: 'How often do arguments end in a cold war (silent treatment) without any real resolution, repair, or genuine apology?', textKn: 'ಯಾವುದೇ ನಿಜವಾದ ಪರಿಹಾರ, ಸರಿಪಡಿಕೆ ಅಥವಾ ನಿಜವಾದ ಕ್ಷಮೆಯಾಚನೆ ಇಲ್ಲದೆ ಜಗಳಗಳು ಶೀತಲ ಸಮರದಲ್ಲಿ (ಮಾತು ಬಿಡುವುದು) ಎಷ್ಟು ಬಾರಿ ಕೊನೆಗೊಳ್ಳುತ್ತವೆ?', partKn: 'ಭಾಗ 2: ಸಂವಹನ ಮತ್ತು ಸಂಘರ್ಷ',
     indicator: 'Inability to repair after ruptures; leads to built-up resentment and emotional distance.',
     reversed: false,
     safetyQuestion: false,
@@ -523,7 +523,7 @@ const marriedQuestions = [
   {
     id: 10,
     part: 'Part 2: Communication and Conflict',
-    text: 'How often do you find yourself hiding things (like purchases, conversations with friends, or your true feelings) just to keep the peace?',
+    text: 'How often do you find yourself hiding things (like purchases, conversations with friends, or your true feelings) just to keep the peace?', textKn: 'ಶಾಂತಿ ಕಾಪಾಡಲು ವಿಷಯಗಳನ್ನು (ಖರೀದಿಗಳು, ಸ್ನೇಹಿತರೊಂದಿಗಿನ ಸಂಭಾಷಣೆಗಳು ಅಥವಾ ನಿಮ್ಮ ನಿಜವಾದ ಭಾವನೆಗಳು) ಮರೆಮಾಚುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಕಂಡುಕೊಳ್ಳುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಂವಹನ ಮತ್ತು ಸಂಘರ್ಷ',
     indicator: 'Avoidance behavior and erosion of basic trust.',
     reversed: false,
     safetyQuestion: false,
@@ -533,7 +533,7 @@ const marriedQuestions = [
   {
     id: 11,
     part: 'Part 3: Intimacy, Connection, and Support',
-    text: 'How often do you feel more like roommates managing a household together rather than romantic partners?',
+    text: 'How often do you feel more like roommates managing a household together rather than romantic partners?', textKn: 'ಪ್ರಣಯ ಸಂಗಾತಿಗಳಿಗಿಂತ ಹೆಚ್ಚಾಗಿ ಮನೆಯನ್ನು ಒಟ್ಟಿಗೆ ನಿರ್ವಹಿಸುವ ರೂಮ್‌ಮೇಟ್‌ಗಳಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತ್ಮೀಯತೆ, ಸಂಪರ್ಕ ಮತ್ತು ಬೆಂಬಲ',
     indicator: 'Emotional disconnection and the erosion of the romantic/intimate bond.',
     reversed: false,
     safetyQuestion: false,
@@ -541,7 +541,7 @@ const marriedQuestions = [
   {
     id: 12,
     part: 'Part 3: Intimacy, Connection, and Support',
-    text: 'How often does a mismatch in your physical intimacy or sex drive cause active distress, guilt, or pressure in your relationship?',
+    text: 'How often does a mismatch in your physical intimacy or sex drive cause active distress, guilt, or pressure in your relationship?', textKn: 'ನಿಮ್ಮ ದೈಹಿಕ ಆತ್ಮೀಯತೆ ಅಥವಾ ಲೈಂಗಿಕ ಬಯಕೆಯಲ್ಲಿನ ಅಸಾಮ್ಯತೆಯು ನಿಮ್ಮ ಸಂಬಂಧದಲ್ಲಿ ಸಕ್ರಿಯ ಸಂಕಟ, ಅಪರಾಧಿ ಭಾವನೆ ಅಥವಾ ಒತ್ತಡವನ್ನು ಎಷ್ಟು ಬಾರಿ ಉಂಟುಮಾಡುತ್ತದೆ?', partKn: 'ಭಾಗ 3: ಆತ್ಮೀಯತೆ, ಸಂಪರ್ಕ ಮತ್ತು ಬೆಂಬಲ',
     indicator: 'Intimacy incompatibility or lack of safe, pressure-free physical connection.',
     reversed: false,
     safetyQuestion: false,
@@ -549,7 +549,7 @@ const marriedQuestions = [
   {
     id: 13,
     part: 'Part 3: Intimacy, Connection, and Support',
-    text: 'How often do you feel that your partner is more of a critic of your life choices/goals rather than your biggest supporter?',
+    text: 'How often do you feel that your partner is more of a critic of your life choices/goals rather than your biggest supporter?', textKn: 'ನಿಮ್ಮ ಸಂಗಾತಿ ನಿಮ್ಮ ಅತಿದೊಡ್ಡ ಬೆಂಬಲಿಗರಿಗಿಂತ ಹೆಚ್ಚಾಗಿ ನಿಮ್ಮ ಜೀವನದ ಆಯ್ಕೆಗಳು/ಗುರಿಗಳ ಟೀಕಾಕಾರರಂತೆ ಇದ್ದಾರೆ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತ್ಮೀಯತೆ, ಸಂಪರ್ಕ ಮತ್ತು ಬೆಂಬಲ',
     indicator: 'Lack of emotional safety and support; presence of contempt or criticism.',
     reversed: false,
     safetyQuestion: false,
@@ -557,7 +557,7 @@ const marriedQuestions = [
   {
     id: 14,
     part: 'Part 3: Intimacy, Connection, and Support',
-    text: 'When something terrible or stressful happens to you outside of the home, how often do you prefer to handle it alone rather than seeking comfort from your partner?',
+    text: 'When something terrible or stressful happens to you outside of the home, how often do you prefer to handle it alone rather than seeking comfort from your partner?', textKn: 'ಮನೆಯ ಹೊರಗೆ ನಿಮಗೆ ಏನಾದರೂ ಭಯಾನಕ ಅಥವಾ ಒತ್ತಡದ ಸಂಗತಿ ಸಂಭವಿಸಿದಾಗ, ನಿಮ್ಮ ಸಂಗಾತಿಯಿಂದ ಸಾಂತ್ವನ ಪಡೆಯುವ ಬದಲು ಅದನ್ನು ಒಬ್ಬಂಟಿಯಾಗಿ ನಿಭಾಯಿಸಲು ನೀವು ಎಷ್ಟು ಬಾರಿ ಬಯಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತ್ಮೀಯತೆ, ಸಂಪರ್ಕ ಮತ್ತು ಬೆಂಬಲ',
     indicator: 'Breakdown of the partner as a "secure base" or primary attachment figure.',
     reversed: false,
     safetyQuestion: false,
@@ -565,7 +565,7 @@ const marriedQuestions = [
   {
     id: 15,
     part: 'Part 3: Intimacy, Connection, and Support',
-    text: 'How often do you dread coming home or actively look for reasons to spend time away from your partner?',
+    text: 'How often do you dread coming home or actively look for reasons to spend time away from your partner?', textKn: 'ಮನೆಗೆ ಬರಲು ಭಯಪಡುವುದು ಅಥವಾ ನಿಮ್ಮ ಸಂಗಾತಿಯಿಂದ ದೂರ ಸಮಯ ಕಳೆಯಲು ಕಾರಣಗಳನ್ನು ಸಕ್ರಿಯವಾಗಿ ಹುಡುಕುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಮಾಡುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತ್ಮೀಯತೆ, ಸಂಪರ್ಕ ಮತ್ತು ಬೆಂಬಲ',
     indicator: 'Active avoidance; the home environment is perceived as a stressor rather than a sanctuary.',
     reversed: false,
     safetyQuestion: false,
@@ -575,7 +575,7 @@ const marriedQuestions = [
   {
     id: 16,
     part: 'Part 4: Relational Impact and Safety',
-    text: 'How often do you blame yourself for your partner\'s bad moods, feeling like it is your job to "fix" their emotional state?',
+    text: 'How often do you blame yourself for your partner\'s bad moods, feeling like it is your job to "fix" their emotional state?', textKn: 'ನಿಮ್ಮ ಸಂಗಾತಿಯ ಕೆಟ್ಟ ಮನಸ್ಥಿತಿಗೆ ನಿಮ್ಮನ್ನೇ ದೂಷಿಸಿಕೊಂಡು, ಅವರ ಭಾವನಾತ್ಮಕ ಸ್ಥಿತಿಯನ್ನು "ಸರಿಪಡಿಸುವುದು" ನಿಮ್ಮ ಕೆಲಸ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಂಬಂಧದ ಪರಿಣಾಮ ಮತ್ತು ಸುರಕ್ಷತೆ',
     indicator: 'Codependency and anxious attachment dynamics.',
     reversed: false,
     safetyQuestion: false,
@@ -583,7 +583,7 @@ const marriedQuestions = [
   {
     id: 17,
     part: 'Part 4: Relational Impact and Safety',
-    text: 'How often do you feel unfairly criticized, mocked, or demeaned by your partner (either in private or in front of others)?',
+    text: 'How often do you feel unfairly criticized, mocked, or demeaned by your partner (either in private or in front of others)?', textKn: 'ನಿಮ್ಮ ಸಂಗಾತಿಯಿಂದ (ಖಾಸಗಿಯಾಗಿ ಅಥವಾ ಇತರರ ಮುಂದೆ) ಅನ್ಯಾಯವಾಗಿ ಟೀಕಿಸಲ್ಪಟ್ಟಂತೆ, ಅಪಹಾಸ್ಯ ಮಾಡಲ್ಪಟ್ಟಂತೆ ಅಥವಾ ಕೀಳಾಗಿ ಕಾಣಲ್ಪಟ್ಟಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಂಬಂಧದ ಪರಿಣಾಮ ಮತ್ತು ಸುರಕ್ಷತೆ',
     indicator: 'Emotional verbal abuse and contempt (the highest predictor of relationship failure).',
     reversed: false,
     safetyQuestion: false,
@@ -591,7 +591,7 @@ const marriedQuestions = [
   {
     id: 18,
     part: 'Part 4: Relational Impact and Safety',
-    text: 'How often do you catch yourself fantasizing about leaving the relationship, living alone, or starting over just to find peace?',
+    text: 'How often do you catch yourself fantasizing about leaving the relationship, living alone, or starting over just to find peace?', textKn: 'ಶಾಂತಿಯನ್ನು ಕಂಡುಕೊಳ್ಳಲು ಸಂಬಂಧವನ್ನು ತೊರೆಯುವುದು, ಒಬ್ಬಂಟಿಯಾಗಿ ಬದುಕುವುದು ಅಥವಾ ಹೊಸದಾಗಿ ಪ್ರಾರಂಭಿಸುವುದರ ಬಗ್ಗೆ ಕಲ್ಪಿಸಿಕೊಳ್ಳುತ್ತಿರುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಗಮನಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಂಬಂಧದ ಪರಿಣಾಮ ಮತ್ತು ಸುರಕ್ಷತೆ',
     indicator: 'Active detachment and emotional exit from the relationship.',
     reversed: false,
     safetyQuestion: false,
@@ -599,7 +599,7 @@ const marriedQuestions = [
   {
     id: 19,
     part: 'Part 4: Relational Impact and Safety',
-    text: 'How often does your partner try to control who you see, monitor your phone/finances, or isolate you from friends and family?',
+    text: 'How often does your partner try to control who you see, monitor your phone/finances, or isolate you from friends and family?', textKn: 'ನಿಮ್ಮ ಸಂಗಾತಿ ನೀವು ಯಾರನ್ನು ಭೇಟಿಯಾಗುತ್ತೀರಿ ಎಂಬುದನ್ನು ನಿಯಂತ್ರಿಸಲು, ನಿಮ್ಮ ಫೋನ್/ಹಣಕಾಸನ್ನು ಮೇಲ್ವಿಚಾರಣೆ ಮಾಡಲು ಅಥವಾ ಸ್ನೇಹಿತರು ಮತ್ತು ಕುಟುಂಬದಿಂದ ನಿಮ್ಮನ್ನು ಪ್ರತ್ಯೇಕಿಸಲು ಎಷ್ಟು ಬಾರಿ ಪ್ರಯತ್ನಿಸುತ್ತಾರೆ?', partKn: 'ಭಾಗ 4: ಸಂಬಂಧದ ಪರಿಣಾಮ ಮತ್ತು ಸುರಕ್ಷತೆ',
     indicator: 'Coercive control and emotional abuse — a critical safety indicator. Please reach out to a domestic abuse resource or trusted professional.',
     reversed: false,
     safetyQuestion: true,
@@ -607,7 +607,7 @@ const marriedQuestions = [
   {
     id: 20,
     part: 'Part 4: Relational Impact and Safety',
-    text: 'How often do you feel physically intimidated by your partner, afraid of their temper, or fearful that an argument might turn physically aggressive?',
+    text: 'How often do you feel physically intimidated by your partner, afraid of their temper, or fearful that an argument might turn physically aggressive?', textKn: 'ನಿಮ್ಮ ಸಂಗಾತಿಯಿಂದ ದೈಹಿಕವಾಗಿ ಬೆದರಿಕೆ, ಅವರ ಕೋಪದ ಭಯ ಅಥವಾ ಜಗಳವು ದೈಹಿಕ ಆಕ್ರಮಣಕ್ಕೆ ತಿರುಗಬಹುದು ಎಂಬ ಭಯವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸಂಬಂಧದ ಪರಿಣಾಮ ಮತ್ತು ಸುರಕ್ಷತೆ',
     indicator: 'Domestic violence risk and severe lack of physical/emotional safety — a critical safety indicator. Please prioritize your safety and reach out for help.',
     reversed: false,
     safetyQuestion: true,
@@ -618,61 +618,61 @@ const marriedQuestions = [
 const divorcedQuestions = [
   {
     id: 1, part: 'Part 1: Coping with Change',
-    text: 'How often do you feel grief or loss over the end of your relationship?',
+    text: 'How often do you feel grief or loss over the end of your relationship?', textKn: 'ನಿಮ್ಮ ಸಂಬಂಧದ ಅಂತ್ಯದ ಬಗ್ಗೆ ದುಃಖ ಅಥವಾ ನಷ್ಟವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಬದಲಾವಣೆಯನ್ನು ನಿಭಾಯಿಸುವುದು',
     indicator: 'Grief is a natural response to separation.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 2, part: 'Part 1: Coping with Change',
-    text: 'How often do you feel confident about managing your life independently?',
+    text: 'How often do you feel confident about managing your life independently?', textKn: 'ನಿಮ್ಮ ಜೀವನವನ್ನು ಸ್ವತಂತ್ರವಾಗಿ ನಿರ್ವಹಿಸುವ ಬಗ್ಗೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಆತ್ಮವಿಶ್ವಾಸ ಹೊಂದಿದ್ದೀರಿ?', partKn: 'ಭಾಗ 1: ಬದಲಾವಣೆಯನ್ನು ನಿಭಾಯಿಸುವುದು',
     indicator: '"Rarely/Never" is the concern here — low confidence after separation.',
     reversed: true, safetyQuestion: false,
   },
   {
     id: 3, part: 'Part 1: Coping with Change',
-    text: 'How often do thoughts about the past relationship interfere with your daily life?',
+    text: 'How often do thoughts about the past relationship interfere with your daily life?', textKn: 'ಹಿಂದಿನ ಸಂಬಂಧದ ಬಗೆಗಿನ ಆಲೋಚನೆಗಳು ನಿಮ್ಮ ದೈನಂದಿನ ಜೀವನಕ್ಕೆ ಎಷ್ಟು ಬಾರಿ ಅಡ್ಡಿಪಡಿಸುತ್ತವೆ?', partKn: 'ಭಾಗ 1: ಬದಲಾವಣೆಯನ್ನು ನಿಭಾಯಿಸುವುದು',
     indicator: 'Intrusive thoughts can indicate unresolved emotional distress.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 4, part: 'Part 2: Emotional State',
-    text: 'How often do you feel a deep sense of sadness or emptiness?',
+    text: 'How often do you feel a deep sense of sadness or emptiness?', textKn: 'ಆಳವಾದ ದುಃಖ ಅಥವಾ ಬರಿದಾದ ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಭಾವನಾತ್ಮಕ ಸ್ಥಿತಿ',
     indicator: 'Persistent sadness may indicate depression following a major life change.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 5, part: 'Part 2: Emotional State',
-    text: 'How often do you feel angry or resentful about how things turned out?',
+    text: 'How often do you feel angry or resentful about how things turned out?', textKn: 'ವಿಷಯಗಳು ಹೇಗೆ ಆದವು ಎಂಬುದರ ಬಗ್ಗೆ ಕೋಪ ಅಥವಾ ಅಸಮಾಧಾನವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಭಾವನಾತ್ಮಕ ಸ್ಥಿತಿ',
     indicator: 'Unresolved anger is common after separation but needs to be addressed.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 6, part: 'Part 3: Social Support',
-    text: 'How often do you feel completely alone in dealing with your situation?',
+    text: 'How often do you feel completely alone in dealing with your situation?', textKn: 'ನಿಮ್ಮ ಪರಿಸ್ಥಿತಿಯನ್ನು ನಿಭಾಯಿಸುವಲ್ಲಿ ಸಂಪೂರ್ಣ ಒಬ್ಬಂಟಿತನವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಸಾಮಾಜಿಕ ಬೆಂಬಲ',
     indicator: 'Perceived isolation increases risk of emotional decline.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 7, part: 'Part 3: Social Support',
-    text: 'How often do you feel embarrassed or judged by people in your social circle?',
+    text: 'How often do you feel embarrassed or judged by people in your social circle?', textKn: 'ನಿಮ್ಮ ಸಾಮಾಜಿಕ ವಲಯದ ಜನರಿಂದ ಮುಜುಗರ ಅಥವಾ ನಿರ್ಣಯಕ್ಕೆ ಒಳಗಾದಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಸಾಮಾಜಿಕ ಬೆಂಬಲ',
     indicator: 'Social stigma can compound distress during separation.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 8, part: 'Part 4: Physical & Practical',
-    text: 'How often do you have difficulty sleeping or feel constantly fatigued?',
+    text: 'How often do you have difficulty sleeping or feel constantly fatigued?', textKn: 'ನಿದ್ರೆಯ ಸಮಸ್ಯೆ ಅಥವಾ ನಿರಂತರ ಆಯಾಸವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಮತ್ತು ಪ್ರಾಯೋಗಿಕ',
     indicator: 'Physical signs of emotional stress.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 9, part: 'Part 4: Physical & Practical',
-    text: 'How often do you feel overwhelmed by new financial or practical responsibilities?',
+    text: 'How often do you feel overwhelmed by new financial or practical responsibilities?', textKn: 'ಹೊಸ ಆರ್ಥಿಕ ಅಥವಾ ಪ್ರಾಯೋಗಿಕ ಜವಾಬ್ದಾರಿಗಳಿಂದ ಅತಿಯಾದ ಒತ್ತಡವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಮತ್ತು ಪ್ರಾಯೋಗಿಕ',
     indicator: 'Practical stress compounds emotional wellbeing after separation.',
     reversed: false, safetyQuestion: false,
   },
   {
     id: 10, part: 'Part 4: Physical & Practical',
-    text: 'How often do you feel hopeful that life will get better?',
+    text: 'How often do you feel hopeful that life will get better?', textKn: 'ಜೀವನ ಉತ್ತಮಗೊಳ್ಳುತ್ತದೆ ಎಂಬ ಭರವಸೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ದೈಹಿಕ ಮತ್ತು ಪ್ರಾಯೋಗಿಕ',
     indicator: '"Rarely/Never" indicates low hope — a key indicator of emotional distress.',
     reversed: true, safetyQuestion: false,
   },
@@ -684,7 +684,7 @@ const olderQuestions = [
   {
     id: 1,
     part: 'Part 1: Mood, Grief, and Emotional Well-Being',
-    text: 'How often do you feel a deep sense of sadness, emptiness, or find yourself crying for no clear reason?',
+    text: 'How often do you feel a deep sense of sadness, emptiness, or find yourself crying for no clear reason?', textKn: 'ಆಳವಾದ ದುಃಖ, ಬರಿದಾದ ಭಾವನೆ ಅಥವಾ ಯಾವುದೇ ಸ್ಪಷ್ಟ ಕಾರಣವಿಲ್ಲದೆ ಅಳುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ, ದುಃಖ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Pervasive low mood is a primary indicator of depression, which is not a normal part of aging.',
     reversed: false,
     safetyQuestion: false,
@@ -692,7 +692,7 @@ const olderQuestions = [
   {
     id: 2,
     part: 'Part 1: Mood, Grief, and Emotional Well-Being',
-    text: 'How often do you feel completely uninterested in hobbies, reading, or activities that used to bring you joy?',
+    text: 'How often do you feel completely uninterested in hobbies, reading, or activities that used to bring you joy?', textKn: 'ನಿಮಗೆ ಹಿಂದೆ ಸಂತೋಷ ನೀಡುತ್ತಿದ್ದ ಹವ್ಯಾಸಗಳು, ಓದುವಿಕೆ ಅಥವಾ ಚಟುವಟಿಕೆಗಳಲ್ಲಿ ಸಂಪೂರ್ಣ ಆಸಕ್ತಿ ಇಲ್ಲದಿರುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ, ದುಃಖ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Anhedonia (loss of pleasure). In seniors, dropping long-time hobbies is a major red flag for depression.',
     reversed: false,
     safetyQuestion: false,
@@ -700,7 +700,7 @@ const olderQuestions = [
   {
     id: 3,
     part: 'Part 1: Mood, Grief, and Emotional Well-Being',
-    text: 'How often do you feel that you are a burden to your family, friends, or caregivers?',
+    text: 'How often do you feel that you are a burden to your family, friends, or caregivers?', textKn: 'ನಿಮ್ಮ ಕುಟುಂಬ, ಸ್ನೇಹಿತರು ಅಥವಾ ಆರೈಕೆದಾರರಿಗೆ ನೀವು ಹೊರೆಯಾಗಿದ್ದೀರಿ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ, ದುಃಖ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Feelings of worthlessness or guilt, which heavily degrade self-esteem and drive depressive thinking.',
     reversed: false,
     safetyQuestion: false,
@@ -708,7 +708,7 @@ const olderQuestions = [
   {
     id: 4,
     part: 'Part 1: Mood, Grief, and Emotional Well-Being',
-    text: 'How often do you feel a sense of hopelessness, feeling like your best years are behind you and there is nothing to look forward to?',
+    text: 'How often do you feel a sense of hopelessness, feeling like your best years are behind you and there is nothing to look forward to?', textKn: 'ನಿಮ್ಮ ಅತ್ಯುತ್ತಮ ವರ್ಷಗಳು ಹಿಂದೆ ಉಳಿದಿವೆ ಮತ್ತು ಎದುರುನೋಡಲು ಏನೂ ಇಲ್ಲ ಎಂಬ ನಿರಾಶೆಯ ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ, ದುಃಖ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'A lack of hope can indicate despair and a struggle to find meaning in this stage of life.',
     reversed: false,
     safetyQuestion: false,
@@ -716,7 +716,7 @@ const olderQuestions = [
   {
     id: 5,
     part: 'Part 1: Mood, Grief, and Emotional Well-Being',
-    text: 'How often do you feel unusually irritable, short-tempered, or frustrated with the people around you?',
+    text: 'How often do you feel unusually irritable, short-tempered, or frustrated with the people around you?', textKn: 'ನಿಮ್ಮ ಸುತ್ತಮುತ್ತಲಿನ ಜನರೊಂದಿಗೆ ಅಸಾಮಾನ್ಯ ಕಿರಿಕಿರಿ, ಕೋಪ ಅಥವಾ ಹತಾಶೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಮನಸ್ಥಿತಿ, ದುಃಖ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Emotional dysregulation; depression in older adults often manifests as grumpiness or irritability rather than just sadness.',
     reversed: false,
     safetyQuestion: false,
@@ -726,7 +726,7 @@ const olderQuestions = [
   {
     id: 6,
     part: 'Part 2: Social Connection and Isolation',
-    text: 'How often do you feel lonely, even when you are talking to someone on the phone or sitting in a room with other people?',
+    text: 'How often do you feel lonely, even when you are talking to someone on the phone or sitting in a room with other people?', textKn: 'ಫೋನ್‌ನಲ್ಲಿ ಯಾರೊಂದಿಗಾದರೂ ಮಾತನಾಡುತ್ತಿರುವಾಗ ಅಥವಾ ಇತರ ಜನರೊಂದಿಗೆ ಕೋಣೆಯಲ್ಲಿ ಕುಳಿತಿರುವಾಗಲೂ ಒಂಟಿತನವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಾಮಾಜಿಕ ಸಂಪರ್ಕ ಮತ್ತು ಏಕಾಂಗಿತನ',
     indicator: 'Emotional isolation and the subjective feeling of loneliness, which is a major health risk for seniors.',
     reversed: false,
     safetyQuestion: false,
@@ -734,7 +734,7 @@ const olderQuestions = [
   {
     id: 7,
     part: 'Part 2: Social Connection and Isolation',
-    text: 'How often do you intentionally avoid answering the phone, attending family gatherings, or seeing friends?',
+    text: 'How often do you intentionally avoid answering the phone, attending family gatherings, or seeing friends?', textKn: 'ಫೋನ್‌ಗೆ ಉತ್ತರಿಸುವುದು, ಕುಟುಂಬ ಕೂಟಗಳಿಗೆ ಹಾಜರಾಗುವುದು ಅಥವಾ ಸ್ನೇಹಿತರನ್ನು ಭೇಟಿಯಾಗುವುದನ್ನು ಉದ್ದೇಶಪೂರ್ವಕವಾಗಿ ತಪ್ಪಿಸುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಮಾಡುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಾಮಾಜಿಕ ಸಂಪರ್ಕ ಮತ್ತು ಏಕಾಂಗಿತನ',
     indicator: 'Social withdrawal, a common coping mechanism for depression and anxiety.',
     reversed: false,
     safetyQuestion: false,
@@ -742,7 +742,7 @@ const olderQuestions = [
   {
     id: 8,
     part: 'Part 2: Social Connection and Isolation',
-    text: 'How often do you feel forgotten, left behind, or disconnected from the younger generations in your family or community?',
+    text: 'How often do you feel forgotten, left behind, or disconnected from the younger generations in your family or community?', textKn: 'ನಿಮ್ಮ ಕುಟುಂಬ ಅಥವಾ ಸಮುದಾಯದ ಯುವ ಪೀಳಿಗೆಯಿಂದ ಮರೆಯಲ್ಪಟ್ಟಂತೆ, ಹಿಂದೆ ಉಳಿದಂತೆ ಅಥವಾ ಸಂಪರ್ಕ ಕಡಿದುಕೊಂಡಂತೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಾಮಾಜಿಕ ಸಂಪರ್ಕ ಮತ್ತು ಏಕಾಂಗಿತನ',
     indicator: 'Measures social belonging and the psychological impact of generational isolation.',
     reversed: false,
     safetyQuestion: false,
@@ -750,7 +750,7 @@ const olderQuestions = [
   {
     id: 9,
     part: 'Part 2: Social Connection and Isolation',
-    text: 'How often do you feel like you have no one you can truly talk to about your deep feelings, fears, or grief?',
+    text: 'How often do you feel like you have no one you can truly talk to about your deep feelings, fears, or grief?', textKn: 'ನಿಮ್ಮ ಆಳವಾದ ಭಾವನೆಗಳು, ಭಯಗಳು ಅಥವಾ ದುಃಖದ ಬಗ್ಗೆ ನಿಜವಾಗಿಯೂ ಮಾತನಾಡಲು ಯಾರೂ ಇಲ್ಲ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಾಮಾಜಿಕ ಸಂಪರ್ಕ ಮತ್ತು ಏಕಾಂಗಿತನ',
     indicator: "Evaluates the individual's perceived emotional support system.",
     reversed: false,
     safetyQuestion: false,
@@ -758,7 +758,7 @@ const olderQuestions = [
   {
     id: 10,
     part: 'Part 2: Social Connection and Isolation',
-    text: 'How often do you feel a profound sense of loss regarding your purpose in life (e.g., after retirement, or after the loss of a spouse/friends)?',
+    text: 'How often do you feel a profound sense of loss regarding your purpose in life (e.g., after retirement, or after the loss of a spouse/friends)?', textKn: 'ನಿಮ್ಮ ಜೀವನದ ಉದ್ದೇಶದ ಬಗ್ಗೆ ಆಳವಾದ ನಷ್ಟದ ಭಾವನೆಯನ್ನು (ಉದಾ: ನಿವೃತ್ತಿಯ ನಂತರ, ಅಥವಾ ಸಂಗಾತಿ/ಸ್ನೇಹಿತರ ನಷ್ಟದ ನಂತರ) ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: ಸಾಮಾಜಿಕ ಸಂಪರ್ಕ ಮತ್ತು ಏಕಾಂಗಿತನ',
     indicator: "Identity loss and grief; struggling to redefine one's self-worth in later life.",
     reversed: false,
     safetyQuestion: false,
@@ -768,7 +768,7 @@ const olderQuestions = [
   {
     id: 11,
     part: 'Part 3: Anxiety, Worry, and Physical Health',
-    text: 'How often do you find yourself excessively worrying about your physical health, constantly fearing that a minor ache is a severe illness?',
+    text: 'How often do you find yourself excessively worrying about your physical health, constantly fearing that a minor ache is a severe illness?', textKn: 'ಸಣ್ಣ ನೋವು ಗಂಭೀರ ಕಾಯಿಲೆಯಾಗಿರಬಹುದೆಂದು ನಿರಂತರವಾಗಿ ಭಯಪಡುತ್ತಾ, ನಿಮ್ಮ ದೈಹಿಕ ಆರೋಗ್ಯದ ಬಗ್ಗೆ ಅತಿಯಾಗಿ ಚಿಂತಿಸುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಕಂಡುಕೊಳ್ಳುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತಂಕ, ಚಿಂತೆ ಮತ್ತು ದೈಹಿಕ ಆರೋಗ್ಯ',
     indicator: 'Health anxiety (hypochondriasis), which is very common and distressing in older populations.',
     reversed: false,
     safetyQuestion: false,
@@ -776,7 +776,7 @@ const olderQuestions = [
   {
     id: 12,
     part: 'Part 3: Anxiety, Worry, and Physical Health',
-    text: 'How often do you worry excessively about your living arrangements, finances, or ability to afford care in the future?',
+    text: 'How often do you worry excessively about your living arrangements, finances, or ability to afford care in the future?', textKn: 'ನಿಮ್ಮ ವಾಸದ ವ್ಯವಸ್ಥೆ, ಹಣಕಾಸು ಅಥವಾ ಭವಿಷ್ಯದಲ್ಲಿ ಆರೈಕೆಯ ವೆಚ್ಚ ಭರಿಸುವ ಸಾಮರ್ಥ್ಯದ ಬಗ್ಗೆ ನೀವು ಎಷ್ಟು ಬಾರಿ ಅತಿಯಾಗಿ ಚಿಂತಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತಂಕ, ಚಿಂತೆ ಮತ್ತು ದೈಹಿಕ ಆರೋಗ್ಯ',
     indicator: 'Generalized anxiety regarding security and loss of control.',
     reversed: false,
     safetyQuestion: false,
@@ -784,7 +784,7 @@ const olderQuestions = [
   {
     id: 13,
     part: 'Part 3: Anxiety, Worry, and Physical Health',
-    text: 'How often do you struggle with sleep, such as waking up very early in the morning and being unable to go back to sleep?',
+    text: 'How often do you struggle with sleep, such as waking up very early in the morning and being unable to go back to sleep?', textKn: 'ಬೆಳಿಗ್ಗೆ ಬಹಳ ಬೇಗ ಎಚ್ಚರಗೊಂಡು ಮತ್ತೆ ನಿದ್ರಿಸಲು ಸಾಧ್ಯವಾಗದಂತಹ ನಿದ್ರೆಯ ಸಮಸ್ಯೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಎದುರಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತಂಕ, ಚಿಂತೆ ಮತ್ತು ದೈಹಿಕ ಆರೋಗ್ಯ',
     indicator: 'Early morning awakening is a classic physiological symptom of clinical depression.',
     reversed: false,
     safetyQuestion: false,
@@ -792,7 +792,7 @@ const olderQuestions = [
   {
     id: 14,
     part: 'Part 3: Anxiety, Worry, and Physical Health',
-    text: 'How often do you experience unexplained physical symptoms (like extreme fatigue, stomachaches, or vague pains) that your doctor cannot find a medical reason for?',
+    text: 'How often do you experience unexplained physical symptoms (like extreme fatigue, stomachaches, or vague pains) that your doctor cannot find a medical reason for?', textKn: 'ನಿಮ್ಮ ವೈದ್ಯರಿಗೆ ವೈದ್ಯಕೀಯ ಕಾರಣ ಕಂಡುಹಿಡಿಯಲಾಗದ ವಿವರಿಸಲಾಗದ ದೈಹಿಕ ಲಕ್ಷಣಗಳನ್ನು (ತೀವ್ರ ಆಯಾಸ, ಹೊಟ್ಟೆನೋವು ಅಥವಾ ಅಸ್ಪಷ್ಟ ನೋವುಗಳಂತಹ) ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತಂಕ, ಚಿಂತೆ ಮತ್ತು ದೈಹಿಕ ಆರೋಗ್ಯ',
     indicator: 'Somatization; older adults frequently express psychological distress through physical complaints rather than emotional ones.',
     reversed: false,
     safetyQuestion: false,
@@ -800,7 +800,7 @@ const olderQuestions = [
   {
     id: 15,
     part: 'Part 3: Anxiety, Worry, and Physical Health',
-    text: 'How often do you notice you have completely lost your appetite, or find that eating has become a chore?',
+    text: 'How often do you notice you have completely lost your appetite, or find that eating has become a chore?', textKn: 'ನಿಮ್ಮ ಹಸಿವನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಕಳೆದುಕೊಂಡಿರುವುದನ್ನು ಅಥವಾ ತಿನ್ನುವುದು ಒಂದು ಕೆಲಸವಾಗಿ ಮಾರ್ಪಟ್ಟಿರುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಗಮನಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಆತಂಕ, ಚಿಂತೆ ಮತ್ತು ದೈಹಿಕ ಆರೋಗ್ಯ',
     indicator: 'Changes in appetite and unintended weight loss are critical physical markers of late-life depression.',
     reversed: false,
     safetyQuestion: false,
@@ -810,7 +810,7 @@ const olderQuestions = [
   {
     id: 16,
     part: 'Part 4: Independence and Cognitive Anxiety',
-    text: 'How often do you feel intense anxiety, embarrassment, or panic when you forget a name, misplace an item, or lose your train of thought?',
+    text: 'How often do you feel intense anxiety, embarrassment, or panic when you forget a name, misplace an item, or lose your train of thought?', textKn: 'ಹೆಸರನ್ನು ಮರೆತಾಗ, ವಸ್ತುವನ್ನು ಇಟ್ಟ ಜಾಗ ಮರೆತಾಗ ಅಥವಾ ಆಲೋಚನೆಯ ಸರಣಿ ಕಳೆದುಕೊಂಡಾಗ ತೀವ್ರ ಆತಂಕ, ಮುಜುಗರ ಅಥವಾ ಪ್ಯಾನಿಕ್ ಅನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸ್ವಾತಂತ್ರ್ಯ ಮತ್ತು ಜ್ಞಾನಗ್ರಹಣ ಆತಂಕ',
     indicator: 'Anxiety regarding cognitive decline (fear of dementia), which can sometimes cause more distress than the memory lapse itself.',
     reversed: false,
     safetyQuestion: false,
@@ -818,7 +818,7 @@ const olderQuestions = [
   {
     id: 17,
     part: 'Part 4: Independence and Cognitive Anxiety',
-    text: 'How often do you feel deeply frustrated or angry about your body not being able to do the things it used to do (e.g., driving, walking, household chores)?',
+    text: 'How often do you feel deeply frustrated or angry about your body not being able to do the things it used to do (e.g., driving, walking, household chores)?', textKn: 'ನಿಮ್ಮ ದೇಹವು ಹಿಂದೆ ಮಾಡುತ್ತಿದ್ದ ಕೆಲಸಗಳನ್ನು (ಉದಾ: ಚಾಲನೆ, ನಡಿಗೆ, ಮನೆಗೆಲಸ) ಮಾಡಲಾಗದಿರುವ ಬಗ್ಗೆ ಆಳವಾದ ಹತಾಶೆ ಅಥವಾ ಕೋಪವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸ್ವಾತಂತ್ರ್ಯ ಮತ್ತು ಜ್ಞಾನಗ್ರಹಣ ಆತಂಕ',
     indicator: 'Grief over the loss of physical independence and mobility.',
     reversed: false,
     safetyQuestion: false,
@@ -826,7 +826,7 @@ const olderQuestions = [
   {
     id: 18,
     part: 'Part 4: Independence and Cognitive Anxiety',
-    text: 'How often do you find it difficult to concentrate on simple tasks, like reading a newspaper, watching a television show, or following a conversation?',
+    text: 'How often do you find it difficult to concentrate on simple tasks, like reading a newspaper, watching a television show, or following a conversation?', textKn: 'ಪತ್ರಿಕೆ ಓದುವುದು, ಟಿವಿ ಕಾರ್ಯಕ್ರಮ ನೋಡುವುದು ಅಥವಾ ಸಂಭಾಷಣೆಯನ್ನು ಅನುಸರಿಸುವಂತಹ ಸರಳ ಕೆಲಸಗಳ ಮೇಲೆ ಏಕಾಗ್ರತೆ ಕಷ್ಟಕರವೆಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಕಂಡುಕೊಳ್ಳುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸ್ವಾತಂತ್ರ್ಯ ಮತ್ತು ಜ್ಞಾನಗ್ರಹಣ ಆತಂಕ',
     indicator: 'Cognitive impairment, which can be caused by early dementia, but is also a very common symptom of severe depression (pseudodementia).',
     reversed: false,
     safetyQuestion: false,
@@ -834,7 +834,7 @@ const olderQuestions = [
   {
     id: 19,
     part: 'Part 4: Independence and Cognitive Anxiety',
-    text: 'How often do you feel entirely overwhelmed by managing your daily routine, such as organizing medications, paying bills, or making meals?',
+    text: 'How often do you feel entirely overwhelmed by managing your daily routine, such as organizing medications, paying bills, or making meals?', textKn: 'ಔಷಧಿಗಳನ್ನು ಜೋಡಿಸುವುದು, ಬಿಲ್ ಪಾವತಿಸುವುದು ಅಥವಾ ಊಟ ತಯಾರಿಸುವಂತಹ ನಿಮ್ಮ ದೈನಂದಿನ ದಿನಚರಿಯನ್ನು ನಿರ್ವಹಿಸುವಲ್ಲಿ ಸಂಪೂರ್ಣ ಒತ್ತಡವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಸ್ವಾತಂತ್ರ್ಯ ಮತ್ತು ಜ್ಞಾನಗ್ರಹಣ ಆತಂಕ',
     indicator: 'Executive dysfunction and feelings of being overwhelmed by life\'s basic demands.',
     reversed: false,
     safetyQuestion: false,
@@ -842,7 +842,7 @@ const olderQuestions = [
   {
     id: 20,
     part: 'Part 4: Independence and Cognitive Anxiety',
-    text: 'How often do you have thoughts that you would be better off dead, or wish you could just go to sleep and not wake up?',
+    text: 'How often do you have thoughts that you would be better off dead, or wish you could just go to sleep and not wake up?', textKn: 'ನೀವು ಸತ್ತರೆ ಉತ್ತಮ ಎಂಬ ಆಲೋಚನೆಗಳು ಅಥವಾ ನಿದ್ರಿಸಿ ಮತ್ತೆ ಎಚ್ಚರಗೊಳ್ಳಬಾರದು ಎಂದು ಬಯಸುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಹೊಂದಿದ್ದೀರಿ?', partKn: 'ಭಾಗ 4: ಸ್ವಾತಂತ್ರ್ಯ ಮತ್ತು ಜ್ಞಾನಗ್ರಹಣ ಆತಂಕ',
     indicator: 'Passive or active suicidal ideation — this requires immediate professional intervention. Please reach out to a physician, mental health professional, or crisis hotline now.',
     reversed: false,
     safetyQuestion: true,
@@ -1197,7 +1197,7 @@ const singleMotherQuestions = [
   {
     id: 1,
     part: 'Part 1: Burnout and Cognitive Load',
-    text: 'How often do you wake up already feeling physically and emotionally exhausted, dreading the demands of the day?',
+    text: 'How often do you wake up already feeling physically and emotionally exhausted, dreading the demands of the day?', textKn: 'ಆ ದಿನದ ಬೇಡಿಕೆಗಳ ಬಗ್ಗೆ ಭಯಪಡುತ್ತಾ, ದೈಹಿಕವಾಗಿ ಮತ್ತು ಭಾವನಾತ್ಮಕವಾಗಿ ಈಗಾಗಲೇ ಬಸವಳಿದ ಭಾವನೆಯಿಂದ ಎಚ್ಚರಗೊಳ್ಳುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಬಳಲಿಕೆ ಮತ್ತು ಮಾನಸಿಕ ಹೊರೆ',
     indicator: 'Morning dread and chronic fatigue are primary signs of parental burnout and depression.',
     reversed: false,
     safetyQuestion: false,
@@ -1205,7 +1205,7 @@ const singleMotherQuestions = [
   {
     id: 2,
     part: 'Part 1: Burnout and Cognitive Load',
-    text: 'How often do you feel a sense of "decision fatigue," where having to make one more choice (even what to make for dinner) feels completely paralyzing?',
+    text: 'How often do you feel a sense of "decision fatigue," where having to make one more choice (even what to make for dinner) feels completely paralyzing?', textKn: 'ಇನ್ನೊಂದು ಆಯ್ಕೆ ಮಾಡಬೇಕಾದ (ಊಟಕ್ಕೆ ಏನು ಮಾಡಬೇಕು ಎಂಬುದೂ ಸಹ) ಸಂದರ್ಭ ಸಂಪೂರ್ಣವಾಗಿ ಸ್ತಬ್ಧಗೊಳಿಸುವಂತೆ ಅನಿಸುವ "ನಿರ್ಧಾರ ಬಳಲಿಕೆ"ಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಬಳಲಿಕೆ ಮತ್ತು ಮಾನಸಿಕ ಹೊರೆ',
     indicator: "Cognitive overload. Solo parenting requires making 100% of the household decisions, which heavily depletes the brain's executive functioning.",
     reversed: false,
     safetyQuestion: false,
@@ -1213,7 +1213,7 @@ const singleMotherQuestions = [
   {
     id: 3,
     part: 'Part 1: Burnout and Cognitive Load',
-    text: 'How often do you completely sacrifice your basic physiological needs (skipping meals, delaying using the restroom, losing sleep) just to keep the household running?',
+    text: 'How often do you completely sacrifice your basic physiological needs (skipping meals, delaying using the restroom, losing sleep) just to keep the household running?', textKn: 'ಮನೆಯನ್ನು ನಡೆಸಲು ನಿಮ್ಮ ಮೂಲಭೂತ ದೈಹಿಕ ಅಗತ್ಯಗಳನ್ನು (ಊಟ ಬಿಡುವುದು, ಶೌಚಾಲಯ ಬಳಕೆ ಮುಂದೂಡುವುದು, ನಿದ್ರೆ ಕಳೆದುಕೊಳ್ಳುವುದು) ಸಂಪೂರ್ಣವಾಗಿ ತ್ಯಾಗ ಮಾಡುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಮಾಡುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಬಳಲಿಕೆ ಮತ್ತು ಮಾನಸಿಕ ಹೊರೆ',
     indicator: 'Severe self-neglect and the collapse of personal boundaries.',
     reversed: false,
     safetyQuestion: false,
@@ -1221,7 +1221,7 @@ const singleMotherQuestions = [
   {
     id: 4,
     part: 'Part 1: Burnout and Cognitive Load',
-    text: 'How often do you feel like you are just surviving on "autopilot," going through the motions without actually enjoying your daily life?',
+    text: 'How often do you feel like you are just surviving on "autopilot," going through the motions without actually enjoying your daily life?', textKn: 'ನಿಮ್ಮ ದೈನಂದಿನ ಜೀವನವನ್ನು ನಿಜವಾಗಿಯೂ ಆನಂದಿಸದೆ, ಕೇವಲ "ಆಟೋಪೈಲಟ್"ನಲ್ಲಿ ಬದುಕುತ್ತಿದ್ದೀರಿ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಬಳಲಿಕೆ ಮತ್ತು ಮಾನಸಿಕ ಹೊರೆ',
     indicator: "Dissociation and emotional blunting; the brain's defense mechanism against chronic, inescapable stress.",
     reversed: false,
     safetyQuestion: false,
@@ -1229,7 +1229,7 @@ const singleMotherQuestions = [
   {
     id: 5,
     part: 'Part 1: Burnout and Cognitive Load',
-    text: 'How often do you lie awake at night, unable to sleep because your brain is looping through a never-ending to-do list or financial worries?',
+    text: 'How often do you lie awake at night, unable to sleep because your brain is looping through a never-ending to-do list or financial worries?', textKn: 'ನಿಮ್ಮ ಮನಸ್ಸು ಅಂತ್ಯವಿಲ್ಲದ ಕೆಲಸಗಳ ಪಟ್ಟಿ ಅಥವಾ ಆರ್ಥಿಕ ಚಿಂತೆಗಳಲ್ಲಿ ಸುತ್ತುತ್ತಿರುವ ಕಾರಣ ರಾತ್ರಿ ನಿದ್ರೆ ಬಾರದೆ ಎಚ್ಚರವಾಗಿ ಮಲಗಿರುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 1: ಬಳಲಿಕೆ ಮತ್ತು ಮಾನಸಿಕ ಹೊರೆ',
     indicator: 'Hyperarousal and sleep-onset insomnia driven by the anxiety of carrying the mental load alone.',
     reversed: false,
     safetyQuestion: false,
@@ -1239,7 +1239,7 @@ const singleMotherQuestions = [
   {
     id: 6,
     part: 'Part 2: "Mom Guilt" and Parenting Stress',
-    text: 'How often do you feel intense guilt that you are not doing enough, providing enough, or being "present" enough for your children?',
+    text: 'How often do you feel intense guilt that you are not doing enough, providing enough, or being "present" enough for your children?', textKn: 'ನಿಮ್ಮ ಮಕ್ಕಳಿಗೆ ಸಾಕಷ್ಟು ಮಾಡುತ್ತಿಲ್ಲ, ಸಾಕಷ್ಟು ಒದಗಿಸುತ್ತಿಲ್ಲ ಅಥವಾ ಸಾಕಷ್ಟು "ಇರುತ್ತಿಲ್ಲ" ಎಂಬ ತೀವ್ರ ಅಪರಾಧಿ ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: "ತಾಯಿಯ ಅಪರಾಧಿ ಭಾವನೆ" ಮತ್ತು ಪಾಲನೆಯ ಒತ್ತಡ',
     indicator: 'Toxic "mom guilt" and perfectionism, which aggressively degrades self-worth.',
     reversed: false,
     safetyQuestion: false,
@@ -1247,7 +1247,7 @@ const singleMotherQuestions = [
   {
     id: 7,
     part: 'Part 2: "Mom Guilt" and Parenting Stress',
-    text: 'How often do you worry that your children are negatively impacted or missing out because they are in a single-parent household?',
+    text: 'How often do you worry that your children are negatively impacted or missing out because they are in a single-parent household?', textKn: 'ಏಕ-ಪೋಷಕ ಕುಟುಂಬದಲ್ಲಿರುವ ಕಾರಣ ನಿಮ್ಮ ಮಕ್ಕಳು ನಕಾರಾತ್ಮಕವಾಗಿ ಪ್ರಭಾವಿತರಾಗುತ್ತಿದ್ದಾರೆ ಅಥವಾ ಏನನ್ನಾದರೂ ಕಳೆದುಕೊಳ್ಳುತ್ತಿದ್ದಾರೆ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಚಿಂತಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: "ತಾಯಿಯ ಅಪರಾಧಿ ಭಾವನೆ" ಮತ್ತು ಪಾಲನೆಯ ಒತ್ತಡ',
     indicator: 'Internalized stigma and anxiety regarding family structure.',
     reversed: false,
     safetyQuestion: false,
@@ -1255,7 +1255,7 @@ const singleMotherQuestions = [
   {
     id: 8,
     part: 'Part 2: "Mom Guilt" and Parenting Stress',
-    text: 'How often do you find yourself snapping, yelling, or losing your temper with your children over minor things, followed by immediate guilt?',
+    text: 'How often do you find yourself snapping, yelling, or losing your temper with your children over minor things, followed by immediate guilt?', textKn: 'ಸಣ್ಣ ವಿಷಯಗಳಿಗೆ ನಿಮ್ಮ ಮಕ್ಕಳ ಮೇಲೆ ಸಿಡುಕುವುದು, ಕೂಗುವುದು ಅಥವಾ ಕೋಪ ಕಳೆದುಕೊಳ್ಳುವುದನ್ನು, ನಂತರ ತಕ್ಷಣ ಅಪರಾಧಿ ಭಾವನೆ ಅನುಭವಿಸುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಕಂಡುಕೊಳ್ಳುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: "ತಾಯಿಯ ಅಪರಾಧಿ ಭಾವನೆ" ಮತ್ತು ಪಾಲನೆಯ ಒತ್ತಡ',
     indicator: 'Emotional dysregulation; depression and severe stress frequently manifest as a shortened temper and irritability.',
     reversed: false,
     safetyQuestion: false,
@@ -1263,7 +1263,7 @@ const singleMotherQuestions = [
   {
     id: 9,
     part: 'Part 2: "Mom Guilt" and Parenting Stress',
-    text: 'How often do you feel resentment toward the relentless demands of motherhood, followed by shame for feeling that way?',
+    text: 'How often do you feel resentment toward the relentless demands of motherhood, followed by shame for feeling that way?', textKn: 'ತಾಯ್ತನದ ನಿರಂತರ ಬೇಡಿಕೆಗಳ ಬಗ್ಗೆ ಅಸಮಾಧಾನವನ್ನು, ನಂತರ ಹಾಗೆ ಭಾವಿಸಿದ್ದಕ್ಕೆ ನಾಚಿಕೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: "ತಾಯಿಯ ಅಪರಾಧಿ ಭಾವನೆ" ಮತ್ತು ಪಾಲನೆಯ ಒತ್ತಡ',
     indicator: 'Parental burnout. It is a normal psychological response to unrelenting demands, but the accompanying shame causes deep emotional distress.',
     reversed: false,
     safetyQuestion: false,
@@ -1271,7 +1271,7 @@ const singleMotherQuestions = [
   {
     id: 10,
     part: 'Part 2: "Mom Guilt" and Parenting Stress',
-    text: 'How often do you compare yourself to two-parent households or other mothers on social media and feel like you are completely failing?',
+    text: 'How often do you compare yourself to two-parent households or other mothers on social media and feel like you are completely failing?', textKn: 'ಎರಡು-ಪೋಷಕ ಕುಟುಂಬಗಳಿಗೆ ಅಥವಾ ಸಾಮಾಜಿಕ ಮಾಧ್ಯಮದಲ್ಲಿನ ಇತರ ತಾಯಂದಿರಿಗೆ ನಿಮ್ಮನ್ನು ಹೋಲಿಸಿಕೊಂಡು ಸಂಪೂರ್ಣವಾಗಿ ವಿಫಲರಾಗುತ್ತಿದ್ದೀರಿ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 2: "ತಾಯಿಯ ಅಪರಾಧಿ ಭಾವನೆ" ಮತ್ತು ಪಾಲನೆಯ ಒತ್ತಡ',
     indicator: 'The "comparison trap," which fuels feelings of inadequacy and low self-esteem.',
     reversed: false,
     safetyQuestion: false,
@@ -1281,7 +1281,7 @@ const singleMotherQuestions = [
   {
     id: 11,
     part: 'Part 3: Isolation and Emotional Well-Being',
-    text: 'How often do you feel completely alone, feeling that if a true emergency happened, you have no "village" or backup to rely on?',
+    text: 'How often do you feel completely alone, feeling that if a true emergency happened, you have no "village" or backup to rely on?', textKn: 'ನಿಜವಾದ ತುರ್ತುಸ್ಥಿತಿ ಸಂಭವಿಸಿದರೆ ಅವಲಂಬಿಸಲು ಯಾವುದೇ "ಸಹಾಯಕ ವಲಯ" ಅಥವಾ ಬ್ಯಾಕಪ್ ಇಲ್ಲ ಎಂದು ಭಾವಿಸುತ್ತಾ ಸಂಪೂರ್ಣ ಒಬ್ಬಂಟಿತನವನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಏಕಾಂಗಿತನ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Lack of a secure support system and profound emotional isolation.',
     reversed: false,
     safetyQuestion: false,
@@ -1289,7 +1289,7 @@ const singleMotherQuestions = [
   {
     id: 12,
     part: 'Part 3: Isolation and Emotional Well-Being',
-    text: 'How often do you feel a lingering sense of sadness, emptiness, or find yourself crying in the shower or car where your kids cannot see you?',
+    text: 'How often do you feel a lingering sense of sadness, emptiness, or find yourself crying in the shower or car where your kids cannot see you?', textKn: 'ನಿಮ್ಮ ಮಕ್ಕಳಿಗೆ ಕಾಣಿಸದ ಸ್ನಾನಗೃಹ ಅಥವಾ ಕಾರಿನಲ್ಲಿ ಅಳುವುದನ್ನು, ನಿರಂತರ ದುಃಖ ಅಥವಾ ಬರಿದಾದ ಭಾವನೆಯನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಏಕಾಂಗಿತನ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Pervasive low mood and masking (hiding depression to protect children).',
     reversed: false,
     safetyQuestion: false,
@@ -1297,7 +1297,7 @@ const singleMotherQuestions = [
   {
     id: 13,
     part: 'Part 3: Isolation and Emotional Well-Being',
-    text: 'How often do you feel like you have entirely lost your identity outside of being a mother and a provider?',
+    text: 'How often do you feel like you have entirely lost your identity outside of being a mother and a provider?', textKn: 'ತಾಯಿ ಮತ್ತು ಜೀವನಾಧಾರ ಒದಗಿಸುವವರಾಗಿರುವುದರ ಹೊರತಾಗಿ ನಿಮ್ಮ ಅಸ್ಮಿತೆಯನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಕಳೆದುಕೊಂಡಿದ್ದೀರಿ ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಏಕಾಂಗಿತನ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Enmeshment and identity loss; a classic precursor to depressive episodes in caregivers.',
     reversed: false,
     safetyQuestion: false,
@@ -1305,7 +1305,7 @@ const singleMotherQuestions = [
   {
     id: 14,
     part: 'Part 3: Isolation and Emotional Well-Being',
-    text: 'How often do you feel that you have to project a facade of being a "strong, independent single mom" while secretly feeling like you are falling apart?',
+    text: 'How often do you feel that you have to project a facade of being a "strong, independent single mom" while secretly feeling like you are falling apart?', textKn: 'ಒಳಗೊಳಗೇ ಕುಸಿಯುತ್ತಿದ್ದರೂ "ಬಲಶಾಲಿ, ಸ್ವತಂತ್ರ ಏಕ ತಾಯಿ" ಎಂಬ ಮುಖವಾಡವನ್ನು ಪ್ರದರ್ಶಿಸಬೇಕು ಎಂದು ನೀವು ಎಷ್ಟು ಬಾರಿ ಭಾವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಏಕಾಂಗಿತನ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Emotional suppression. The pressure to appear resilient prevents seeking help and increases internal distress.',
     reversed: false,
     safetyQuestion: false,
@@ -1313,7 +1313,7 @@ const singleMotherQuestions = [
   {
     id: 15,
     part: 'Part 3: Isolation and Emotional Well-Being',
-    text: 'How often do you experience physical symptoms like tension headaches, a tight chest, or unexplained stomach issues when thinking about your responsibilities?',
+    text: 'How often do you experience physical symptoms like tension headaches, a tight chest, or unexplained stomach issues when thinking about your responsibilities?', textKn: 'ನಿಮ್ಮ ಜವಾಬ್ದಾರಿಗಳ ಬಗ್ಗೆ ಯೋಚಿಸುವಾಗ ತಲೆನೋವು, ಎದೆ ಬಿಗಿತ ಅಥವಾ ವಿವರಿಸಲಾಗದ ಹೊಟ್ಟೆಯ ಸಮಸ್ಯೆಗಳಂತಹ ದೈಹಿಕ ಲಕ್ಷಣಗಳನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 3: ಏಕಾಂಗಿತನ ಮತ್ತು ಭಾವನಾತ್ಮಕ ಯೋಗಕ್ಷೇಮ',
     indicator: 'Somatization; the body physically manifesting the chronic psychological stress of solo parenting.',
     reversed: false,
     safetyQuestion: false,
@@ -1323,7 +1323,7 @@ const singleMotherQuestions = [
   {
     id: 16,
     part: 'Part 4: Financial Anxiety and Coping Mechanisms',
-    text: 'How often does anxiety about money, bills, or providing for your children\'s future cause you physical panic (racing heart, shortness of breath)?',
+    text: 'How often does anxiety about money, bills, or providing for your children\'s future cause you physical panic (racing heart, shortness of breath)?', textKn: 'ಹಣ, ಬಿಲ್‌ಗಳು ಅಥವಾ ನಿಮ್ಮ ಮಕ್ಕಳ ಭವಿಷ್ಯಕ್ಕಾಗಿ ಒದಗಿಸುವ ಬಗೆಗಿನ ಆತಂಕವು ದೈಹಿಕ ಪ್ಯಾನಿಕ್ (ಹೃದಯಬಡಿತ ಹೆಚ್ಚಾಗುವುದು, ಉಸಿರಾಟದ ತೊಂದರೆ) ಉಂಟುಮಾಡುವುದನ್ನು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಆರ್ಥಿಕ ಆತಂಕ ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Acute financial anxiety and hyper-vigilance regarding survival and security.',
     reversed: false,
     safetyQuestion: false,
@@ -1331,7 +1331,7 @@ const singleMotherQuestions = [
   {
     id: 17,
     part: 'Part 4: Financial Anxiety and Coping Mechanisms',
-    text: 'How often do you avoid looking at your bank account, opening mail, or dealing with ex-partner issues because the anxiety is too overwhelming?',
+    text: 'How often do you avoid looking at your bank account, opening mail, or dealing with ex-partner issues because the anxiety is too overwhelming?', textKn: 'ಆತಂಕ ತುಂಬಾ ಅತಿಯಾಗಿರುವ ಕಾರಣ ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಖಾತೆಯನ್ನು ನೋಡುವುದು, ಅಂಚೆ ತೆರೆಯುವುದು ಅಥವಾ ಮಾಜಿ ಸಂಗಾತಿಯ ಸಮಸ್ಯೆಗಳನ್ನು ನಿಭಾಯಿಸುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ತಪ್ಪಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಆರ್ಥಿಕ ಆತಂಕ ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Anxiety-driven avoidance behavior, which often compounds stress over time.',
     reversed: false,
     safetyQuestion: false,
@@ -1339,7 +1339,7 @@ const singleMotherQuestions = [
   {
     id: 18,
     part: 'Part 4: Financial Anxiety and Coping Mechanisms',
-    text: 'How often do you feel completely drained of the energy required to maintain friendships or date, choosing isolation instead?',
+    text: 'How often do you feel completely drained of the energy required to maintain friendships or date, choosing isolation instead?', textKn: 'ಸ್ನೇಹ ಸಂಬಂಧಗಳನ್ನು ಕಾಪಾಡಿಕೊಳ್ಳಲು ಅಥವಾ ಡೇಟಿಂಗ್‌ಗೆ ಬೇಕಾದ ಶಕ್ತಿಯನ್ನು ಸಂಪೂರ್ಣವಾಗಿ ಕಳೆದುಕೊಂಡು, ಬದಲಿಗೆ ಏಕಾಂಗಿತನವನ್ನು ಆಯ್ಕೆ ಮಾಡಿಕೊಳ್ಳುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಅನುಭವಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಆರ್ಥಿಕ ಆತಂಕ ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Social withdrawal due to extreme emotional and physical exhaustion.',
     reversed: false,
     safetyQuestion: false,
@@ -1347,7 +1347,7 @@ const singleMotherQuestions = [
   {
     id: 19,
     part: 'Part 4: Financial Anxiety and Coping Mechanisms',
-    text: 'How often do you rely on substances (like a few glasses of wine every night) or behavioral escapes (like endless doomscrolling) to numb out and cope with the evening silence?',
+    text: 'How often do you rely on substances (like a few glasses of wine every night) or behavioral escapes (like endless doomscrolling) to numb out and cope with the evening silence?', textKn: 'ಸಂಜೆಯ ಮೌನವನ್ನು ನಿಭಾಯಿಸಲು ಮತ್ತು ನಿಶ್ಚೇಷ್ಟಿತಗೊಳ್ಳಲು ಮಾದಕ ವಸ್ತುಗಳನ್ನು (ಪ್ರತಿ ರಾತ್ರಿ ಕೆಲವು ಗ್ಲಾಸ್ ವೈನ್‌ನಂತಹ) ಅಥವಾ ವರ್ತನಾ ಪಲಾಯನಗಳನ್ನು (ಅಂತ್ಯವಿಲ್ಲದ ಸ್ಕ್ರೋಲಿಂಗ್‌ನಂತಹ) ನೀವು ಎಷ್ಟು ಬಾರಿ ಅವಲಂಬಿಸುತ್ತೀರಿ?', partKn: 'ಭಾಗ 4: ಆರ್ಥಿಕ ಆತಂಕ ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Maladaptive (unhealthy) coping mechanisms and a risk factor for substance dependency to manage solo-parenting stress.',
     reversed: false,
     safetyQuestion: false,
@@ -1355,7 +1355,7 @@ const singleMotherQuestions = [
   {
     id: 20,
     part: 'Part 4: Financial Anxiety and Coping Mechanisms',
-    text: 'How often do you have passing thoughts that your family would be better off without you, or wish you could get sick or injured just so you could finally rest?',
+    text: 'How often do you have passing thoughts that your family would be better off without you, or wish you could get sick or injured just so you could finally rest?', textKn: 'ನಿಮ್ಮ ಕುಟುಂಬವು ನಿಮ್ಮಿಲ್ಲದೆ ಉತ್ತಮವಾಗಿರುತ್ತದೆ ಎಂಬ ಕ್ಷಣಿಕ ಆಲೋಚನೆಗಳನ್ನು, ಅಥವಾ ಕೊನೆಗೂ ವಿಶ್ರಾಂತಿ ಪಡೆಯಲು ಅನಾರೋಗ್ಯ ಅಥವಾ ಗಾಯಗೊಳ್ಳಬೇಕೆಂದು ಬಯಸುವುದನ್ನು ನೀವು ಎಷ್ಟು ಬಾರಿ ಹೊಂದಿದ್ದೀರಿ?', partKn: 'ಭಾಗ 4: ಆರ್ಥಿಕ ಆತಂಕ ಮತ್ತು ನಿಭಾಯಿಸುವ ವಿಧಾನಗಳು',
     indicator: 'Passive suicidality, severe depressive crisis, or extreme burnout — this requires immediate professional intervention. You and your children deserve for you to be healthy and safe.',
     reversed: false,
     safetyQuestion: true,
