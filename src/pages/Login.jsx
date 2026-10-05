@@ -16,6 +16,7 @@ export default function Login() {
   const [loading, setLoading] = useState(false)
 
   const registered = location.state?.registered
+  const passwordReset = location.state?.passwordReset
 
   if (user) {
     let dest = user.service === 'career_fit' ? '/career/dashboard' : '/dashboard'
@@ -78,6 +79,13 @@ export default function Login() {
             </div>
           )}
 
+          {passwordReset && (
+            <div className="mb-5 rounded-xl px-4 py-3 text-sm font-medium"
+                 style={{ background: 'rgba(74,222,128,0.15)', border: '1px solid rgba(74,222,128,0.4)', color: '#86efac' }}>
+              Your password has been reset. Sign in with your new password.
+            </div>
+          )}
+
           {error && (
             <div className="mb-5 rounded-xl px-4 py-3 text-sm font-medium"
                  style={{ background: 'rgba(248,113,113,0.15)', border: '1px solid rgba(248,113,113,0.4)', color: '#fca5a5' }}>
@@ -108,7 +116,12 @@ export default function Login() {
             </div>
 
             <div>
-              <label htmlFor="login-password" className="block text-sm font-medium text-white/70 mb-1.5">Password</label>
+              <div className="flex items-center justify-between mb-1.5">
+                <label htmlFor="login-password" className="block text-sm font-medium text-white/70">Password</label>
+                <Link to="/forgot-password" className="text-xs font-medium text-green-400 hover:text-green-300 transition-colors">
+                  Forgot password?
+                </Link>
+              </div>
               <input
                 id="login-password"
                 type="password"

@@ -120,6 +120,40 @@ def send_otp(email: str, otp: str):
         print(f'[mailer] FAILED to send OTP to {email}: {exc}', flush=True)
 
 
+def send_password_reset_email(email: str, otp: str):
+    if not _email_configured:
+        print(f'[DEV] Password reset code for {email}: {otp}', flush=True)
+        return
+    try:
+        import httpx
+        resp = httpx.post(
+            'https://api.brevo.com/v3/smtp/email',
+            headers={'api-key': _brevo_key, 'Content-Type': 'application/json'},
+            json={
+                'sender':  {'name': 'MindCheck', 'email': _brevo_sender},
+                'to':      [{'email': email}],
+                'subject': 'MindCheck — Reset your password',
+                'htmlContent': f'''
+                  <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;
+                              border:1px solid #e5e7eb;border-radius:12px;">
+                    <h2 style="color:#1d4ed8;">MindCheck</h2>
+                    <p style="color:#374151;">We received a request to reset your password. Use the code below:</p>
+                    <div style="font-size:36px;font-weight:700;letter-spacing:10px;
+                                color:#1d4ed8;padding:16px 0;">{otp}</div>
+                    <p style="color:#6b7280;font-size:14px;">
+                      Expires in <strong>15 minutes</strong>. If you did not request this, you can safely ignore this email —
+                      your password will not be changed.
+                    </p>
+                  </div>''',
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
+        print(f'[mailer] Password reset email sent OK to {email}', flush=True)
+    except Exception as exc:
+        print(f'[mailer] FAILED to send password reset email to {email}: {exc}', flush=True)
+
+
 # ── AI-generated write-up (Gemini primary, Groq fallback) ────────────────────
 # Writes the short note shown as "AI Assessment" in the admin panel, meant to be
 # pasted straight into what the admin sends the user alongside the PDF-rubric
@@ -392,6 +426,14 @@ class LoginBody(BaseModel):
     email: str
     password: str
 
+class ForgotPasswordBody(BaseModel):
+    email: str
+
+class ResetPasswordBody(BaseModel):
+    email: str
+    otp: str
+    newPassword: str
+
 class SubmitBody(BaseModel):
     category: str
     categoryLabel: Optional[str] = None
@@ -540,6 +582,42 @@ def logout_log(request: Request, background_tasks: BackgroundTasks):
         )
     except Exception:
         pass
+    return {'ok': True}
+
+
+@app.post('/api/auth/forgot-password')
+def forgot_password(body: ForgotPasswordBody, background_tasks: BackgroundTasks):
+    with db() as cur:
+        cur.execute('SELECT id FROM users WHERE email = %s', (body.email,))
+        row = cur.fetchone()
+        if row:
+            otp = make_otp()
+            cur.execute(
+                "UPDATE users SET otp = %s, otp_expires_at = NOW() + INTERVAL '15 minutes' WHERE id = %s",
+                (otp, row[0])
+            )
+            background_tasks.add_task(send_password_reset_email, body.email, otp)
+    # Always respond ok — don't reveal whether the email is registered.
+    return {'ok': True}
+
+
+@app.post('/api/auth/reset-password', responses=_R400)
+def reset_password(body: ResetPasswordBody):
+    if len(body.newPassword) < 6:
+        raise HTTPException(400, 'Password must be at least 6 characters.')
+    with db() as cur:
+        cur.execute(
+            'SELECT id FROM users WHERE email = %s AND otp = %s AND otp_expires_at > NOW()',
+            (body.email, body.otp.strip())
+        )
+        row = cur.fetchone()
+        if not row:
+            raise HTTPException(400, 'Invalid or expired code.')
+        hashed = bcrypt.hashpw(body.newPassword.encode(), bcrypt.gensalt()).decode()
+        cur.execute(
+            'UPDATE users SET password = %s, otp = NULL, otp_expires_at = NULL WHERE id = %s',
+            (hashed, row[0])
+        )
     return {'ok': True}
 
 
