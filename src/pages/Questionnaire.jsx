@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useNavigate } from 'react-router-dom'
-import { QUESTIONS, ANSWER_OPTIONS, CATEGORIES, calculateResult, calculateCareerFitResult } from '../data/questions'
+import { QUESTIONS, ANSWER_OPTIONS, ANSWER_OPTIONS_KN, CATEGORIES, calculateResult, calculateCareerFitResult } from '../data/questions'
 
 const CAREER_FIT_CATEGORIES = ['counselling-10th', 'counselling-12th']
 import { useAuth } from '../context/AuthContext'
@@ -148,6 +148,14 @@ export default function Questionnaire() {
   const [answers, setAnswers]                 = useState({})
   const [submitAttempted, setSubmitAttempted] = useState(false)
   const [submitting, setSubmitting]           = useState(false)
+
+  // Kannada toggle — career-fit (10th/12th counselling) questions only.
+  // Translations live on the question objects themselves (textKn/partKn),
+  // seeded only for the default questions in src/data/questions.js; if an
+  // admin has replaced a category's questions via the DB, those rows won't
+  // have a textKn and we silently fall back to English for that question.
+  const [language, setLanguage] = useState('en')
+  const isCareerFit = CAREER_FIT_CATEGORIES.includes(categoryId)
 
   // Section selection (for institution users)
   const [section, setSection]               = useState('')
@@ -332,6 +340,10 @@ export default function Questionnaire() {
   }
 
   const currentAnswer = answers[question.id]
+  const showKn      = isCareerFit && language === 'kn'
+  const partText    = showKn ? (question.partKn || question.part) : question.part
+  const questionText = showKn ? (question.textKn || question.text) : question.text
+  const answerOptions = showKn ? ANSWER_OPTIONS_KN : ANSWER_OPTIONS
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={bgStyle}>
@@ -351,6 +363,16 @@ export default function Questionnaire() {
               style={{ background: 'rgba(96,165,250,0.15)', color: '#93c5fd', border: '1px solid rgba(96,165,250,0.3)' }}>
               {section}
             </span>
+          )}
+          {isCareerFit && (
+            <button
+              type="button"
+              onClick={() => setLanguage((l) => (l === 'en' ? 'kn' : 'en'))}
+              className="ml-auto text-xs font-semibold px-3 py-1 rounded-full transition-colors"
+              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
+            >
+              {language === 'en' ? 'ಕನ್ನಡ' : 'English'}
+            </button>
           )}
         </div>
 
@@ -373,7 +395,7 @@ export default function Questionnaire() {
           <div className="mb-3">
             <span className="inline-block text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide"
               style={{ background: 'rgba(74,222,128,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
-              {question.part}
+              {partText}
             </span>
           </div>
         )}
@@ -387,13 +409,13 @@ export default function Questionnaire() {
             Q{question.id}
           </p>
           <p className="text-white font-medium text-lg leading-relaxed mb-5">
-            {question.text}
+            {questionText}
           </p>
 
           {/* Answers beside the emotion face — face head starts at first option level */}
           <div className="flex gap-4 items-start">
             <div className="flex-1 min-w-0 space-y-2.5">
-              {ANSWER_OPTIONS.map((opt) => {
+              {answerOptions.map((opt) => {
                 const selected = currentAnswer === opt.value
                 return (
                   <button
