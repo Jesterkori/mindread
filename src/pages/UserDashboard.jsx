@@ -37,6 +37,38 @@ export default function UserDashboard() {
   const [paymentQr, setPaymentQr]     = useState('')
   const [paymentNote, setPaymentNote] = useState('')
 
+  // Kannada toggle for a released result — translated on demand (and cached
+  // per result) the first time it's switched on, since admin_action/notes
+  // are free text an admin typed and can't be pre-translated like questions.
+  const [kannada, setKannada]         = useState({})   // { [resultId]: boolean }
+  const [translated, setTranslated]   = useState({})   // { [resultId]: { action, notes } }
+  const [translating, setTranslating] = useState({})   // { [resultId]: boolean }
+  const [translateError, setTranslateError] = useState({})
+
+  async function toggleKannada(r) {
+    const on = !kannada[r.id]
+    setKannada((k) => ({ ...k, [r.id]: on }))
+    if (!on || translated[r.id]) return
+
+    setTranslating((t) => ({ ...t, [r.id]: true }))
+    setTranslateError((e) => ({ ...e, [r.id]: '' }))
+    try {
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texts: [r.admin_action || '', r.admin_notes || ''] }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Translation failed')
+      setTranslated((t) => ({ ...t, [r.id]: { action: data.translations[0], notes: data.translations[1] } }))
+    } catch {
+      setTranslateError((e) => ({ ...e, [r.id]: 'Could not translate right now. Please try again.' }))
+      setKannada((k) => ({ ...k, [r.id]: false }))
+    } finally {
+      setTranslating((t) => ({ ...t, [r.id]: false }))
+    }
+  }
+
   useEffect(() => {
     fetch('/api/user/results', { headers: authHeader() })
       .then((r) => r.json())
@@ -144,6 +176,7 @@ export default function UserDashboard() {
                 const key   = levelKey(r.level)
                 const style = LEVEL_STYLES[key]
                 const isOpen = expanded === r.id
+                const kannadaBtnLabel = translating[r.id] ? 'Translating…' : (kannada[r.id] ? 'English' : 'ಕನ್ನಡ')
 
                 return (
                   <div key={r.id} className="rounded-2xl p-4 transition-all"
@@ -179,10 +212,30 @@ export default function UserDashboard() {
                       <div className="mt-4 pt-4 space-y-4"
                         style={{ borderTop: '1px solid rgba(255,255,255,0.1)' }}>
 
+                        {(r.admin_action || r.admin_notes) && (
+                          <div className="flex items-center justify-between">
+                            <span />
+                            <button
+                              onClick={() => toggleKannada(r)}
+                              disabled={translating[r.id]}
+                              className="text-xs font-semibold px-3 py-1 rounded-full transition-colors disabled:opacity-50"
+                              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
+                            >
+                              {kannadaBtnLabel}
+                            </button>
+                          </div>
+                        )}
+
+                        {translateError[r.id] && (
+                          <p className="text-xs" style={{ color: '#f87171' }}>{translateError[r.id]}</p>
+                        )}
+
                         {r.admin_action && (
                           <div>
                             <p className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-1">Counselling Result</p>
-                            <p className="text-sm text-white/80 leading-relaxed">{r.admin_action}</p>
+                            <p className="text-sm text-white/80 leading-relaxed">
+                              {kannada[r.id] && translated[r.id] ? translated[r.id].action : r.admin_action}
+                            </p>
                           </div>
                         )}
 
@@ -192,7 +245,9 @@ export default function UserDashboard() {
                             <p className="text-xs font-semibold text-white/50 uppercase tracking-wide mb-1">
                               Note from our team
                             </p>
-                            <p className="text-sm text-white/70">{r.admin_notes}</p>
+                            <p className="text-sm text-white/70">
+                              {kannada[r.id] && translated[r.id] ? translated[r.id].notes : r.admin_notes}
+                            </p>
                           </div>
                         )}
 

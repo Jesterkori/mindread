@@ -1,3 +1,4 @@
+import asyncio
 import csv
 import io
 import json
@@ -318,6 +319,48 @@ async def _store_analysis(submission_id: int, category: str, category_label: str
             cur.execute('UPDATE submissions SET ai_analysis = %s WHERE id = %s', (analysis, submission_id))
     except Exception as exc:
         print(f'AI analysis background error: {exc}', flush=True)
+
+
+# ── On-demand Kannada translation (Gemini primary, Groq fallback) ────────────
+# Powers the "ಕನ್ನಡ" toggle on a user's released result (admin's free-typed
+# answer/note, plus any career profile text) — unlike the question bank, this
+# text is written per-submission by an admin, so it can't be pre-translated;
+# it's translated live, on demand, the first time a user taps the toggle.
+
+_TRANSLATE_SYSTEM_PROMPT = (
+    'You are a professional English-to-Kannada translator for a mental wellness / career '
+    'counselling platform. Translate the given text into natural, plain Kannada that a general '
+    'reader can understand. Preserve the meaning exactly — do not add, remove, soften, or '
+    'reinterpret any information, and keep the same tone and level of seriousness. '
+    'Output ONLY the Kannada translation and nothing else — no English, no explanations, no quotes.'
+)
+
+
+async def _translate_one_kn(text: str) -> str:
+    if not text or not text.strip():
+        return text
+    try:
+        return (await _call_gemini_analysis(_TRANSLATE_SYSTEM_PROMPT, text)).strip()
+    except Exception as exc:
+        print(f'Gemini translate failed, falling back to Groq: {exc}', flush=True)
+        return (await _call_groq_analysis(_TRANSLATE_SYSTEM_PROMPT, text)).strip()
+
+
+class TranslateBody(BaseModel):
+    texts: list[str]
+
+
+@app.post('/api/translate', responses=_R401)
+async def translate_kannada(body: TranslateBody, request: Request):
+    get_current_user(request)
+    if len(body.texts) > 10:
+        raise HTTPException(400, 'Too many texts in one request.')
+    try:
+        translations = await asyncio.gather(*[_translate_one_kn(t) for t in body.texts])
+    except Exception as exc:
+        print(f'[translate] failed: {exc}', flush=True)
+        raise HTTPException(502, 'Translation is temporarily unavailable. Please try again later.')
+    return {'ok': True, 'translations': list(translations)}
 
 
 # ── AI sanity-check (Groq free tier) ─────────────────────────────────────────

@@ -15,6 +15,9 @@ const PROFILES_10TH = [
     title: 'The Analytical / Scientific Mind',
     stream: 'Science (PCM / PCB)',
     careers: 'Engineering, Data Science, Medicine, Research, Architecture',
+    titleKn: 'ವಿಶ್ಲೇಷಣಾತ್ಮಕ / ವೈಜ್ಞಾನಿಕ ಮನಸ್ಸು',
+    streamKn: 'ವಿಜ್ಞಾನ (PCM / PCB)',
+    careersKn: 'ಎಂಜಿನಿಯರಿಂಗ್, ಡೇಟಾ ಸೈನ್ಸ್, ವೈದ್ಯಕೀಯ, ಸಂಶೋಧನೆ, ವಾಸ್ತುಶಿಲ್ಪ',
   },
   {
     keys: ['creative', 'expressive', 'part 2'],
@@ -22,6 +25,9 @@ const PROFILES_10TH = [
     title: 'The Creative / Expressive Mind',
     stream: 'Arts & Humanities',
     careers: 'Design, Journalism, Literature, Fine Arts, Media, Law',
+    titleKn: 'ಸೃಜನಶೀಲ / ಅಭಿವ್ಯಕ್ತಿಶೀಲ ಮನಸ್ಸು',
+    streamKn: 'ಕಲೆ ಮತ್ತು ಮಾನವಿಕ ಶಾಸ್ತ್ರಗಳು',
+    careersKn: 'ವಿನ್ಯಾಸ, ಪತ್ರಿಕೋದ್ಯಮ, ಸಾಹಿತ್ಯ, ಲಲಿತಕಲೆ, ಮಾಧ್ಯಮ, ಕಾನೂನು',
   },
   {
     keys: ['enterprising', 'leadership', 'part 3'],
@@ -29,6 +35,9 @@ const PROFILES_10TH = [
     title: 'The Enterprising / Leadership Mind',
     stream: 'Commerce / Business',
     careers: 'Management, Finance, Entrepreneurship, Marketing, Corporate Law',
+    titleKn: 'ಉದ್ಯಮಶೀಲ / ನಾಯಕತ್ವದ ಮನಸ್ಸು',
+    streamKn: 'ವಾಣಿಜ್ಯ / ವ್ಯವಹಾರ',
+    careersKn: 'ನಿರ್ವಹಣೆ, ಹಣಕಾಸು, ಉದ್ಯಮಶೀಲತೆ, ಮಾರ್ಕೆಟಿಂಗ್, ಕಾರ್ಪೊರೇಟ್ ಕಾನೂನು',
   },
   {
     keys: ['empathetic', 'social', 'part 4'],
@@ -36,6 +45,9 @@ const PROFILES_10TH = [
     title: 'The Empathetic / Social Mind',
     stream: 'Humanities or Science (PCB)',
     careers: 'Psychology, Healthcare, Teaching, Social Work, Public Policy',
+    titleKn: 'ಸಹಾನುಭೂತಿಯ / ಸಾಮಾಜಿಕ ಮನಸ್ಸು',
+    streamKn: 'ಮಾನವಿಕ ಶಾಸ್ತ್ರಗಳು ಅಥವಾ ವಿಜ್ಞಾನ (PCB)',
+    careersKn: 'ಮನೋವಿಜ್ಞಾನ, ಆರೋಗ್ಯ ರಕ್ಷಣೆ, ಬೋಧನೆ, ಸಮಾಜ ಸೇವೆ, ಸಾರ್ವಜನಿಕ ನೀತಿ',
   },
   {
     keys: ['practical', 'technical', 'part 5'],
@@ -43,6 +55,9 @@ const PROFILES_10TH = [
     title: 'The Practical / Technical Mind',
     stream: 'Science (Computer Science) or Vocational / Diploma',
     careers: 'IT/Software, Robotics, Applied Engineering, Digital Media, Skilled Trades',
+    titleKn: 'ಪ್ರಾಯೋಗಿಕ / ತಾಂತ್ರಿಕ ಮನಸ್ಸು',
+    streamKn: 'ವಿಜ್ಞಾನ (ಕಂಪ್ಯೂಟರ್ ಸೈನ್ಸ್) ಅಥವಾ ವೃತ್ತಿಪರ / ಡಿಪ್ಲೊಮಾ',
+    careersKn: 'ಐಟಿ/ಸಾಫ್ಟ್‌ವೇರ್, ರೊಬೊಟಿಕ್ಸ್, ಅನ್ವಯಿಕ ಎಂಜಿನಿಯರಿಂಗ್, ಡಿಜಿಟಲ್ ಮಾಧ್ಯಮ, ಕುಶಲ ಕಸುಬುಗಳು',
   },
   {
     keys: ['multipotentialite', 'diverse', 'mix'],
@@ -50,6 +65,9 @@ const PROFILES_10TH = [
     title: 'The Multipotentialite',
     stream: 'Interdisciplinary combinations',
     careers: 'Commerce with Math, Arts with Economics — shadow professionals to narrow interests',
+    titleKn: 'ಬಹುಸಾಮರ್ಥ್ಯದ ವ್ಯಕ್ತಿ',
+    streamKn: 'ಅಂತರಶಿಸ್ತೀಯ ಸಂಯೋಜನೆಗಳು',
+    careersKn: 'ಗಣಿತದೊಂದಿಗೆ ವಾಣಿಜ್ಯ, ಅರ್ಥಶಾಸ್ತ್ರದೊಂದಿಗೆ ಕಲೆ — ಆಸಕ್ತಿಗಳನ್ನು ಸಂಕುಚಿತಗೊಳಿಸಲು ವೃತ್ತಿಪರರನ್ನು ಅನುಸರಿಸಿ',
   },
 ]
 
@@ -60,6 +78,9 @@ const PROFILES_12TH = [
     title: 'The Deep Tech / Analytical Mind',
     stream: 'B.Tech / B.E. or B.Sc. (Physics, Mathematics, Data Science)',
     careers: 'Engineering, Data Science, AI, Research, Architecture',
+    titleKn: 'ಆಳ ತಂತ್ರಜ್ಞಾನ / ವಿಶ್ಲೇಷಣಾತ್ಮಕ ಮನಸ್ಸು',
+    streamKn: 'B.Tech / B.E. ಅಥವಾ B.Sc. (ಭೌತಶಾಸ್ತ್ರ, ಗಣಿತ, ಡೇಟಾ ಸೈನ್ಸ್)',
+    careersKn: 'ಎಂಜಿನಿಯರಿಂಗ್, ಡೇಟಾ ಸೈನ್ಸ್, AI, ಸಂಶೋಧನೆ, ವಾಸ್ತುಶಿಲ್ಪ',
   },
   {
     keys: ['creative', 'design', 'part 2'],
@@ -67,6 +88,9 @@ const PROFILES_12TH = [
     title: 'The Creative / Design Mind',
     stream: 'B.Arch, B.Des (UI/UX), B.A. (Journalism, Mass Comm, Fine Arts)',
     careers: 'UI/UX, Film, Architecture, Graphic Design, Journalism, Digital Arts',
+    titleKn: 'ಸೃಜನಶೀಲ / ವಿನ್ಯಾಸ ಮನಸ್ಸು',
+    streamKn: 'B.Arch, B.Des (UI/UX), B.A. (ಪತ್ರಿಕೋದ್ಯಮ, ಸಮೂಹ ಸಂವಹನ, ಲಲಿತಕಲೆ)',
+    careersKn: 'UI/UX, ಚಲನಚಿತ್ರ, ವಾಸ್ತುಶಿಲ್ಪ, ಗ್ರಾಫಿಕ್ ವಿನ್ಯಾಸ, ಪತ್ರಿಕೋದ್ಯಮ, ಡಿಜಿಟಲ್ ಕಲೆ',
   },
   {
     keys: ['enterprise', 'strategic', 'part 3'],
@@ -74,6 +98,9 @@ const PROFILES_12TH = [
     title: 'The Enterprise / Strategic Mind',
     stream: 'BBA, B.Com (Hons), CA/CS/CFA, Integrated Law (BBA LLB)',
     careers: 'Finance, Investment Banking, Entrepreneurship, Corporate Law, CA',
+    titleKn: 'ಉದ್ಯಮ / ಕಾರ್ಯತಂತ್ರದ ಮನಸ್ಸು',
+    streamKn: 'BBA, B.Com (Hons), CA/CS/CFA, ಇಂಟಿಗ್ರೇಟೆಡ್ ಕಾನೂನು (BBA LLB)',
+    careersKn: 'ಹಣಕಾಸು, ಹೂಡಿಕೆ ಬ್ಯಾಂಕಿಂಗ್, ಉದ್ಯಮಶೀಲತೆ, ಕಾರ್ಪೊರೇಟ್ ಕಾನೂನು, CA',
   },
   {
     keys: ['health', 'society', 'part 4'],
@@ -81,6 +108,9 @@ const PROFILES_12TH = [
     title: 'The Health / Society Mind',
     stream: 'MBBS, BDS, B.Sc. (Psychology, Nursing), BA LLB, B.A. (Pol. Science)',
     careers: 'Medicine, Psychology, Law, Civil Services, Social Work, Diplomacy',
+    titleKn: 'ಆರೋಗ್ಯ / ಸಮಾಜ ಮನಸ್ಸು',
+    streamKn: 'MBBS, BDS, B.Sc. (ಮನೋವಿಜ್ಞಾನ, ನರ್ಸಿಂಗ್), BA LLB, B.A. (ರಾಜ್ಯಶಾಸ್ತ್ರ)',
+    careersKn: 'ವೈದ್ಯಕೀಯ, ಮನೋವಿಜ್ಞಾನ, ಕಾನೂನು, ನಾಗರಿಕ ಸೇವೆಗಳು, ಸಮಾಜ ಸೇವೆ, ರಾಜತಾಂತ್ರಿಕತೆ',
   },
   {
     keys: ['applied', 'operational', 'part 5'],
@@ -88,6 +118,9 @@ const PROFILES_12TH = [
     title: 'The Applied / Operational Mind',
     stream: 'B.Sc. Hospitality, Commercial Pilot Training, Culinary Arts, Supply Chain',
     careers: 'Aviation, Hotel Management, Culinary Arts, Logistics, Tourism',
+    titleKn: 'ಅನ್ವಯಿಕ / ಕಾರ್ಯಾಚರಣಾ ಮನಸ್ಸು',
+    streamKn: 'B.Sc. ಆತಿಥ್ಯ, ವಾಣಿಜ್ಯ ಪೈಲಟ್ ತರಬೇತಿ, ಪಾಕಶಾಸ್ತ್ರ, ಸರಬರಾಜು ಸರಪಳಿ',
+    careersKn: 'ವಿಮಾನಯಾನ, ಹೋಟೆಲ್ ನಿರ್ವಹಣೆ, ಪಾಕಶಾಸ್ತ್ರ, ಲಾಜಿಸ್ಟಿಕ್ಸ್, ಪ್ರವಾಸೋದ್ಯಮ',
   },
 ]
 
@@ -105,6 +138,39 @@ export default function CareerDashboard() {
   const [loading, setLoading] = useState(true)
   const [paymentQr, setPaymentQr] = useState('')
   const [paymentNote, setPaymentNote] = useState('')
+
+  // Kannada toggle for the released result. The profile card's text (stream/
+  // careers) is pre-translated on the profile objects above; the admin's
+  // free-typed note can't be, so it's translated on demand the first time
+  // the toggle is switched on, same as on the student results page.
+  const [kannada, setKannada]         = useState(false)
+  const [notesKn, setNotesKn]         = useState('')
+  const [translating, setTranslating] = useState(false)
+  const [translateError, setTranslateError] = useState('')
+
+  async function toggleKannada(notes) {
+    const on = !kannada
+    setKannada(on)
+    if (!on || notesKn || !notes) return
+
+    setTranslating(true)
+    setTranslateError('')
+    try {
+      const res = await fetch('/api/translate', {
+        method: 'POST',
+        headers: { ...authHeader(), 'Content-Type': 'application/json' },
+        body: JSON.stringify({ texts: [notes] }),
+      })
+      const data = await res.json()
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Translation failed')
+      setNotesKn(data.translations[0])
+    } catch {
+      setTranslateError('Could not translate right now. Please try again.')
+      setKannada(false)
+    } finally {
+      setTranslating(false)
+    }
+  }
 
   useEffect(() => {
     fetch('/api/user/results', { headers: authHeader() })
@@ -214,8 +280,28 @@ export default function CareerDashboard() {
     // Results released — match a profile from the label
     const profile = matchProfile(latest.label, user?.grade)
 
+    const kannadaBtnLabel = translating ? 'Translating…' : (kannada ? 'English' : 'ಕನ್ನಡ')
+
     return (
       <div className="space-y-4">
+        {(profile || latest.admin_notes) && (
+          <div className="flex items-center justify-between">
+            <span />
+            <button
+              onClick={() => toggleKannada(latest.admin_notes)}
+              disabled={translating}
+              className="text-xs font-semibold px-3 py-1 rounded-full transition-colors disabled:opacity-50"
+              style={{ background: 'rgba(251,191,36,0.15)', color: '#fbbf24', border: '1px solid rgba(251,191,36,0.3)' }}
+            >
+              {kannadaBtnLabel}
+            </button>
+          </div>
+        )}
+
+        {translateError && (
+          <p className="text-xs" style={{ color: '#f87171' }}>{translateError}</p>
+        )}
+
         {/* Profile card */}
         {profile && (
           <div className="rounded-2xl p-8" style={{ background: `${profile.color}12`, border: `1.5px solid ${profile.color}35` }}>
@@ -226,18 +312,18 @@ export default function CareerDashboard() {
               </div>
               <div>
                 <p className="text-xs uppercase tracking-widest mb-1" style={{ color: profile.color }}>Your Aptitude Profile</p>
-                <h2 className="text-lg font-extrabold text-white">{profile.title}</h2>
+                <h2 className="text-lg font-extrabold text-white">{kannada ? profile.titleKn : profile.title}</h2>
               </div>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: profile.color }}>Recommended Stream</p>
-                <p className="text-white/80 text-sm leading-relaxed">{profile.stream}</p>
+                <p className="text-white/80 text-sm leading-relaxed">{kannada ? profile.streamKn : profile.stream}</p>
               </div>
               <div className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}>
                 <p className="text-xs font-semibold uppercase tracking-wider mb-1.5" style={{ color: profile.color }}>Explore Careers In</p>
-                <p className="text-white/80 text-sm leading-relaxed">{profile.careers}</p>
+                <p className="text-white/80 text-sm leading-relaxed">{kannada ? profile.careersKn : profile.careers}</p>
               </div>
             </div>
           </div>
@@ -247,7 +333,7 @@ export default function CareerDashboard() {
         {latest.admin_notes && (
           <div className="rounded-2xl p-6" style={{ background: 'rgba(96,165,250,0.07)', border: '1px solid rgba(96,165,250,0.2)' }}>
             <p className="text-xs font-semibold uppercase tracking-wider mb-3 text-blue-300">Additional Notes</p>
-            <p className="text-white/70 text-sm leading-relaxed">{latest.admin_notes}</p>
+            <p className="text-white/70 text-sm leading-relaxed">{kannada && notesKn ? notesKn : latest.admin_notes}</p>
           </div>
         )}
 
